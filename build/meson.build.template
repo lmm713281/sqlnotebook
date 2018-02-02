@@ -60,8 +60,12 @@ libsqlite3_vapi = meson.get_compiler('vala').find_library(
     'sqlite3',
     dirs: join_paths(meson.current_source_dir(), 'ext/vapi'))
 
+libsqlite3_tokenizer_vapi = meson.get_compiler('vala').find_library(
+    'sqlite3_tokenizer',
+    dirs: join_paths(meson.current_source_dir(), 'src/libsqlite3'))
+
 libsqlite3_dep = declare_dependency(
-    dependencies: [libsqlite3_vapi],
+    dependencies: [libsqlite3_vapi, libsqlite3_tokenizer_vapi],
     link_with: libsqlite3_a,
     include_directories: include_directories('src/libsqlite3'))
 
@@ -160,3 +164,27 @@ executable(
     dependencies: sqlnotebookgui_deps,
     gui_app: true,
     vala_args: '--gresources=../src/sqlnotebook-gui/resources/gresource.xml')
+
+#
+# tests (executable)
+#
+
+tests_deps = [
+    gio_dep,
+    glib_dep,
+    gobject_dep,
+    gmodule_dep,
+    gee_dep,
+    z_dep,
+    windows_ws2_32_dep,
+    windows_dnsapi_dep,
+    windows_iphlpapi_dep,
+    libsqlnotebook_dep
+]
+
+tests_sources = [ <sources-tests> ]
+
+executable(
+    'tests',
+    tests_sources,
+    dependencies: tests_deps)

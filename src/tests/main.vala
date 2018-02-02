@@ -14,31 +14,18 @@
 // OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using SqlNotebook.Utils;
+using SqlNotebook.Tests;
 
-namespace SqlNotebook.Interpreter.Tokens {
-    public class Token : Object {
-        public TokenKind token_kind { get; set; default = TokenKind.SPACE; }
-        public string text { get; set; }
-        public uint64 span_offset { get; set; }
-        public uint64 span_length { get; set; }
+void main(string[] args) {
+    Test.init(ref args);
 
-        public static Token for_token(TokenKind token_kind, string text, uint64 span_offset, uint64 span_length) {
-            var x = new Token() {
-                token_kind = token_kind,
-                text = text,
-                span_offset = span_offset,
-                span_length = span_length
-            };
-            return x;
-        }
+    var modules = new TestModule[] {
+        new Test_Tokenizer()
+    };
 
-        public static Token for_eof(uint64 span_offset) {
-            return for_token(TokenKind.END_OF_FILE, "", span_offset, 0);
-        }
-
-        public string to_string() {
-            return @"$token_kind: $text";
-        }
+    foreach (var module in modules) {
+        module.go();
     }
+
+    Test.run();
 }

@@ -14,31 +14,34 @@
 // OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using SqlNotebook.Utils;
+using Gee;
+using Sqlite3Tokenizer;
 
 namespace SqlNotebook.Interpreter.Tokens {
-    public class Token : Object {
-        public TokenKind token_kind { get; set; default = TokenKind.SPACE; }
-        public string text { get; set; }
-        public uint64 span_offset { get; set; }
-        public uint64 span_length { get; set; }
+    public class Tokenizer : Object {
+        private static Mutex _lock = Mutex();
 
-        public static Token for_token(TokenKind token_kind, string text, uint64 span_offset, uint64 span_length) {
-            var x = new Token() {
-                token_kind = token_kind,
-                text = text,
-                span_offset = span_offset,
-                span_length = span_length
-            };
-            return x;
-        }
+        public ArrayList<Token> tokenize(string input) {
+            var list = new ArrayList<Token>();
 
-        public static Token for_eof(uint64 span_offset) {
-            return for_token(TokenKind.END_OF_FILE, "", span_offset, 0);
-        }
+            _lock.@lock();
+            try {
+                sqlite3_tokenizer_start(input);
 
-        public string to_string() {
-            return @"$token_kind: $text";
+                while (sqlite3_tokenizer_next() != 0) {
+                    var token_type = sqlite3_tokenizer_get_token_type();
+                    var char_offset = sqlite3_tokenizer_get_token_char_offset();
+                    var char_length = sqlite3_tokenizer_get_token_char_length();
+                    var text = input.substring(char_offset, char_length);
+                    var token = Token.for_token((TokenKind)token_type, text, char_offset, char_length);
+                    list.add(token);
+                }
+
+                sqlite3_tokenizer_end();
+            } finally {
+                _lock.unlock();
+            }
+            return list;
         }
     }
 }

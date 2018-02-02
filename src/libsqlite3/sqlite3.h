@@ -15,15 +15,18 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #pragma once
+
+#ifdef __cplusplus
+#error This file should be compiled as C.
+#endif
+
 #include <stdint.h>
 #include "../../ext/sqlite/sqlite3.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-int SxGetToken(const unsigned char* z, int* tokenType);
-
-#ifdef __cplusplus
-}
-#endif
+// not thread safe!
+void sqlite3_tokenizer_start(const char * z);
+int sqlite3_tokenizer_next();
+int sqlite3_tokenizer_get_token_type();
+int sqlite3_tokenizer_get_token_char_offset();
+int sqlite3_tokenizer_get_token_char_length();
+void sqlite3_tokenizer_end();

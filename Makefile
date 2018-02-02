@@ -45,6 +45,10 @@ format:
 	docker build -t sqlnotebook-uncrustify -f build/Dockerfile.uncrustify .
 	docker run --rm -t -v "$(CURDIR)":/source sqlnotebook-uncrustify /bin/bash /source/build/uncrustify.sh
 
+.PHONY: test
+test: linux
+	obj-linux/tests --verbose
+
 # not called by the user directly, use linux/windows/mac above instead
 .PHONY: internal-docker-build
 internal-docker-build:

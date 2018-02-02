@@ -14,31 +14,19 @@
 // OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using SqlNotebook.Interpreter.Tokens;
 using SqlNotebook.Utils;
 
-namespace SqlNotebook.Interpreter.Tokens {
-    public class Token : Object {
-        public TokenKind token_kind { get; set; default = TokenKind.SPACE; }
-        public string text { get; set; }
-        public uint64 span_offset { get; set; }
-        public uint64 span_length { get; set; }
+namespace SqlNotebook.Tests {
+    public class Test_Tokenizer : TestModule {
+        private static Tokenizer _target = new Tokenizer();
 
-        public static Token for_token(TokenKind token_kind, string text, uint64 span_offset, uint64 span_length) {
-            var x = new Token() {
-                token_kind = token_kind,
-                text = text,
-                span_offset = span_offset,
-                span_length = span_length
-            };
-            return x;
-        }
-
-        public static Token for_eof(uint64 span_offset) {
-            return for_token(TokenKind.END_OF_FILE, "", span_offset, 0);
-        }
-
-        public string to_string() {
-            return @"$token_kind: $text";
+        public override void go() {
+            Test.add_func("/Tokenizer/tokenize", () => {
+                var actual = _target.tokenize("SELECT");
+                assert_eq_int(actual.size, 1, "size");
+                // assert(actual[0].token_kind == TokenKind.SELECT);
+            });
         }
     }
 }
