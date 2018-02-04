@@ -24,7 +24,7 @@
 #include "../../ext/sqlite/sqlite3.h"
 
 // not thread safe!
-void sqlite3_tokenizer_start(const char * z);
+void sqlite3_tokenizer_start(const char* z);
 int sqlite3_tokenizer_next();
 int sqlite3_tokenizer_get_token_type();
 int sqlite3_tokenizer_get_token_char_offset();

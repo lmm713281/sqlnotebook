@@ -28,13 +28,13 @@
 #define SQLITE_OMIT_TCL_VARIABLE 1
 #include "../../ext/sqlite/sqlite3.c"
 
-static char * s_text;
+static char* s_text;
 static int s_len;
 static int s_token_type;
 static int s_old_pos;
 static int s_pos;
 
-void sqlite3_tokenizer_start(const char * z) {
+void sqlite3_tokenizer_start(const char* z) {
     s_text = strdup(z);
     s_len = strlen(z);
     s_token_type = 0;
@@ -46,7 +46,7 @@ int sqlite3_tokenizer_next() {
     int token_type = TK_SPACE;
 
     while (token_type == TK_SPACE && s_pos < s_len) {
-        int token_len = sqlite3GetToken((const unsigned char *)&s_text[s_pos], &token_type);
+        int token_len = sqlite3GetToken((const unsigned char*)&s_text[s_pos], &token_type);
         s_old_pos = s_pos;
         s_pos += token_len;
     }

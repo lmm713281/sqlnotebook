@@ -24,11 +24,12 @@ namespace SqlNotebook.Tests {
         }
 
         protected static bool assert_eq_int(int actual, int expected, string description) {
-            if (actual != expected) {
-                fail(@"$description, actual=$actual, expected=$expected");
+            if (actual == expected) {
                 return true;
+            } else {
+                fail(@"$description, actual=$actual, expected=$expected");
+                return false;
             }
-            return false;
         }
     }
 }

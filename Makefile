@@ -24,6 +24,7 @@ run: linux
 .PHONY: clean
 clean:
 	rm -rf obj-linux bin-linux obj-windows bin-windows obj-mac bin-mac meson.build
+	find src -name "*.vala.uncrustify" -delete
 
 # build for linux, requires docker
 .PHONY: linux

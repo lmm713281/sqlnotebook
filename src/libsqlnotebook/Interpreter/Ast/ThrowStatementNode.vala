@@ -16,6 +16,7 @@
 
 namespace SqlNotebook.Interpreter.Ast {
     public class ThrowStatementNode : StatementNode {
+        // null means this is a rethrow
         public ExpressionNode? message { get; set; }
 
         protected override Node? get_child() {

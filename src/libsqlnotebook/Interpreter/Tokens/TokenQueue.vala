@@ -27,6 +27,21 @@ namespace SqlNotebook.Interpreter.Tokens {
         private int _peek_index;
         private Token _eof_token;
 
+        public TokenQueue(ArrayList<Token> tokens) {
+            _tokens = tokens;
+            _peek_index = 0;
+
+            uint64 eof_offset;
+            if (tokens.size > 0) {
+                var last_token = tokens.last();
+                eof_offset = last_token.span_offset + last_token.span_length;
+            } else {
+                eof_offset = 0;
+            }
+
+            _eof_token = Token.for_eof(eof_offset);
+        }
+
         public Token get_current_token() {
             return peek_token(0);
         }
@@ -43,24 +58,13 @@ namespace SqlNotebook.Interpreter.Tokens {
             }
         }
 
-        public TokenQueue(ArrayList<Token> tokens) {
-            _tokens = tokens;
-            _peek_index = 0;
-
-            uint64 eof_offset;
-            if (tokens.size > 0) {
-                var last_token = tokens.last();
-                eof_offset = last_token.span_offset + last_token.span_length;
-            } else {
-                eof_offset = 0;
-            }
-
-            _eof_token = Token.for_eof(eof_offset);
-        }
-
-        public Token peek_token(int skip) {
+        public Token peek_token(int skip = 0) {
             var n = _peek_index + skip;
             return n < _tokens.size ? _tokens[n] : _eof_token;
+        }
+
+        public string peek(int skip = 0) {
+            return peek_token(skip).text.down();
         }
 
         public void jump(int token_index) {
@@ -75,7 +79,18 @@ namespace SqlNotebook.Interpreter.Tokens {
             }
         }
 
-        public Token take_expected(Gee.List<string> expected_texts) throws CompileError {
+        public Token take_expected(string expected_text) throws CompileError {
+            var text = get_current_token().text;
+            var lowercase_text = text.down();
+
+            if (expected_text.down() == lowercase_text) {
+                return take();
+            }
+
+            throw get_unexpected_token_error(text, new string[] { expected_text });
+        }
+
+        public Token take_expected_many(string[] expected_texts) throws CompileError {
             var text = get_current_token().text;
             var lowercase_text = text.down();
 
@@ -85,12 +100,29 @@ namespace SqlNotebook.Interpreter.Tokens {
                 }
             }
 
-            throw new CompileError.UNEXPECTED_TOKEN(
-                    @"Token \"text\" was unexpected.  Expected one of the following: " +
-                    StringUtil.join_strings(", ", expected_texts));
+            throw get_unexpected_token_error(text, expected_texts);
         }
 
-        public bool try_eat_expected(Gee.List<string> expected_texts) {
+        private CompileError get_unexpected_token_error(string unexpected_text, string[] expected_texts) {
+            var expected_texts_list = ArrayUtil.to_list(expected_texts);
+            var expected_texts_str = StringUtil.join_strings(", ", expected_texts_list);
+            var message = @"Token \"$unexpected_text\" was unexpected.  Expected: $expected_texts_str";
+            return new CompileError.UNEXPECTED_TOKEN(message);
+        }
+
+        public bool try_eat_expected(string expected_text) {
+            var text = get_current_token().text;
+            var lowercase_text = text.down();
+
+            if (expected_text.down() == lowercase_text) {
+                take();
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool try_eat_expected_many(string[] expected_texts) {
             var text = get_current_token().text;
             var lowercase_text = text.down();
 

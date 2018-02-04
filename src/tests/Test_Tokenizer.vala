@@ -24,8 +24,8 @@ namespace SqlNotebook.Tests {
         public override void go() {
             Test.add_func("/Tokenizer/tokenize", () => {
                 var actual = _target.tokenize("SELECT");
-                assert_eq_int(actual.size, 1, "size");
-                // assert(actual[0].token_kind == TokenKind.SELECT);
+                assert_eq_int(actual.size, 1, "actual.size") &&
+                assert_eq_int(actual[0].token_kind, TokenKind.SELECT, "actual[0].token_kind");
             });
         }
     }

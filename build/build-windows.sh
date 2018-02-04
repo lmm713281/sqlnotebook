@@ -44,6 +44,7 @@ cp -f /usr/x86_64-w64-mingw32/bin/libharfbuzz-0.dll bin-windows/
 cp -f /usr/x86_64-w64-mingw32/bin/libharfbuzz-gobject-0.dll bin-windows/
 cp -f /usr/x86_64-w64-mingw32/bin/libharfbuzz-icu-0.dll bin-windows/
 cp -f /usr/x86_64-w64-mingw32/bin/libgraphite2.dll bin-windows/
+cp -f /usr/x86_64-w64-mingw32/bin/libgee-0.8-2.dll bin-windows/
 cp -f /usr/lib/gcc/x86_64-w64-mingw32/6.3-win32/libstdc++-6.dll bin-windows/
 cp -f obj-windows/libsqlnotebook.dll bin-windows/
 cp -f obj-windows/sqlnotebook.exe bin-windows/

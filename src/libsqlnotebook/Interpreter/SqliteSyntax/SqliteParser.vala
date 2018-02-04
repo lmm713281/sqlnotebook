@@ -33,14 +33,14 @@ namespace SqlNotebook.Interpreter.SqliteSyntax {
             return read(q, "sql-stmt", out ast);
         }
 
-        private SqliteParserResult read(TokenQueue q, string root_prod_name, out SqliteSyntaxProductionNode ast) {
+        public SqliteParserResult read(TokenQueue q, string root_prod_name, out SqliteSyntaxProductionNode ast) {
             var starting_location = q.current_token_index;
             var match_result = match(q, root_prod_name, out ast);
             var num_valid_tokens = q.current_token_index - starting_location;
             if (match_result.is_match) {
                 return SqliteParserResult.for_valid(num_valid_tokens);
             } else {
-                var error_message = match_result.error_message ?? "Not a statement";
+                var error_message = match_result.error_message ?? @"Invalid $root_prod_name syntax.";
                 return SqliteParserResult.for_invalid(error_message, num_valid_tokens);
             }
         }

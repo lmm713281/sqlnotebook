@@ -16,6 +16,7 @@
 
 namespace SqlNotebook.Errors {
     public errordomain CompileError {
-        UNEXPECTED_TOKEN
+        UNEXPECTED_TOKEN,
+        INVALID_SYNTAX
     }
 }
