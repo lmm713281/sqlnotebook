@@ -14,44 +14,25 @@
 // OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-namespace SqlNotebook.Errors {
-    public errordomain RuntimeError {
-        // SQLite errors
-        // https://www.sqlite.org/c3ref/c_abort.html
-        SQLITE_ERROR,
-        SQLITE_INTERNAL,
-        SQLITE_PERM,
-        SQLITE_ABORT,
-        SQLITE_BUSY,
-        SQLITE_LOCKED,
-        SQLITE_NOMEM,
-        SQLITE_READONLY,
-        SQLITE_INTERRUPT,
-        SQLITE_IOERR,
-        SQLITE_CORRUPT,
-        SQLITE_NOTFOUND,
-        SQLITE_FULL,
-        SQLITE_CANTOPEN,
-        SQLITE_PROTOCOL,
-        SQLITE_EMPTY,
-        SQLITE_SCHEMA,
-        SQLITE_TOOBIG,
-        SQLITE_CONSTRAINT,
-        SQLITE_MISMATCH,
-        SQLITE_MISUSE,
-        SQLITE_NOLFS,
-        SQLITE_AUTH,
-        SQLITE_FORMAT,
-        SQLITE_RANGE,
-        SQLITE_NOTADB,
-        SQLITE_NOTICE,
-        SQLITE_WARNING,
-        SQLITE_ROW,
-        SQLITE_DONE,
+using Gee;
+using SqlNotebook.Collections;
 
-        // SQL Notebook errors
-        UNKNOWN_SCRIPT_NAME,
-        ERROR_CREATING_TEMP_DIR,
-        ERROR_LISTING_TEMP_DIRS
+namespace SqlNotebook.Interpreter {
+    public class ScriptEnvironment : Object {
+        // local variables and script parameters. keys are in lowercase.
+        public HashMap<string, DataValue> variables = new HashMap<string, DataValue>();
+
+        // the names of script parameters, in lowercase.  this is populated as DECLARE PARAMETER statements are ran,
+        // to ensure that the same parameter is not declared twice.
+        public HashSet<string> parameter_names = new HashSet<string>();
+
+        public ScriptOutput output = new ScriptOutput();
+
+        public bool did_return = false;
+        public bool did_break = false;
+        public bool did_continue = false;
+        public bool did_throw = false;
+
+        public DataValue error_message = DataValue.for_null();
     }
 }

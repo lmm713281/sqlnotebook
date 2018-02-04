@@ -15,12 +15,16 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using SqlNotebook.Errors;
+using SqlNotebook.Utils;
 
 namespace SqlNotebook {
     public class Notebook : Object {
         private string _notebook_file_path;
         private bool _is_temporary;
         private SqliteSession _sqlite_session;
+        private LockBox _lock_box = new LockBox();
+
+        public delegate void NotebookActionDelegate(LockBoxKey key) throws RuntimeError;
 
         private Notebook(string notebook_file_path, bool is_temporary, SqliteSession sqlite_session) {
             _notebook_file_path = notebook_file_path;
@@ -41,6 +45,15 @@ namespace SqlNotebook {
         public static Notebook open(string file_path) throws RuntimeError {
             var session = SqliteSession.open(file_path, false);
             return new Notebook(file_path, false, session);
+        }
+
+        public void invoke(NotebookActionDelegate action) throws RuntimeError {
+            var key = _lock_box.enter();
+            try {
+                action(key);
+            } finally {
+                _lock_box.exit(key);
+            }
         }
     }
 }

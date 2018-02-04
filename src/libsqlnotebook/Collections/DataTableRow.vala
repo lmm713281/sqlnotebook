@@ -14,44 +14,10 @@
 // OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-namespace SqlNotebook.Errors {
-    public errordomain RuntimeError {
-        // SQLite errors
-        // https://www.sqlite.org/c3ref/c_abort.html
-        SQLITE_ERROR,
-        SQLITE_INTERNAL,
-        SQLITE_PERM,
-        SQLITE_ABORT,
-        SQLITE_BUSY,
-        SQLITE_LOCKED,
-        SQLITE_NOMEM,
-        SQLITE_READONLY,
-        SQLITE_INTERRUPT,
-        SQLITE_IOERR,
-        SQLITE_CORRUPT,
-        SQLITE_NOTFOUND,
-        SQLITE_FULL,
-        SQLITE_CANTOPEN,
-        SQLITE_PROTOCOL,
-        SQLITE_EMPTY,
-        SQLITE_SCHEMA,
-        SQLITE_TOOBIG,
-        SQLITE_CONSTRAINT,
-        SQLITE_MISMATCH,
-        SQLITE_MISUSE,
-        SQLITE_NOLFS,
-        SQLITE_AUTH,
-        SQLITE_FORMAT,
-        SQLITE_RANGE,
-        SQLITE_NOTADB,
-        SQLITE_NOTICE,
-        SQLITE_WARNING,
-        SQLITE_ROW,
-        SQLITE_DONE,
+using Gee;
 
-        // SQL Notebook errors
-        UNKNOWN_SCRIPT_NAME,
-        ERROR_CREATING_TEMP_DIR,
-        ERROR_LISTING_TEMP_DIRS
+namespace SqlNotebook.Collections {
+    public class DataTableRow { // not inheriting from Object hopefully for speed
+        public DataTableValue[] values;
     }
 }

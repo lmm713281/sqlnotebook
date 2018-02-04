@@ -30,6 +30,7 @@ z_dep = meson.get_compiler('c').find_library('z', required: true)
 linux_dl_dep = meson.get_compiler('c').find_library('dl', required: false)
 threads_dep = dependency('threads')
 m_dep = meson.get_compiler('c').find_library('m', required: false)
+posix_dep = meson.get_compiler('vala').find_library('posix')
 
 # windows-only deps
 windows_ws2_32_dep = meson.get_compiler('c').find_library('ws2_32', required: false)
@@ -84,7 +85,8 @@ libsqlnotebook_deps = [
     windows_dnsapi_dep,
     windows_iphlpapi_dep,
     threads_dep,
-    libsqlite3_dep
+    posix_dep,
+    libsqlite3_dep,
 ]
 
 libsqlnotebook_sources = [ <sources-libsqlnotebook> ]
