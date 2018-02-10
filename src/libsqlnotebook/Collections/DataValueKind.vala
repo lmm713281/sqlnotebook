@@ -22,6 +22,29 @@ namespace SqlNotebook.Collections {
         INTEGER,
         REAL,
         TEXT,
-        BLOB
+        BLOB;
+
+        public string to_string() {
+            switch (this) {
+                case NULL:
+                    return "(null)";
+
+                case INTEGER:
+                    return "integer";
+
+                case REAL:
+                    return "real";
+
+                case TEXT:
+                    return "text";
+
+                case BLOB:
+                    return "blob";
+
+                default:
+                    assert(false);
+                    return "";
+            }
+        }
     }
 }

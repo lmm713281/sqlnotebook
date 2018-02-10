@@ -16,5 +16,6 @@
 
 namespace SqlNotebook.Interpreter.Ast {
     public abstract class StatementNode : Node {
+        public StatementType statement_type;
     }
 }

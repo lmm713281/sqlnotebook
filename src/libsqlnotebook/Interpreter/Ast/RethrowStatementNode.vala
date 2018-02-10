@@ -21,5 +21,9 @@ namespace SqlNotebook.Interpreter.Ast {
                 return true;
             }
         }
+
+        public RethrowStatementNode() {
+            statement_type = StatementType.RETHROW;
+        }
     }
 }

@@ -17,7 +17,7 @@
 using Gee;
 
 namespace SqlNotebook.Collections {
-    public class DataValue { // not inheriting from Object hopefully for speed
+    public class DataValue : Object {
         public DataValueKind kind;
         public int64 integer_value;
         public double real_value;
@@ -61,6 +61,29 @@ namespace SqlNotebook.Collections {
                 blob_value = value
             };
             return x;
+        }
+
+        public string to_string() {
+            switch (kind) {
+                case DataValueKind.NULL:
+                    return "(null)";
+
+                case DataValueKind.INTEGER:
+                    return @"$integer_value";
+
+                case DataValueKind.REAL:
+                    return @"$real_value";
+
+                case DataValueKind.TEXT:
+                    return text_value;
+
+                case DataValueKind.BLOB:
+                    return "(blob)";
+
+                default:
+                    assert(false);
+                    return "(unknown kind)";
+            }
         }
     }
 }

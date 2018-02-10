@@ -19,6 +19,10 @@ namespace SqlNotebook.Interpreter.Ast {
         public ExpressionNode condition { get; set; }
         public BlockNode block { get; set; }
 
+        public WhileStatementNode() {
+            statement_type = StatementType.WHILE;
+        }
+
         protected override Node?[] get_children() {
             return new Node?[] { condition, block };
         }

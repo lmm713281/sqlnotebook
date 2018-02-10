@@ -19,6 +19,10 @@ namespace SqlNotebook.Interpreter.Ast {
         public BlockNode try_block { get; set; }
         public BlockNode catch_block { get; set; }
 
+        public TryCatchStatementNode() {
+            statement_type = StatementType.TRY_CATCH;
+        }
+
         protected override Node?[] get_children() {
             return new Node?[] { try_block, catch_block };
         }

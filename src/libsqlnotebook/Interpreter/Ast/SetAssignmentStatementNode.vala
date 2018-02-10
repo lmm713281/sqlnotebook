@@ -16,5 +16,8 @@
 
 namespace SqlNotebook.Interpreter.Ast {
     public class SetAssignmentStatementNode : AssignmentStatementNode {
+        public SetAssignmentStatementNode() {
+            statement_type = StatementType.SET;
+        }
     }
 }

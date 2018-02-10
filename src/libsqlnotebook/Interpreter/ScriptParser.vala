@@ -539,7 +539,9 @@ namespace SqlNotebook.Interpreter {
                 var node = new SqlStatementNode() {
                     source_token = tok,
                     sql = q.substring(start, result.num_valid_tokens),
-                    sqlite_syntax = syntax_node
+                    sqlite_syntax = syntax_node,
+                    pre_statements = new ArrayList<StatementNode>(),
+                    post_statements = new ArrayList<StatementNode>()
                 };
                 // TODO: call macro preprocessor here
                 return node;

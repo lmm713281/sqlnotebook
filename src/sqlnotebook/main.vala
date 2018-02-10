@@ -17,11 +17,6 @@
 using SqlNotebook;
 
 void main() {
-    try {
-        stdout.printf("Hello!\n");
-        Notebook.create();
-        stdout.printf("World!\n");
-    } catch (Error e) {
-        stdout.printf("Error! %s\n", e.message);
-    }
+    stdout.printf("Hello!\n");
+    stdout.printf("World!\n");
 }

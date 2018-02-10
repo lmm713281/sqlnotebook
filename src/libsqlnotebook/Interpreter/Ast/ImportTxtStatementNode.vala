@@ -22,6 +22,10 @@ namespace SqlNotebook.Interpreter.Ast {
         public IdentifierOrExpressionNode? text_column_name { get; set; }
         public OptionsListNode options_list { get; set; }
 
+        public ImportTxtStatementNode() {
+            statement_type = StatementType.IMPORT_TXT;
+        }
+
         protected override Node?[] get_children() {
             return new Node?[] { file_path, table_name, line_number_column_name, text_column_name, options_list };
         }

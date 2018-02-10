@@ -18,6 +18,10 @@ namespace SqlNotebook.Interpreter.Ast {
     public class PrintStatementNode : StatementNode {
         public ExpressionNode value { get; set; }
 
+        public PrintStatementNode() {
+            statement_type = StatementType.PRINT;
+        }
+
         protected override Node? get_child() {
             return value;
         }

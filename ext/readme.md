@@ -18,3 +18,4 @@
 ## vapi
 - From https://github.com/GNOME/vala/tree/master/vapi
 - Commit `2ae0ebc8aa27ea4bf0a264432e7a64c8f9fe258b`
+- Applied patch `vapi-patch1.diff` to `vapi/sqlite3.vapi`

@@ -17,35 +17,32 @@
 using SqlNotebook.Errors;
 
 namespace SqlNotebook.Utils {
-    public class LockBox : Object {
+    public abstract class LockBox<TToken>: Object {
         private Mutex _mutex = Mutex();
         private bool _is_entered = false;
-        private int _proof_value = 0;
+        private TToken? _current_token = null;
 
-        public LockBoxKey enter() {
-            _mutex.lock ();
+        protected abstract TToken new_token();
+
+        public TToken enter() {
+            _mutex.@lock();
 
             assert(!_is_entered);
             _is_entered = true;
 
-            var key = LockBoxKey() {
-                proof = ++_proof_value
-            };
-
-            return key;
+            return new_token();
         }
 
-        public void check(LockBoxKey key) {
+        public void check(TToken token) {
             assert(_is_entered);
-            assert(key.proof == _proof_value);
+            assert(_current_token == token);
         }
 
-        public void exit(LockBoxKey key) {
-            assert(_is_entered);
-            assert(key.proof == _proof_value);
-
-            _proof_value++;
+        public void exit(TToken token) {
+            check(token);
+            _current_token = null;
             _is_entered = false;
+
             _mutex.unlock();
         }
     }

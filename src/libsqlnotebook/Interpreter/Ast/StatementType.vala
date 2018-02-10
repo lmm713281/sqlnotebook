@@ -14,10 +14,27 @@
 // OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using SqlNotebook.Errors;
-
-namespace SqlNotebook.Utils {
-    public struct LockBoxKey {
-        int proof;
+namespace SqlNotebook.Interpreter.Ast {
+    public enum StatementType {
+        INVALID, // indicates a bug, value was not changed from the default
+        BLOCK,
+        BREAK,
+        CONTINUE,
+        DECLARE,
+        EXECUTE,
+        EXPORT_TXT,
+        FOR,
+        IF,
+        IMPORT_CSV,
+        IMPORT_TXT,
+        IMPORT_XLS,
+        PRINT,
+        RETHROW,
+        RETURN,
+        SET,
+        SQL,
+        THROW,
+        TRY_CATCH,
+        WHILE
     }
 }

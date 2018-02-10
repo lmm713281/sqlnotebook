@@ -23,6 +23,10 @@ namespace SqlNotebook.Interpreter.Ast {
         public ArrayList<StatementNode> pre_statements { get; set; }
         public ArrayList<StatementNode> post_statements { get; set; }
 
+        public SqlStatementNode() {
+            statement_type = StatementType.SQL;
+        }
+
         protected override Node?[] get_children() {
             var pre_count = pre_statements.size;
             var post_count = post_statements.size;

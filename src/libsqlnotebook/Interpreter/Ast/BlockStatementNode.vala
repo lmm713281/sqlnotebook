@@ -18,6 +18,10 @@ namespace SqlNotebook.Interpreter.Ast {
     public class BlockStatementNode : StatementNode {
         public BlockNode block { get; set; }
 
+        public BlockStatementNode() {
+            statement_type = StatementType.BLOCK;
+        }
+
         protected override Node? get_child() {
             return block;
         }

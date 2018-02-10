@@ -20,6 +20,10 @@ namespace SqlNotebook.Interpreter.Ast {
         public ImportTableNode import_table { get; set; }
         public OptionsListNode options_list { get; set; }
 
+        public ImportCsvStatementNode() {
+            statement_type = StatementType.IMPORT_CSV;
+        }
+
         protected override Node?[] get_children() {
             return new Node?[] { file_path, import_table, options_list };
         }

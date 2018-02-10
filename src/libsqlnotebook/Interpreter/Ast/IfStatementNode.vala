@@ -20,6 +20,10 @@ namespace SqlNotebook.Interpreter.Ast {
         public BlockNode block { get; set; }
         public BlockNode? else_block { get; set; }
 
+        public IfStatementNode() {
+            statement_type = StatementType.IF;
+        }
+
         protected override Node?[] get_children() {
             return new Node?[] { condition, block, else_block };
         }

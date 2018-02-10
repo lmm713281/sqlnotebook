@@ -23,6 +23,10 @@ namespace SqlNotebook.Interpreter.Ast {
         public string script_name { get; set; }
         public ArrayList<ArgumentPairNode> arguments { get; set; }
 
+        public ExecuteStatementNode() {
+            statement_type = StatementType.EXECUTE;
+        }
+
         protected override Node?[] get_children() {
             return CollectionUtil.to_casted_array<ArgumentPairNode, Node?>(arguments);
         }

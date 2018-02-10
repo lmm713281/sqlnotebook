@@ -54,6 +54,12 @@ namespace SqlNotebook.Utils {
             return new TempFolder(process_dir);
         }
 
+        public string get_temp_file_path(string extension) {
+            var filename = Uuid.string_random() + extension;
+            var file_path = Path.build_filename(_process_dir, filename);
+            return file_path;
+        }
+
         private static void prune(string sqlnotebook_dir) {
             try {
                 foreach (var path in get_process_paths(sqlnotebook_dir)) {
@@ -67,7 +73,6 @@ namespace SqlNotebook.Utils {
             }
         }
 
-        // find the directories under /tmp/com.sqlnotebook.app_temp
         private static LinkedList<string> get_process_paths(string sqlnotebook_dir) throws RuntimeError {
             try {
                 var sqlnotebook_dir_file = File.new_for_path(sqlnotebook_dir);

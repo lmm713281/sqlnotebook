@@ -20,6 +20,10 @@ namespace SqlNotebook.Interpreter.Ast {
         public SqlStatementNode select_statement { get; set; }
         public OptionsListNode options_list { get; set; }
 
+        public ExportTxtStatementNode() {
+            statement_type = StatementType.EXPORT_TXT;
+        }
+
         protected override Node?[] get_children() {
             return new Node?[] { file_path, select_statement, options_list };
         }

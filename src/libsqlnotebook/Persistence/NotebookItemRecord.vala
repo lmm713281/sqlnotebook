@@ -14,19 +14,7 @@
 // OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-namespace SqlNotebook.Interpreter.Ast {
-    public class ImportXlsStatementNode : StatementNode {
-        public ExpressionNode file_path { get; set; }
-        public ExpressionNode? which_sheet { get; set; }
-        public ImportTableNode import_table { get; set; }
-        public OptionsListNode options_list { get; set; }
-
-        public ImportXlsStatementNode() {
-            statement_type = StatementType.IMPORT_XLS;
-        }
-
-        protected override Node?[] get_children() {
-            return new Node?[] { file_path, which_sheet, import_table, options_list };
-        }
+namespace SqlNotebook.Persistence {
+    public class NotebookItemRecord : Object {
     }
 }

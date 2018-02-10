@@ -16,5 +16,8 @@
 
 namespace SqlNotebook.Interpreter.Ast {
     public class ContinueStatementNode : StatementNode {
+        public ContinueStatementNode() {
+            statement_type = StatementType.CONTINUE;
+        }
     }
 }

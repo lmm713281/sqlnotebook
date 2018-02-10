@@ -47,6 +47,30 @@ namespace SqlNotebook.Collections {
             return _column_names[column_index];
         }
 
+        public DataValue get_value(int row_index, int column_index) {
+            var kind = get_value_kind(row_index, column_index);
+            switch (kind) {
+                case DataValueKind.BLOB:
+                    return DataValue.for_blob(get_value_blob(row_index, column_index));
+
+                case DataValueKind.INTEGER:
+                    return DataValue.for_integer(get_value_integer(row_index, column_index));
+
+                case DataValueKind.NULL:
+                    return DataValue.for_null();
+
+                case DataValueKind.REAL:
+                    return DataValue.for_real(get_value_real(row_index, column_index));
+
+                case DataValueKind.TEXT:
+                    return DataValue.for_text(get_value_text(row_index, column_index));
+
+                default:
+                    assert(false);
+                    return DataValue.for_null();
+            }
+        }
+
         public DataValueKind get_value_kind(int row_index, int column_index) {
             return _rows[row_index].values[column_index].kind;
         }

@@ -50,8 +50,12 @@ namespace SqlNotebook.Errors {
         SQLITE_DONE,
 
         // SQL Notebook errors
+        CANCELED,
         UNKNOWN_SCRIPT_NAME,
         ERROR_CREATING_TEMP_DIR,
-        ERROR_LISTING_TEMP_DIRS
+        ERROR_LISTING_TEMP_DIRS,
+        INVALID_SCRIPT_OPERATION,
+        INVALID_NOTEBOOK_OPERATION,
+        UNCAUGHT_SCRIPT_ERROR
     }
 }

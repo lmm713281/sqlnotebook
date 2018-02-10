@@ -17,5 +17,9 @@
 namespace SqlNotebook.Interpreter.Ast {
     public class DeclareAssignmentStatementNode : AssignmentStatementNode {
         public bool is_parameter { get; set; }
+
+        public DeclareAssignmentStatementNode() {
+            statement_type = StatementType.DECLARE;
+        }
     }
 }

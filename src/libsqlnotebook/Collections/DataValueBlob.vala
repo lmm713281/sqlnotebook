@@ -17,7 +17,7 @@
 using Gee;
 
 namespace SqlNotebook.Collections {
-    public class DataValueBlob { // not inheriting from Object hopefully for speed
+    public class DataValueBlob : Object {
         public uint8[] bytes;
     }
 }

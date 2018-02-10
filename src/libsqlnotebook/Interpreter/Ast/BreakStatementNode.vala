@@ -16,5 +16,8 @@
 
 namespace SqlNotebook.Interpreter.Ast {
     public class BreakStatementNode : StatementNode {
+        public BreakStatementNode() {
+            statement_type = StatementType.BREAK;
+        }
     }
 }

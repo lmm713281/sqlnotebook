@@ -19,6 +19,10 @@ namespace SqlNotebook.Interpreter.Ast {
         // null means this is a rethrow
         public ExpressionNode? message { get; set; }
 
+        public ThrowStatementNode() {
+            statement_type = StatementType.THROW;
+        }
+
         protected override Node? get_child() {
             return message;
         }

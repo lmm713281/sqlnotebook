@@ -22,6 +22,10 @@ namespace SqlNotebook.Interpreter.Ast {
         public ExpressionNode? step { get; set; }
         public BlockNode block { get; set; }
 
+        public ForStatementNode() {
+            statement_type = StatementType.FOR;
+        }
+
         protected override Node?[] get_children() {
             return new Node?[] { first_number, last_number, step, block };
         }
