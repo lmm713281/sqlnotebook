@@ -50,8 +50,15 @@ format:
 test: linux
 	obj-linux/tests --verbose
 
-# not called by the user directly, use linux/windows/mac above instead
+.PHONY: doc
+doc: internal-doctoc
+	
+.PHONY: internal-doctoc
+internal-doctoc:
+	docker build -t sqlnotebook-doctoc -f build/Dockerfile.doctoc .
+	docker run --rm -t -v "$(CURDIR)":/source sqlnotebook-doctoc /bin/bash /source/build/doctoc.sh
+
 .PHONY: internal-docker-build
 internal-docker-build:
 	docker build -t sqlnotebook-build-$(PLATFORM) -f build/Dockerfile.build-$(PLATFORM) .
-	docker run --rm -t -v "$(CURDIR)":/source sqlnotebook-build-$(PLATFORM) /bin/bash /source/build/build-$(PLATFORM).sh
+	docker run -i --rm -t -v "$(CURDIR)":/source sqlnotebook-build-$(PLATFORM) /bin/bash /source/build/build-$(PLATFORM).sh

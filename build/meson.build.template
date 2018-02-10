@@ -1,4 +1,4 @@
-# sqlnotebook Library
+# SQL Notebook
 # Copyright (C) 2018 Brian Luft
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
@@ -31,6 +31,11 @@ linux_dl_dep = meson.get_compiler('c').find_library('dl', required: false)
 threads_dep = dependency('threads')
 m_dep = meson.get_compiler('c').find_library('m', required: false)
 posix_dep = meson.get_compiler('vala').find_library('posix')
+
+jansson_vapi = meson.get_compiler('vala').find_library(
+    'jansson',
+    dirs: join_paths(meson.current_source_dir(), 'ext/vapi'))
+jansson_dep = meson.get_compiler('c').find_library('jansson', required: true)
 
 # windows-only deps
 windows_ws2_32_dep = meson.get_compiler('c').find_library('ws2_32', required: false)
@@ -91,7 +96,9 @@ libsqlnotebook_deps = [
     threads_dep,
     posix_dep,
     libsqlite3_dep,
-    nativeutil_dep
+    nativeutil_dep,
+    jansson_vapi,
+    jansson_dep
 ]
 
 libsqlnotebook_sources = [ <sources-libsqlnotebook> ]

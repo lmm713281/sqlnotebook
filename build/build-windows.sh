@@ -6,7 +6,7 @@ mkdir -p obj-windows/
 python3 build/generate-meson.py > meson.build
 chown --reference=.gitignore meson.build
 ext/meson/meson.py obj-windows/ --cross-file build/meson-windows.txt
-ninja -v -C obj-windows/
+ninja -C obj-windows/
 
 cp -f /usr/x86_64-w64-mingw32/bin/libffi-6.dll bin-windows/
 cp -f /usr/x86_64-w64-mingw32/bin/libiconv-2.dll bin-windows/
