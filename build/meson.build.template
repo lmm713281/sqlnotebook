@@ -33,9 +33,7 @@ m_dep = meson.get_compiler('c').find_library('m', required: false)
 posix_dep = meson.get_compiler('vala').find_library('posix')
 zip_dep = meson.get_compiler('c').find_library('zip', required: true)
 
-jansson_vapi = meson.get_compiler('vala').find_library(
-    'jansson',
-    dirs: join_paths(meson.current_source_dir(), 'ext/vapi'))
+jansson_vapi = meson.get_compiler('vala').find_library('jansson', dirs: join_paths(meson.current_source_dir(), 'ext/vapi'))
 jansson_dep = meson.get_compiler('c').find_library('jansson', required: true)
 
 # windows-only deps
@@ -56,7 +54,9 @@ libsqlite3_deps = [
     threads_dep
 ]
 
-libsqlite3_sources = [ <sources-libsqlite3> ]
+libsqlite3_sources = [
+    'src/libsqlite3/sqlite3.c'
+]
 
 libsqlite3_a = static_library(
     'sqlite3',
@@ -80,10 +80,6 @@ libsqlite3_dep = declare_dependency(
 # libsqlnotebook (shared library)
 #
 
-nativeutil_dep = meson.get_compiler('vala').find_library(
-    'NativeUtil',
-    dirs: join_paths(meson.current_source_dir(), 'src/libsqlnotebook/Utils'))
-
 libsqlnotebook_deps = [
     gio_dep,
     glib_dep,
@@ -97,7 +93,6 @@ libsqlnotebook_deps = [
     threads_dep,
     posix_dep,
     libsqlite3_dep,
-    nativeutil_dep,
     jansson_vapi,
     jansson_dep,
     zip_dep

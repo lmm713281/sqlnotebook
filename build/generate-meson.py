@@ -10,8 +10,9 @@ with open("build/meson.build.template", "r") as templateFile:
 
 for project in projectNames:
     valaSources = glob.glob("src/" + project + "/**/*.vala", recursive=True)
+    vapiSources = glob.glob("src/" + project + "/**/*.vapi", recursive=True)
     cSources = glob.glob("src/" + project + "/**/*.c", recursive=True)
-    sources = valaSources + cSources
+    sources = valaSources + vapiSources + cSources
     needle = "<sources-" + project + ">"
     quotedRelativeFilePaths = map(lambda x: "'" + x.replace("", "") + "'", sources)
     replacement = ",".join(quotedRelativeFilePaths)
