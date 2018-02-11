@@ -31,6 +31,7 @@ linux_dl_dep = meson.get_compiler('c').find_library('dl', required: false)
 threads_dep = dependency('threads')
 m_dep = meson.get_compiler('c').find_library('m', required: false)
 posix_dep = meson.get_compiler('vala').find_library('posix')
+zip_dep = meson.get_compiler('c').find_library('zip', required: true)
 
 jansson_vapi = meson.get_compiler('vala').find_library(
     'jansson',
@@ -98,7 +99,8 @@ libsqlnotebook_deps = [
     libsqlite3_dep,
     nativeutil_dep,
     jansson_vapi,
-    jansson_dep
+    jansson_dep,
+    zip_dep
 ]
 
 libsqlnotebook_sources = [ <sources-libsqlnotebook> ]

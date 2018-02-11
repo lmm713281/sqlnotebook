@@ -22,12 +22,12 @@ RUN apt-get update -y --fix-missing && \
     add-apt-repository ppa:apt-fast/stable && \
     add-apt-repository ppa:vala-team && \
     apt-get update -y && \
-    apt-get install -y apt-fast
-RUN apt-fast install -y \
-    build-essential valac meson ninja-build mingw-w64 mingw-w64-common mingw-w64-tools \
-    mingw-w64-tools libgee-0.8-2 libgee-0.8-dev libglib2.0-0 libglib2.0-dev gettext \
-    libgettextpo-dev libgettextpo0 unzip gtk-doc-tools ghostscript libspectre-dev libspectre1 \
-    libxml2-utils
+    apt-get install -y apt-fast && \
+    apt-fast install -y \
+        build-essential valac meson ninja-build mingw-w64 mingw-w64-common mingw-w64-tools \
+        mingw-w64-tools libgee-0.8-2 libgee-0.8-dev libglib2.0-0 libglib2.0-dev gettext \
+        libgettextpo-dev libgettextpo0 unzip gtk-doc-tools ghostscript libspectre-dev libspectre1 \
+        libxml2-utils
 
 RUN cd /usr/x86_64-w64-mingw32/ && curl -L http://repo.msys2.org/mingw/x86_64/mingw-w64-x86_64-zlib-1.2.11-1-any.pkg.tar.xz | unxz | tar x
 RUN cd /usr/x86_64-w64-mingw32/ && curl -L http://repo.msys2.org/mingw/x86_64/mingw-w64-x86_64-libffi-3.2.1-4-any.pkg.tar.xz | unxz | tar x
