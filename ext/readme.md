@@ -22,5 +22,3 @@
 - `sqlite3.vapi`
     - From https://github.com/GNOME/vala/blob/2ae0ebc8aa27ea4bf0a264432e7a64c8f9fe258b/vapi/sqlite3.vapi
     - Applied patch `vapi-patch1.diff` to `vapi/sqlite3.vapi`
-- `jansson.vapi`
-    - From https://github.com/mspanc/jansson/blob/24fa13daad552ca50f47cbc59436e8be903d24be/jansson.vapi

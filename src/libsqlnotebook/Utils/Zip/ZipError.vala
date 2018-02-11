@@ -14,26 +14,12 @@
 // OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#pragma once
-
-#include <stdint.h>
-
-typedef struct ZipArchive ZipArchive;
-
-typedef enum {
-    ZIP_ARCHIVE_RESULT_SUCCESS = 0,
-    ZIP_ARCHIVE_RESULT_UNKNOWN_ERROR = 1,
-    ZIP_ARCHIVE_RESULT_CORRUPT_FILE = 2,
-    ZIP_ARCHIVE_RESULT_OUT_OF_MEMORY = 3,
-    ZIP_ARCHIVE_RESULT_FILE_NOT_FOUND = 4,
-    ZIP_ARCHIVE_RESULT_IO_FAILED = 5
-} ZipArchiveResult;
-
-ZipArchiveResult zip_archive_open(const char* zip_file_path, ZipArchive** archive);
-ZipArchiveResult zip_archive_create(const char* zip_file_path, ZipArchive** archive);
-int64_t zip_archive_get_entries_count(ZipArchive* archive);
-ZipArchiveResult zip_archive_get_entry_name(ZipArchive* archive, int entry_index, const char** name);
-ZipArchiveResult zip_archive_get_entry_size(ZipArchive* archive, int entry_index, uint64_t* size);
-ZipArchiveResult zip_archive_copy_entry_to_buffer(ZipArchive* archive, int entry_index, uint8_t** buffer, uint64_t buffer_size);
-ZipArchiveResult zip_archive_write_entry_to_file(ZipArchive* archive, int entry_index, const char* file_path);
-void zip_archive_close(ZipArchive* archive);
+namespace SqlNotebook.Utils.Zip {
+    public errordomain ZipError {
+        UNKNOWN_ERROR,
+        CORRUPT_FILE,
+        OUT_OF_MEMORY,
+        FILE_NOT_FOUND,
+        IO_FAILED
+    }
+}

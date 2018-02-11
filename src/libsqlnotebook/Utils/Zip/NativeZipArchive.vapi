@@ -14,27 +14,20 @@
 // OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-[CCode(cheader_filename = "src/libsqlnotebook/Utils/ZipArchive.h")]
-namespace SqlNotebook.Utils {
-    [CCode(cname = "ZipArchiveResult", cprefix = "ZIP_ARCHIVE_RESULT_")]
-    public enum ZipArchiveNativeResult {
-        SUCCESS,
-        UNKNOWN_ERROR,
-        CORRUPT_FILE,
-        OUT_OF_MEMORY,
-        FILE_NOT_FOUND,
-        IO_FAILED
-    }
-
+[CCode(cheader_filename = "src/libsqlnotebook/Utils/Zip/NativeZipArchive.h")]
+namespace SqlNotebook.Utils.Zip {
     [Compact]
     [CCode(free_function = "zip_archive_close", cname = "ZipArchive", cprefix = "zip_archive_")]
-    public class ZipArchiveNative {
-        public static ZipArchiveNativeResult open(string zip_file_path, out ZipArchiveNative archive);
-        public static ZipArchiveNativeResult create(string zip_file_path, out ZipArchiveNative archive);
+    public class NativeZipArchive {
+        public static NativeZipArchiveResult open(string zip_file_path, out NativeZipArchive archive);
+        public static NativeZipArchiveResult create(string zip_file_path, out NativeZipArchive archive);
         public int64 get_entries_count();
-        public ZipArchiveNativeResult get_entry_name(int entry_index, out unowned string name);
-        public ZipArchiveNativeResult get_entry_size(int entry_index, out uint64 size);
-        public ZipArchiveNativeResult copy_entry_to_buffer(int entry_index, ref uint8[] buffer);
-        public ZipArchiveNativeResult write_entry_to_file(int entry_index, string file_path);
+        public NativeZipArchiveResult get_entry_name(int entry_index, out unowned string name);
+        public NativeZipArchiveResult get_entry_size(int entry_index, out uint64 size);
+        public NativeZipArchiveResult copy_entry_to_buffer(int entry_index, ref uint8[] buffer);
+        public NativeZipArchiveResult copy_entry_to_string(int entry_index, out string buffer);
+        public NativeZipArchiveResult write_entry_to_file(int entry_index, string file_path);
+        public NativeZipArchiveResult add_entry_from_file(string entry_name, string file_path);
+        public NativeZipArchiveResult add_entry_from_string(string entry_name, string data, uint64 length);
     }
 }

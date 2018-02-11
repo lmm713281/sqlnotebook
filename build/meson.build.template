@@ -33,7 +33,6 @@ m_dep = meson.get_compiler('c').find_library('m', required: false)
 posix_dep = meson.get_compiler('vala').find_library('posix')
 zip_dep = meson.get_compiler('c').find_library('zip', required: true)
 
-jansson_vapi = meson.get_compiler('vala').find_library('jansson', dirs: join_paths(meson.current_source_dir(), 'ext/vapi'))
 jansson_dep = meson.get_compiler('c').find_library('jansson', required: true)
 
 # windows-only deps
@@ -93,7 +92,6 @@ libsqlnotebook_deps = [
     threads_dep,
     posix_dep,
     libsqlite3_dep,
-    jansson_vapi,
     jansson_dep,
     zip_dep
 ]

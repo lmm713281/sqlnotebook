@@ -14,10 +14,8 @@
 // OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-namespace SqlNotebook.Utils {
-    public class ZipEntry : Object {
-        public int index { get; set; }
-        public string name { get; set; }
-        public uint64 size { get; set; }
+namespace SqlNotebook.Utils.Json {
+    public errordomain JsonError {
+        INVALID_JSON
     }
 }

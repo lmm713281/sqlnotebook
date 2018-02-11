@@ -17,7 +17,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <zip.h>
-#include "ZipArchive.h"
+#include "NativeZipArchive.h"
 
 struct ZipArchive {
     zip_t* zip;
@@ -33,18 +33,23 @@ static ZipArchiveResult zip_archive_open_core(const char* zip_file_path, ZipArch
             /* errorp */ &error_code);
     if (zip == NULL) {
         *archive = NULL;
+
         switch (error_code) {
             case ZIP_ER_INCONS:
             case ZIP_ER_NOZIP:
                 return ZIP_ARCHIVE_RESULT_CORRUPT_FILE;
+
             case ZIP_ER_MEMORY:
                 return ZIP_ARCHIVE_RESULT_OUT_OF_MEMORY;
+
             case ZIP_ER_NOENT:
                 return ZIP_ARCHIVE_RESULT_FILE_NOT_FOUND;
+
             case ZIP_ER_OPEN:
             case ZIP_ER_READ:
             case ZIP_ER_SEEK:
                 return ZIP_ARCHIVE_RESULT_IO_FAILED;
+
             default:
                 return ZIP_ARCHIVE_RESULT_UNKNOWN_ERROR;
         }
@@ -103,7 +108,10 @@ ZipArchiveResult zip_archive_get_entry_size(ZipArchive* archive, int entry_index
 ZipArchiveResult zip_archive_copy_entry_to_buffer(ZipArchive* archive, int entry_index, uint8_t** buffer,
         uint64_t buffer_size) {
     zip_file_t* file = NULL;
-    int sub_result = 0, result = ZIP_ARCHIVE_RESULT_SUCCESS;
+    int sub_result = 0;
+    ZipArchiveResult result = ZIP_ARCHIVE_RESULT_SUCCESS;
+
+    *buffer = NULL;
 
     file = zip_fopen_index(
             /* archive */ archive->zip,
@@ -118,6 +126,50 @@ ZipArchiveResult zip_archive_copy_entry_to_buffer(ZipArchive* archive, int entry
             /* file */ file,
             /* buf */ *buffer,
             /* nbytes */ buffer_size);
+    if (sub_result == -1) {
+        result = ZIP_ARCHIVE_RESULT_IO_FAILED;
+        goto finish;
+    }
+
+finish:
+    if (file != NULL) {
+        sub_result = zip_fclose(file);
+        if (sub_result != 0) {
+            result = ZIP_ARCHIVE_RESULT_IO_FAILED;
+        }
+    }
+
+    return result;
+}
+
+ZipArchiveResult zip_archive_copy_entry_to_string(ZipArchive* archive, int entry_index, char** buffer) {
+    zip_file_t* file = NULL;
+    int sub_result = 0;
+    ZipArchiveResult result = ZIP_ARCHIVE_RESULT_SUCCESS;
+    uint64_t size = 0;
+
+    *buffer = NULL;
+
+    file = zip_fopen_index(
+            /* archive */ archive->zip,
+            /* index */ entry_index,
+            /* flags */ 0);
+    if (file == NULL) {
+        result = ZIP_ARCHIVE_RESULT_CORRUPT_FILE;
+        goto finish;
+    }
+
+    result = zip_archive_get_entry_size(archive, entry_index, &size);
+    if (result != ZIP_ARCHIVE_RESULT_SUCCESS) {
+        goto finish;
+    }
+
+    *buffer = calloc(size + 1, sizeof(char));
+
+    sub_result = zip_fread(
+            /* file */ file,
+            /* buf */ *buffer,
+            /* nbytes */ size);
     if (sub_result == -1) {
         result = ZIP_ARCHIVE_RESULT_IO_FAILED;
         goto finish;
@@ -193,6 +245,79 @@ finish:
 
     if (source_file != NULL) {
         sub_result = zip_fclose(source_file);
+        if (sub_result != 0) {
+            result = ZIP_ARCHIVE_RESULT_IO_FAILED;
+        }
+    }
+
+    return result;
+}
+
+ZipArchiveResult zip_archive_add_entry_from_file(ZipArchive* archive, const char* entry_name, const char* file_path) {
+    zip_source_t* file_source = NULL;
+    ZipArchiveResult result = ZIP_ARCHIVE_RESULT_SUCCESS;
+    int sub_result = 0;
+
+    file_source = zip_source_file(
+            /* archive */ archive->zip,
+            /* fname */ file_path,
+            /* start */ 0,
+            /* len */ -1);
+    if (file_source == NULL) {
+        result = ZIP_ARCHIVE_RESULT_FILE_NOT_FOUND;
+        goto finish;
+    }
+
+    sub_result = zip_file_add(
+            /* archive */ archive->zip,
+            /* name */ entry_name,
+            /* source */ file_source,
+            /* flags */ ZIP_FL_OVERWRITE | ZIP_FL_ENC_UTF_8);
+    if (sub_result == -1) {
+        result = ZIP_ARCHIVE_RESULT_IO_FAILED;
+        goto finish;
+    }
+
+finish:
+    if (file_source != NULL) {
+        sub_result = zip_source_close(file_source);
+        if (sub_result != 0) {
+            result = ZIP_ARCHIVE_RESULT_IO_FAILED;
+        }
+    }
+
+    return result;
+}
+
+ZipArchiveResult zip_archive_add_entry_from_string(ZipArchive* archive, const char* entry_name, const char* data,
+        uint64_t length) {
+    zip_source_t* buffer_source = NULL;
+    ZipArchiveResult result = ZIP_ARCHIVE_RESULT_SUCCESS;
+    int sub_result = 0;
+
+    buffer_source = zip_source_buffer(
+            /* archive */ archive->zip,
+            /* data */ data,
+            /* len */ length,
+            /* freep */ 0);
+    if (buffer_source == NULL) {
+        result = ZIP_ARCHIVE_RESULT_UNKNOWN_ERROR;
+        goto finish;
+    }
+
+    sub_result = zip_file_add(
+            /* archive */ archive->zip,
+            /* name */ entry_name,
+            /* source */ buffer_source,
+            /* flags */ ZIP_FL_OVERWRITE | ZIP_FL_ENC_UTF_8);
+    if (sub_result == -1) {
+        result = ZIP_ARCHIVE_RESULT_IO_FAILED;
+        goto finish;
+    }
+
+finish:
+    if (buffer_source != NULL) {
+        sub_result = zip_source_close(buffer_source);
         if (sub_result != 0) {
             result = ZIP_ARCHIVE_RESULT_IO_FAILED;
         }

@@ -14,10 +14,13 @@
 // OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using Gee;
+#pragma once
 
-namespace SqlNotebook.Persistence {
-    public class NotebookUserData : Object {
-        public ArrayList<NotebookItemRecord> items { get; set; default = new ArrayList<NotebookItemRecord>(); }
-    }
-}
+typedef enum {
+    ZIP_ARCHIVE_RESULT_SUCCESS = 0,
+    ZIP_ARCHIVE_RESULT_UNKNOWN_ERROR = 1,
+    ZIP_ARCHIVE_RESULT_CORRUPT_FILE = 2,
+    ZIP_ARCHIVE_RESULT_OUT_OF_MEMORY = 3,
+    ZIP_ARCHIVE_RESULT_FILE_NOT_FOUND = 4,
+    ZIP_ARCHIVE_RESULT_IO_FAILED = 5
+} ZipArchiveResult;

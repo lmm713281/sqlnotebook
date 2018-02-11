@@ -18,10 +18,12 @@ using SqlNotebook.Errors;
 using SqlNotebook.Interpreter;
 using SqlNotebook.Interpreter.SqliteSyntax;
 using SqlNotebook.Interpreter.Tokens;
+using SqlNotebook.Persistence;
 using SqlNotebook.Utils;
 
 namespace SqlNotebook {
     public class LibraryFactory : Object {
+        private NotebookSerializer _notebook_serializer;
         private ScriptParser _script_parser;
         private SqliteGrammar _sqlite_grammar;
         private SqliteParser _sqlite_parser;
@@ -38,6 +40,7 @@ namespace SqlNotebook {
             f._temp_folder = TempFolder.create();
             f._tokenizer = new Tokenizer();
             f._script_parser = new ScriptParser(f._tokenizer, f._sqlite_parser);
+            f._notebook_serializer = new NotebookSerializer(f._temp_folder);
             return f;
         }
 
@@ -47,9 +50,10 @@ namespace SqlNotebook {
             return new Notebook(file_path, true, session);
         }
 
-        public Notebook open_notebook(string file_path) throws RuntimeError {
-            var session = SqliteSession.open(file_path, false);
-            return new Notebook(file_path, false, session);
+        public Notebook open_notebook(string notebook_file_path) throws RuntimeError {
+
+            var session = SqliteSession.open(notebook_file_path, false);
+            return new Notebook(notebook_file_path, false, session);
         }
 
         public ScriptEnvironment get_script_environment() {
