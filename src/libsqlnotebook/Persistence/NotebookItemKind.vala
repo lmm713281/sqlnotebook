@@ -15,7 +15,7 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace SqlNotebook.Persistence {
-    public enum NotebookItemType {
+    public enum NotebookItemKind {
         SCRIPT
         // TODO: note, console, table, view
     }

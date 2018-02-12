@@ -16,5 +16,8 @@
 
 namespace SqlNotebook.Persistence {
     public class NotebookItemRecord : Object {
+        public string name;
+        public NotebookItemKind kind;
+        public string data;
     }
 }

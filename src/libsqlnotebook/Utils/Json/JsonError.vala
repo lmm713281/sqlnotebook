@@ -16,6 +16,7 @@
 
 namespace SqlNotebook.Utils.Json {
     public errordomain JsonError {
-        INVALID_JSON
+        INVALID_JSON,
+        UNEXPECTED_JSON
     }
 }

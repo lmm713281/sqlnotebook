@@ -14,38 +14,18 @@
 // OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-namespace SqlNotebook.Utils.Json {
-    public enum JsonDataType {
-        OBJECT,
-        ARRAY,
-        STRING,
-        NUMBER,
-        BOOLEAN,
-        NULL;
+using Gee;
 
-        public string to_string() {
-            switch (this) {
-                case OBJECT:
-                    return "object";
-
-                case ARRAY:
-                    return "array";
-
-                case STRING:
-                    return "string";
-
-                case NUMBER:
-                    return "number";
-
-                case BOOLEAN:
-                    return "boolean";
-
-                case NULL:
-                    return "null";
-
-                default:
-                    assert(false);
-                    return "";
+namespace SqlNotebook.Utils {
+    [Compact]
+    public abstract class MapUtil {
+        public static bool try_get_value<TK, TV>(HashMap<TK, TV> self, TK key, out TV value) {
+            if (self.has_key(key)) {
+                value = self.get(key);
+                return true;
+            } else {
+                value = null;
+                return false;
             }
         }
     }

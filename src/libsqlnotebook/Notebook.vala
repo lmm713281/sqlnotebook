@@ -22,14 +22,17 @@ using SqlNotebook.Utils;
 namespace SqlNotebook {
     public class Notebook : Object {
         private string _notebook_file_path;
+        private string _sqlite_db_file_path;
         private bool _is_temporary;
         private NotebookLockBox _lock_box = new NotebookLockBox();
 
         // protected by lock
         private SqliteSession _sqlite_session;
 
-        public Notebook(string notebook_file_path, bool is_temporary, SqliteSession sqlite_session) {
+        public Notebook(string notebook_file_path, string sqlite_db_file_path, bool is_temporary,
+                SqliteSession sqlite_session) {
             _notebook_file_path = notebook_file_path;
+            _sqlite_db_file_path = sqlite_db_file_path;
             _is_temporary = is_temporary;
             _sqlite_session = sqlite_session;
         }
@@ -40,6 +43,18 @@ namespace SqlNotebook {
 
         public void exit(NotebookLockToken token) {
             _lock_box.exit(token);
+        }
+
+        // returns the absolute path of the sqlite db
+        public string close_sqlite(NotebookLockToken token) {
+            _lock_box.check(token);
+            _sqlite_session.close();
+            return _sqlite_db_file_path;
+        }
+
+        public void reopen_sqlite(NotebookLockToken token) throws RuntimeError {
+            _lock_box.check(token);
+            _sqlite_session.reopen();
         }
 
         public DataTable sqlite_query_with_named_args(string sql, HashMap<string, DataValue> args,

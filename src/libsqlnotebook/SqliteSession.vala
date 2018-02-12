@@ -23,7 +23,7 @@ namespace SqlNotebook {
     public class SqliteSession : Object {
         private string _file_path;
         private bool _is_temporary;
-        private Sqlite.Database _database;
+        private Sqlite.Database? _database;
 
         private SqliteSession(string file_path, bool is_temporary) {
             _file_path = file_path;
@@ -31,6 +31,8 @@ namespace SqlNotebook {
         }
 
         ~SqliteSession() {
+            _database = null;
+
             if (_is_temporary) {
                 try {
                     File.new_for_path(_file_path).delete();
@@ -44,6 +46,14 @@ namespace SqlNotebook {
             var session = new SqliteSession(file_path, is_temporary);
             maybe_throw_without_database(Sqlite.Database.open(file_path, out session._database));
             return session;
+        }
+
+        public void close() {
+            _database = null;
+        }
+
+        public void reopen() throws RuntimeError {
+            maybe_throw_without_database(Sqlite.Database.open(_file_path, out _database));
         }
 
         private static void maybe_throw(Sqlite.Database database, int sqlite_result) throws RuntimeError {

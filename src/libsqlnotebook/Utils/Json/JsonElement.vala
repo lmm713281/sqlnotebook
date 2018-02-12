@@ -36,6 +36,17 @@ namespace SqlNotebook.Utils.Json {
             return json_element;
         }
 
+        public void check_type(JsonDataType expected_type) throws JsonError {
+            var actual_type = get_data_type();
+            if (actual_type != expected_type) {
+                var expected_type_str = expected_type.to_string();
+                var actual_type_str = actual_type.to_string();
+                throw new JsonError.UNEXPECTED_JSON(
+                        @"The JSON contains unexpected data. A value of type $expected_type_str was expected, but a " +
+                        @"value of type $actual_type_str was found.");
+            }
+        }
+
         public JsonDataType get_data_type() {
             switch (_native_root.get_element_type()) {
                 case NativeJsonDataType.OBJECT:
@@ -48,16 +59,12 @@ namespace SqlNotebook.Utils.Json {
                     return JsonDataType.STRING;
 
                 case NativeJsonDataType.INTEGER:
-                    return JsonDataType.INTEGER;
-
                 case NativeJsonDataType.REAL:
-                    return JsonDataType.REAL;
+                    return JsonDataType.NUMBER;
 
                 case NativeJsonDataType.TRUE:
-                    return JsonDataType.TRUE;
-
                 case NativeJsonDataType.FALSE:
-                    return JsonDataType.FALSE;
+                    return JsonDataType.BOOLEAN;
 
                 case NativeJsonDataType.NULL:
                     return JsonDataType.NULL;
@@ -68,19 +75,28 @@ namespace SqlNotebook.Utils.Json {
             }
         }
 
-        public string get_string() {
+        public bool get_boolean() throws JsonError {
+            check_type(JsonDataType.BOOLEAN);
+            return _native_root.get_element_type() == NativeJsonDataType.TRUE;
+        }
+
+        public string get_string() throws JsonError {
+            check_type(JsonDataType.STRING);
             return _native_root.get_string().dup();
         }
 
-        public int64 get_integer() {
+        public int64 get_integer() throws JsonError {
+            check_type(JsonDataType.NUMBER);
             return _native_root.get_integer();
         }
 
-        public double get_real() {
+        public double get_real() throws JsonError {
+            check_type(JsonDataType.NUMBER);
             return _native_root.get_real();
         }
 
-        public ArrayList<JsonElement> get_array() {
+        public ArrayList<JsonElement> get_array() throws JsonError {
+            check_type(JsonDataType.ARRAY);
             var count = _native_root.get_array_size();
             var list = new ArrayList<JsonElement>();
 
@@ -93,7 +109,8 @@ namespace SqlNotebook.Utils.Json {
             return list;
         }
 
-        public HashMap<string, JsonElement> get_object() {
+        public HashMap<string, JsonElement> get_object() throws JsonError {
+            check_type(JsonDataType.OBJECT);
             var map = new HashMap<string, JsonElement>();
             var iterator = _native_root.get_object_iterator();
 

@@ -47,13 +47,16 @@ namespace SqlNotebook {
         public Notebook new_notebook() throws RuntimeError {
             var file_path = _temp_folder.get_temp_file_path(".db");
             var session = SqliteSession.open(file_path, true);
-            return new Notebook(file_path, true, session);
+            return new Notebook("untitled", file_path, true, session);
         }
 
         public Notebook open_notebook(string notebook_file_path) throws RuntimeError {
+            string sqlite_db_file_path;
+            NotebookUserData user_data;
+            _notebook_serializer.open_notebook(notebook_file_path, out sqlite_db_file_path, out user_data);
 
-            var session = SqliteSession.open(notebook_file_path, false);
-            return new Notebook(notebook_file_path, false, session);
+            var session = SqliteSession.open(sqlite_db_file_path, false);
+            return new Notebook(notebook_file_path, sqlite_db_file_path, false, session);
         }
 
         public ScriptEnvironment get_script_environment() {
