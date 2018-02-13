@@ -4,9 +4,6 @@
 - Applied patch `meson-patch1.diff` to `meson/mesonbuild/compiler/c.py`.
 - Applied patch `meson-patch2.diff` to `meson/mesonbuild/modules/gnome.py`.
 
-## miniz
-- From https://github.com/richgel999/miniz/releases/download/2.0.6/miniz-2.0.6.zip
-
 ## sqlite
 - From https://www.sqlite.org/download.html
 - Release `sqlite-amalgamation-3140100.zip`

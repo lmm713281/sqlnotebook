@@ -40,7 +40,7 @@ fi
 export PATH=~/.local/bin:$PATH
 
 python3 build/generate-meson.py > meson.build
-ext/meson/meson.py obj-mac/
+ext/meson/meson.py --buildtype $BUILDTYPE obj-mac/
 ninja -v -C obj-mac/
 
 # sqlnotebook

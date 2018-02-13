@@ -1,20 +1,23 @@
 #!/bin/bash
 
+export BINDIR=/source/bin-linux-$1
+export OBJDIR=/source/obj-linux-$1
+
 cd /source
-mkdir -p bin-linux/
-mkdir -p obj-linux/
+mkdir -p $BINDIR
+mkdir -p $OBJDIR
 
 python3 build/generate-meson.py > meson.build
 chown --reference=.gitignore meson.build
-ext/meson/meson.py obj-linux/
-ninja -C obj-linux/
+ext/meson/meson.py --buildtype $1 $OBJDIR/
+ninja -C $OBJDIR/
 
-cp -f obj-linux/libsqlnotebook.so bin-linux/
-cp -f obj-linux/sqlnotebook bin-linux/
-cp -f obj-linux/sqlnotebook-gui bin-linux/
+cp -f $OBJDIR/libsqlnotebook.so $BINDIR/
+cp -f $OBJDIR/sqlnotebook $BINDIR/
+cp -f $OBJDIR/sqlnotebook-gui $BINDIR/
 
-strip bin-linux/libsqlnotebook.so
-strip bin-linux/sqlnotebook
-strip bin-linux/sqlnotebook-gui
+strip $BINDIR/libsqlnotebook.so
+strip $BINDIR/sqlnotebook
+strip $BINDIR/sqlnotebook-gui
 
-chown --reference=.gitignore --recursive bin-linux/ obj-linux/
+chown --reference=.gitignore --recursive $BINDIR/ $OBJDIR/

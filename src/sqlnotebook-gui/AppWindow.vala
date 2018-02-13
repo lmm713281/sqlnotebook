@@ -14,11 +14,32 @@
 // OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using Gtk;
+
 namespace SqlNotebook.Gui {
     [GtkTemplate(ui = "/com/sqlnotebook/sqlnotebook-gui/AppWindow.ui")]
     public class AppWindow : Gtk.ApplicationWindow {
+        
+        [GtkChild] private Toolbar _toolbar;
+        [GtkChild] private ToolButton _new_notebook_btn;
+        [GtkChild] private ToolButton _open_notebook_btn;
+        [GtkChild] private ToolButton _save_notebook_btn;
+        [GtkChild] private ToolButton _add_note_btn;
+        [GtkChild] private ToolButton _add_console_btn;
+        [GtkChild] private ToolButton _add_script_btn;
+        
         public AppWindow(Gtk.Application application) {
             Object(application: application);
+            set_size_request(900, 650);
+            
+            _new_notebook_btn.icon_widget = new Image.from_resource("/com/sqlnotebook/sqlnotebook-gui/new_notebook_20.png");
+            _open_notebook_btn.icon_widget = new Image.from_resource("/com/sqlnotebook/sqlnotebook-gui/open_notebook_20.png");
+            _save_notebook_btn.icon_widget = new Image.from_resource("/com/sqlnotebook/sqlnotebook-gui/save_notebook_20.png");
+            _add_note_btn.icon_widget = new Image.from_resource("/com/sqlnotebook/sqlnotebook-gui/note_add_20.png");
+            _add_console_btn.icon_widget = new Image.from_resource("/com/sqlnotebook/sqlnotebook-gui/console_add_20.png");
+            _add_script_btn.icon_widget = new Image.from_resource("/com/sqlnotebook/sqlnotebook-gui/script_add_20.png");
+            
+            _toolbar.set_style(ToolbarStyle.BOTH);
         }
     }
 }
