@@ -12,6 +12,7 @@ bin-windows-release/
 obj-windows-release/
 meson.build
 *.ui~
+*.ui#
 *.DS_Store
 *.vala.uncrustify
 run.sh

@@ -173,6 +173,7 @@ sqlnotebookgui_deps = [
     windows_dnsapi_dep,
     windows_iphlpapi_dep,
     gtk_dep,
+    posix_dep,
     libsqlnotebook_dep
 ]
 

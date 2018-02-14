@@ -9,8 +9,11 @@ mkdir -p $OBJDIR
 
 python3 build/generate-meson.py > meson.build
 chown --reference=.gitignore meson.build
-ext/meson/meson.py --buildtype $1 $OBJDIR/
-ninja -C $OBJDIR/
+
+# https://unix.stackexchange.com/a/4529
+# the perl snippet below strips ansi escape codes.  doing this because geany doesn't seem to like the escape codes.
+ext/meson/meson.py --buildtype $1 $OBJDIR/ | perl -pe 's/\e\[?.*?[\@-~]//g'
+ninja -C $OBJDIR/ | perl -pe 's/\e\[?.*?[\@-~]//g'
 
 cp -f $OBJDIR/libsqlnotebook.so $BINDIR/
 cp -f $OBJDIR/sqlnotebook $BINDIR/

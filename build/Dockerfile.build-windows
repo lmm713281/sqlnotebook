@@ -64,7 +64,7 @@ RUN cd /usr/x86_64-w64-mingw32/ && curl -L http://repo.msys2.org/mingw/x86_64/mi
 RUN cd /usr/x86_64-w64-mingw32/ && curl -L http://repo.msys2.org/mingw/x86_64/mingw-w64-x86_64-shared-mime-info-1.9-1-any.pkg.tar.xz | unxz | tar x
 RUN cd /usr/x86_64-w64-mingw32/ && curl -L http://repo.msys2.org/mingw/x86_64/mingw-w64-x86_64-gtk3-3.22.26-1-any.pkg.tar.xz | unxz | tar x
 RUN cd /usr/x86_64-w64-mingw32/ && curl -L http://repo.msys2.org/mingw/x86_64/mingw-w64-x86_64-libgee-0.20.0-2-any.pkg.tar.xz | unxz | tar x
-
+RUN cd /usr/x86_64-w64-mingw32/ && curl -L http://repo.msys2.org/mingw/x86_64/mingw-w64-x86_64-libzip-1.3.0-1-any.pkg.tar.xz | unxz | tar x
 RUN cd /usr/x86_64-w64-mingw32/ && cp -R mingw64/* ./ && rm -rf mingw64/
 RUN ln -s /usr/x86_64-w64-mingw32/ /mingw64
 

@@ -21,7 +21,7 @@ all: linux-debug
 clean:
 	rm -rf obj-linux-debug bin-linux-debug obj-windows-debug bin-windows-debug obj-mac-debug bin-mac-debug
 	rm -rf obj-linux-release bin-linux-release obj-windows-release bin-windows-release obj-mac-release bin-mac-release
-	rm -f meson.build
+	rm -f meson.build run.sh
 	find src -name "*.vala.uncrustify" -delete
 
 .PHONY: run
@@ -75,6 +75,6 @@ internal-doctoc:
 internal-docker-build:
 	-rm -rf obj-$(PLATFORM)-$(BUILDTYPE)/meson-*
 	docker build -q -t sqlnotebook-build-$(PLATFORM) -f build/Dockerfile.build-$(PLATFORM) .
-	docker run -i --rm -t -v "$(CURDIR)":/source sqlnotebook-build-$(PLATFORM) /bin/bash /source/build/build-$(PLATFORM).sh $(BUILDTYPE)
+	docker run --rm -t -v "$(CURDIR)":/source sqlnotebook-build-$(PLATFORM) /bin/bash /source/build/build-$(PLATFORM).sh $(BUILDTYPE)
 	echo "bin-$(PLATFORM)-$(BUILDTYPE)/sqlnotebook-gui" > run.sh
 	chmod +x run.sh

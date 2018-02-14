@@ -26,39 +26,73 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
-                      <object class="GtkImageMenuItem">
-                        <property name="label">_New</property>
+                      <object class="GtkMenuItem" id="_new_mnu">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">_New</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">False</property>
+                        <signal name="activate" handler="new_mnu_activate" swapped="no"/>
+                        <accelerator key="n" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkImageMenuItem">
-                        <property name="label">gtk-open</property>
+                      <object class="GtkMenuItem" id="_open_mnu">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">_Open...</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
+                        <signal name="activate" handler="open_mnu_activate" swapped="no"/>
+                        <accelerator key="o" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkImageMenuItem">
-                        <property name="label">gtk-save</property>
+                      <object class="GtkMenuItem" id="_save_mnu">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">_Save</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
+                        <accelerator key="s" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkImageMenuItem">
-                        <property name="label">gtk-save-as</property>
+                      <object class="GtkMenuItem" id="_save_as_mnu">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Save _as...</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparatorMenuItem">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="_add_note_mnu">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Add note</property>
+                        <property name="use_underline">True</property>
+                        <accelerator key="n" signal="activate" modifiers="GDK_SHIFT_MASK | GDK_CONTROL_MASK"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="_add_console_mnu">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Add console</property>
+                        <property name="use_underline">True</property>
+                        <accelerator key="c" signal="activate" modifiers="GDK_SHIFT_MASK | GDK_CONTROL_MASK"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="_add_script_mnu">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Add script</property>
+                        <property name="use_underline">True</property>
+                        <accelerator key="s" signal="activate" modifiers="GDK_SHIFT_MASK | GDK_CONTROL_MASK"/>
                       </object>
                     </child>
                     <child>
@@ -154,30 +188,6 @@
           </packing>
         </child>
         <child>
-          <object class="GtkStatusbar" id="_status_bar">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="margin_start">10</property>
-            <property name="margin_end">10</property>
-            <property name="spacing">2</property>
-            <child>
-              <object class="GtkSpinner">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="left_attach">0</property>
-            <property name="top_attach">3</property>
-          </packing>
-        </child>
-        <child>
           <object class="GtkToolbar" id="_toolbar">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
@@ -185,8 +195,10 @@
               <object class="GtkToolButton" id="_new_notebook_btn">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="tooltip_text" translatable="yes">Create a new notebook</property>
                 <property name="label" translatable="yes">New</property>
                 <property name="use_underline">True</property>
+                <signal name="clicked" handler="new_notebook_btn_clicked" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -197,8 +209,10 @@
               <object class="GtkToolButton" id="_open_notebook_btn">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="tooltip_text" translatable="yes">Open a saved notebook file</property>
                 <property name="label" translatable="yes">Open</property>
                 <property name="use_underline">True</property>
+                <signal name="clicked" handler="open_notebook_btn_clicked" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -209,6 +223,7 @@
               <object class="GtkToolButton" id="_save_notebook_btn">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="tooltip_text" translatable="yes">Save the notebook file</property>
                 <property name="label" translatable="yes">Save</property>
                 <property name="use_underline">True</property>
               </object>
@@ -221,6 +236,9 @@
               <object class="GtkSeparatorToolItem">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <style>
+                  <class name="toolbar_separator"/>
+                </style>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -231,6 +249,7 @@
               <object class="GtkToolButton" id="_add_note_btn">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="tooltip_text" translatable="yes">Add a new note</property>
                 <property name="label" translatable="yes">Note</property>
                 <property name="use_underline">True</property>
               </object>
@@ -243,6 +262,7 @@
               <object class="GtkToolButton" id="_add_console_btn">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="tooltip_text" translatable="yes">Add a new console</property>
                 <property name="label" translatable="yes">Console</property>
                 <property name="use_underline">True</property>
               </object>
@@ -255,12 +275,33 @@
               <object class="GtkToolButton" id="_add_script_btn">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="tooltip_text" translatable="yes">Add a new script</property>
                 <property name="label" translatable="yes">Script</property>
                 <property name="use_underline">True</property>
               </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolItem">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="homogeneous">False</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolItem" id="_search_tool_item">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">False</property>
               </packing>
             </child>
           </object>
@@ -275,45 +316,15 @@
             <property name="can_focus">True</property>
             <property name="hexpand">True</property>
             <property name="vexpand">True</property>
+            <property name="position">250</property>
+            <property name="position_set">True</property>
             <child>
-              <object class="GtkGrid">
+              <object class="GtkTreeView">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <child>
-                  <object class="GtkSearchBar">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="search_mode_enabled">True</property>
-                    <child>
-                      <object class="GtkSearchEntry">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="caps_lock_warning">False</property>
-                        <property name="primary_icon_name">edit-find-symbolic</property>
-                        <property name="primary_icon_activatable">False</property>
-                        <property name="primary_icon_sensitive">False</property>
-                        <property name="placeholder_text" translatable="yes">Search</property>
-                      </object>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkTreeView">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="model">contents_tree_store</property>
-                    <child internal-child="selection">
-                      <object class="GtkTreeSelection"/>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">1</property>
-                  </packing>
+                <property name="can_focus">True</property>
+                <property name="model">contents_tree_store</property>
+                <child internal-child="selection">
+                  <object class="GtkTreeSelection"/>
                 </child>
               </object>
               <packing>
@@ -325,6 +336,7 @@
               <object class="GtkNotebook">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="show_border">False</property>
               </object>
               <packing>
                 <property name="resize">True</property>

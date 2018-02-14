@@ -11,5 +11,6 @@
     <file alias="script_add_20.png">../../../art/script_add_20.png</file>
     <file alias="console_20.png">../../../art/console_20.png</file>
     <file alias="console_add_20.png">../../../art/console_add_20.png</file>
+    <file alias="sqlnotebook_48.png">../../../art/sqlnotebook_48.png</file>
   </gresource>
 </gresources>
