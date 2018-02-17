@@ -4,7 +4,7 @@
   <requires lib="gtk+" version="3.20"/>
   <template class="SqlNotebookGuiAboutDialog" parent="GtkDialog">
     <property name="can_focus">False</property>
-    <property name="border_width">7</property>
+    <property name="border_width">11</property>
     <property name="title" translatable="yes">About SQL Notebook</property>
     <property name="window_position">center-on-parent</property>
     <property name="type_hint">dialog</property>

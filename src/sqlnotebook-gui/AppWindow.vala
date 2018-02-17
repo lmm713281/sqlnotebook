@@ -23,12 +23,6 @@ namespace SqlNotebook.Gui {
     public class AppWindow : ApplicationWindow {
         private Gtk.Application _application;
 
-        [GtkChild] private ToolButton _new_notebook_btn;
-        [GtkChild] private ToolButton _open_notebook_btn;
-        [GtkChild] private ToolButton _save_notebook_btn;
-        [GtkChild] private ToolButton _add_note_btn;
-        [GtkChild] private ToolButton _add_console_btn;
-        [GtkChild] private ToolButton _add_script_btn;
         [GtkChild] private ToolItem _search_tool_item;
 
         public AppWindow(Gtk.Application application) {
@@ -46,23 +40,18 @@ namespace SqlNotebook.Gui {
             } catch (Error e) {
                 assert(false);
             }
-
-            _new_notebook_btn.icon_widget = new Image.from_resource("/com/sqlnotebook/sqlnotebook-gui/new_notebook_20.png");
-            _open_notebook_btn.icon_widget = new Image.from_resource("/com/sqlnotebook/sqlnotebook-gui/open_notebook_20.png");
-            _save_notebook_btn.icon_widget = new Image.from_resource("/com/sqlnotebook/sqlnotebook-gui/save_notebook_20.png");
-            _add_note_btn.icon_widget = new Image.from_resource("/com/sqlnotebook/sqlnotebook-gui/note_add_20.png");
-            _add_console_btn.icon_widget = new Image.from_resource("/com/sqlnotebook/sqlnotebook-gui/console_add_20.png");
-            _add_script_btn.icon_widget = new Image.from_resource("/com/sqlnotebook/sqlnotebook-gui/script_add_20.png");
-
+            
+            var search_entry = new Entry() {
+                placeholder_text = "Search Help"
+            };
+            
             try {
-                var search_entry = new Entry() {
-                    placeholder_text = "Search Help",
-                    primary_icon_pixbuf = new Pixbuf.from_resource("/com/sqlnotebook/sqlnotebook-gui/search_20.png")
-                };
-                _search_tool_item.add(search_entry);
+                search_entry.primary_icon_pixbuf = new Pixbuf.from_resource("/com/sqlnotebook/sqlnotebook-gui/search_20.png");
             } catch (Error e) {
                 assert(false);
             }
+            
+            _search_tool_item.add(search_entry);
         }
 
         [GtkCallback]
@@ -99,15 +88,16 @@ namespace SqlNotebook.Gui {
         }
 
         private void open_existing_notebook_window() {
-            var w = new FileChooserNative(
+            var w = new FileChooserDialog(
                     /* title */ "Open Notebook",
                     /* parent */ this,
                     /* action */ FileChooserAction.OPEN,
-                    /* accept_label */ "Open",
-                    /* cancel_label */ "Cancel");
+                    /* accept_label */ "Open", ResponseType.ACCEPT,
+                    /* cancel_label */ "Cancel", ResponseType.CANCEL);
             w.set_modal(true);
             w.set_transient_for(this);
             w.run();
+            w.close();
         }
     }
 }

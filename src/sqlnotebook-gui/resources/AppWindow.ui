@@ -2,6 +2,36 @@
 <!-- Generated with glade 3.20.0 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
+  <object class="GtkImage" id="_add_console_img">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="resource">/com/sqlnotebook/sqlnotebook-gui/console_add_20.png</property>
+  </object>
+  <object class="GtkImage" id="_add_note_img">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="resource">/com/sqlnotebook/sqlnotebook-gui/note_add_20.png</property>
+  </object>
+  <object class="GtkImage" id="_add_script_img">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="resource">/com/sqlnotebook/sqlnotebook-gui/script_add_20.png</property>
+  </object>
+  <object class="GtkImage" id="_new_notebook_img">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="resource">/com/sqlnotebook/sqlnotebook-gui/new_notebook_20.png</property>
+  </object>
+  <object class="GtkImage" id="_open_notebook_img">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="resource">/com/sqlnotebook/sqlnotebook-gui/open_notebook_20.png</property>
+  </object>
+  <object class="GtkImage" id="_save_notebook_img">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="resource">/com/sqlnotebook/sqlnotebook-gui/save_notebook_20.png</property>
+  </object>
   <object class="GtkListStore" id="contents_tree_store"/>
   <template class="SqlNotebookGuiAppWindow" parent="GtkApplicationWindow">
     <property name="can_focus">False</property>
@@ -199,6 +229,7 @@
                 <property name="tooltip_text" translatable="yes">Create a new notebook</property>
                 <property name="label" translatable="yes">New</property>
                 <property name="use_underline">True</property>
+                <property name="icon_widget">_new_notebook_img</property>
                 <signal name="clicked" handler="new_notebook_btn_clicked" swapped="no"/>
               </object>
               <packing>
@@ -213,6 +244,7 @@
                 <property name="tooltip_text" translatable="yes">Open a saved notebook file</property>
                 <property name="label" translatable="yes">Open</property>
                 <property name="use_underline">True</property>
+                <property name="icon_widget">_open_notebook_img</property>
                 <signal name="clicked" handler="open_notebook_btn_clicked" swapped="no"/>
               </object>
               <packing>
@@ -227,6 +259,7 @@
                 <property name="tooltip_text" translatable="yes">Save the notebook file</property>
                 <property name="label" translatable="yes">Save</property>
                 <property name="use_underline">True</property>
+                <property name="icon_widget">_save_notebook_img</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -253,6 +286,7 @@
                 <property name="tooltip_text" translatable="yes">Add a new note</property>
                 <property name="label" translatable="yes">Note</property>
                 <property name="use_underline">True</property>
+                <property name="icon_widget">_add_note_img</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -266,6 +300,7 @@
                 <property name="tooltip_text" translatable="yes">Add a new console</property>
                 <property name="label" translatable="yes">Console</property>
                 <property name="use_underline">True</property>
+                <property name="icon_widget">_add_console_img</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -279,6 +314,7 @@
                 <property name="tooltip_text" translatable="yes">Add a new script</property>
                 <property name="label" translatable="yes">Script</property>
                 <property name="use_underline">True</property>
+                <property name="icon_widget">_add_script_img</property>
               </object>
               <packing>
                 <property name="expand">False</property>

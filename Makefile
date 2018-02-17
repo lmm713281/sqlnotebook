@@ -69,6 +69,7 @@ license:
 .PHONY: internal-docker-build
 internal-docker-build:
 	-rm -rf obj-$(PLATFORM)-$(BUILDTYPE)/meson-*
+	-rm -f obj-$(PLATFORM)-$(BUILDTYPE)/resources.*
 	echo "bin-$(PLATFORM)-$(BUILDTYPE)/sqlnotebook-gui" > run.sh
 	docker build -q -t sqlnotebook-build-$(PLATFORM) -f build/Dockerfile.build-$(PLATFORM) .
 	docker run --rm -t -v "$(CURDIR)":/source sqlnotebook-build-$(PLATFORM) /bin/bash /source/build/build-$(PLATFORM).sh $(BUILDTYPE)

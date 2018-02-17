@@ -52,9 +52,17 @@ cp -f /usr/x86_64-w64-mingw32/bin/libgee-0.8-2.dll $BINDIR/
 cp -f /usr/lib/gcc/x86_64-w64-mingw32/6.3-win32/libstdc++-6.dll $BINDIR/
 cp -f /usr/x86_64-w64-mingw32/bin/libjansson-4.dll $BINDIR/
 cp -f /usr/x86_64-w64-mingw32/bin/libzip-5.dll $BINDIR/
+
+mkdir -p $BINDIR/schemas
+cp -rf /usr/share/glib-2.0/schemas/* $BINDIR/schemas/
+
 cp -f $OBJDIR/libsqlnotebook.dll $BINDIR/
 cp -f $OBJDIR/sqlnotebook.exe $BINDIR/
 cp -f $OBJDIR/sqlnotebook-gui.exe $BINDIR/
-x86_64-w64-mingw32-strip $BINDIR/*.dll $BINDIR/*.exe
+
+if [ $1 == "release" ]
+then
+    x86_64-w64-mingw32-strip $BINDIR/*.dll $BINDIR/*.exe
+fi
 
 chown --reference=.gitignore --recursive $BINDIR/ $OBJDIR/
