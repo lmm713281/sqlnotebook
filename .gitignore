@@ -16,3 +16,4 @@ meson.build
 *.DS_Store
 *.vala.uncrustify
 run.sh
+

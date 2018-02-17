@@ -16,6 +16,7 @@
 
 using Gdk;
 using Gtk;
+using SqlNotebook.Utils;
 
 namespace SqlNotebook.Gui {
     [GtkTemplate(ui = "/com/sqlnotebook/sqlnotebook-gui/AppWindow.ui")]
@@ -40,7 +41,12 @@ namespace SqlNotebook.Gui {
             // this sets the application name in the GNOME shell top bar
             set_wmclass("SQL Notebook", "SQL Notebook");
 
-            icon = new Pixbuf.from_resource("/com/sqlnotebook/sqlnotebook-gui/sqlnotebook_48.png");
+            try {
+                icon = new Pixbuf.from_resource("/com/sqlnotebook/sqlnotebook-gui/sqlnotebook_48.png");
+            } catch (Error e) {
+                assert(false);
+            }
+
             _new_notebook_btn.icon_widget = new Image.from_resource("/com/sqlnotebook/sqlnotebook-gui/new_notebook_20.png");
             _open_notebook_btn.icon_widget = new Image.from_resource("/com/sqlnotebook/sqlnotebook-gui/open_notebook_20.png");
             _save_notebook_btn.icon_widget = new Image.from_resource("/com/sqlnotebook/sqlnotebook-gui/save_notebook_20.png");
@@ -64,11 +70,6 @@ namespace SqlNotebook.Gui {
             open_new_notebook_window();
         }
 
-        private void open_new_notebook_window() {
-            var w = new AppWindow(_application);
-            w.show_all();
-        }
-
         [GtkCallback]
         private void open_mnu_activate() {
             open_existing_notebook_window();
@@ -79,6 +80,24 @@ namespace SqlNotebook.Gui {
             open_existing_notebook_window();
         }
 
+        [GtkCallback]
+        private void about_mnu_activate() {
+            show_about_dialog(this,
+                    program_name: "SQL Notebook",
+                    copyright: "Copyright © 2018 Brian Luft",
+                    website: "https://sqlnotebook.com",
+                    website_label: "Visit the SQL Notebook website",
+                    logo: icon,
+                    license: ResourceUtil.get_string("/com/sqlnotebook/sqlnotebook-gui/license.txt"),
+                    default_width: 700,
+                    default_height: 500);
+        }
+
+        private void open_new_notebook_window() {
+            var w = new AppWindow(_application);
+            w.show_all();
+        }
+
         private void open_existing_notebook_window() {
             var w = new FileChooserNative(
                     /* title */ "Open Notebook",
@@ -86,6 +105,8 @@ namespace SqlNotebook.Gui {
                     /* action */ FileChooserAction.OPEN,
                     /* accept_label */ "Open",
                     /* cancel_label */ "Cancel");
+            w.set_modal(true);
+            w.set_transient_for(this);
             w.run();
         }
     }

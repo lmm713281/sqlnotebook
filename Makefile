@@ -61,20 +61,15 @@ format:
 test: linux
 	obj-linux/tests --verbose
 
-.PHONY: doc
-doc: internal-doctoc
-
-# --- internal commands below ---
-	
-.PHONY: internal-doctoc
-internal-doctoc:
+.PHONY: license
+license:
 	docker build -q -t sqlnotebook-doctoc -f build/Dockerfile.doctoc .
-	docker run --rm -t -v "$(CURDIR)":/source sqlnotebook-doctoc /bin/bash /source/build/doctoc.sh
+	docker run --rm -t -v "$(CURDIR)":/source sqlnotebook-doctoc /bin/bash /source/build/generate-license.sh
 
 .PHONY: internal-docker-build
 internal-docker-build:
 	-rm -rf obj-$(PLATFORM)-$(BUILDTYPE)/meson-*
+	echo "bin-$(PLATFORM)-$(BUILDTYPE)/sqlnotebook-gui" > run.sh
 	docker build -q -t sqlnotebook-build-$(PLATFORM) -f build/Dockerfile.build-$(PLATFORM) .
 	docker run --rm -t -v "$(CURDIR)":/source sqlnotebook-build-$(PLATFORM) /bin/bash /source/build/build-$(PLATFORM).sh $(BUILDTYPE)
-	echo "bin-$(PLATFORM)-$(BUILDTYPE)/sqlnotebook-gui" > run.sh
 	chmod +x run.sh

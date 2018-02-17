@@ -50,6 +50,8 @@ cp -f /usr/x86_64-w64-mingw32/bin/libharfbuzz-icu-0.dll $BINDIR/
 cp -f /usr/x86_64-w64-mingw32/bin/libgraphite2.dll $BINDIR/
 cp -f /usr/x86_64-w64-mingw32/bin/libgee-0.8-2.dll $BINDIR/
 cp -f /usr/lib/gcc/x86_64-w64-mingw32/6.3-win32/libstdc++-6.dll $BINDIR/
+cp -f /usr/x86_64-w64-mingw32/bin/libjansson-4.dll $BINDIR/
+cp -f /usr/x86_64-w64-mingw32/bin/libzip-5.dll $BINDIR/
 cp -f $OBJDIR/libsqlnotebook.dll $BINDIR/
 cp -f $OBJDIR/sqlnotebook.exe $BINDIR/
 cp -f $OBJDIR/sqlnotebook-gui.exe $BINDIR/

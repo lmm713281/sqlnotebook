@@ -2,6 +2,7 @@
 <gresources>
   <gresource prefix="/com/sqlnotebook/sqlnotebook-gui">
     <file compressed="true">AppWindow.ui</file>
+    <file compressed="true">license.txt</file>
     <file alias="new_notebook_20.png">../../../art/new_notebook_20.png</file>
     <file alias="open_notebook_20.png">../../../art/open_notebook_20.png</file>
     <file alias="save_notebook_20.png">../../../art/save_notebook_20.png</file>

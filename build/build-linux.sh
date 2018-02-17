@@ -2,9 +2,13 @@
 
 export BINDIR=/source/bin-linux-$1
 export OBJDIR=/source/obj-linux-$1
+export PKGROOT=$BINDIR/sqlnotebook
+export PKGDIR=$PKGROOT/opt/sqlnotebook
 
 cd /source
-mkdir -p $BINDIR
+mkdir -p $PKGDIR
+mkdir -p $PKGDIR/bin
+mkdir -p $PKGDIR/lib
 mkdir -p $OBJDIR
 
 python3 build/generate-meson.py > meson.build
@@ -12,15 +16,98 @@ chown --reference=.gitignore meson.build
 
 # https://unix.stackexchange.com/a/4529
 # the perl snippet below strips ansi escape codes.  doing this because geany doesn't seem to like the escape codes.
-ext/meson/meson.py --buildtype $1 $OBJDIR/ | perl -pe 's/\e\[?.*?[\@-~]//g'
-ninja -C $OBJDIR/ | perl -pe 's/\e\[?.*?[\@-~]//g'
+# the grep snippets removes noisy messages
+ext/meson/meson.py --buildtype $1 $OBJDIR/ | \
+    perl -pe 's/\e\[?.*?[\@-~]//g'
+    
+ninja -C $OBJDIR/ | \
+    perl -pe 's/\e\[?.*?[\@-~]//g' | \
+    grep -v '\] Compiling ' | \
+    grep -v '\] Linking ' | \
+    grep -v '\] Generating ' 
 
-cp -f $OBJDIR/libsqlnotebook.so $BINDIR/
-cp -f $OBJDIR/sqlnotebook $BINDIR/
-cp -f $OBJDIR/sqlnotebook-gui $BINDIR/
+cp -f $OBJDIR/libsqlnotebook.so $PKGDIR/lib/
+cp -f $OBJDIR/sqlnotebook $PKGDIR/bin/sqlnotebook.bin
+cp -f $OBJDIR/sqlnotebook-gui $PKGDIR/bin/sqlnotebook-gui.bin
 
-strip $BINDIR/libsqlnotebook.so
-strip $BINDIR/sqlnotebook
-strip $BINDIR/sqlnotebook-gui
+# generate these copy statements by uncommenting the command below and then running a build
+#LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH" \
+#    ldd bin-linux-debug/sqlnotebook-gui | \
+#    awk '{ print "cp -f " $3 " $PKGDIR/" }' | \
+#    grep -v libX | \
+#    grep -v libwayland | \
+#    grep -v "^cp -f /lib/" | \
+#    grep -v "0x0" | \
+#    grep -v "  " | \
+#    sort
+cp -f /usr/lib/x86_64-linux-gnu/libatk-1.0.so.0 $PKGDIR/lib/
+cp -f /usr/lib/x86_64-linux-gnu/libatk-bridge-2.0.so.0 $PKGDIR/lib/
+cp -f /usr/lib/x86_64-linux-gnu/libatspi.so.0 $PKGDIR/lib/
+cp -f /usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.62.0 $PKGDIR/lib/
+cp -f /usr/lib/x86_64-linux-gnu/libboost_system.so.1.62.0 $PKGDIR/lib/
+cp -f /usr/lib/x86_64-linux-gnu/libcairo-gobject.so.2 $PKGDIR/lib/
+cp -f /usr/lib/x86_64-linux-gnu/libcairo.so.2 $PKGDIR/lib/
+cp -f /usr/lib/x86_64-linux-gnu/libcapnp-0.5.3.so $PKGDIR/lib/
+cp -f /usr/lib/x86_64-linux-gnu/libdatrie.so.1 $PKGDIR/lib/
+cp -f /usr/lib/x86_64-linux-gnu/libepoxy.so.0 $PKGDIR/lib/
+cp -f /usr/lib/x86_64-linux-gnu/libffi.so.6 $PKGDIR/lib/
+cp -f /usr/lib/x86_64-linux-gnu/libfontconfig.so.1 $PKGDIR/lib/
+cp -f /usr/lib/x86_64-linux-gnu/libfreetype.so.6 $PKGDIR/lib/
+cp -f /usr/lib/x86_64-linux-gnu/libgdk-3.so.0 $PKGDIR/lib/
+cp -f /usr/lib/x86_64-linux-gnu/libgdk_pixbuf-2.0.so.0 $PKGDIR/lib/
+cp -f /usr/lib/x86_64-linux-gnu/libgee-0.8.so.2 $PKGDIR/lib/
+cp -f /usr/lib/x86_64-linux-gnu/libgio-2.0.so.0 $PKGDIR/lib/
+cp -f /usr/lib/x86_64-linux-gnu/libgmodule-2.0.so.0 $PKGDIR/lib/
+cp -f /usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0 $PKGDIR/lib/
+cp -f /usr/lib/x86_64-linux-gnu/libgraphite2.so.3 $PKGDIR/lib/
+cp -f /usr/lib/x86_64-linux-gnu/libgtk-3.so.0 $PKGDIR/lib/
+cp -f /usr/lib/x86_64-linux-gnu/libharfbuzz.so.0 $PKGDIR/lib/
+cp -f /usr/lib/x86_64-linux-gnu/libkj-0.5.3.so $PKGDIR/lib/
+cp -f /usr/lib/x86_64-linux-gnu/liblz4.so.1 $PKGDIR/lib/
+cp -f /usr/lib/x86_64-linux-gnu/libmirclient.so.9 $PKGDIR/lib/
+cp -f /usr/lib/x86_64-linux-gnu/libmircommon.so.7 $PKGDIR/lib/
+cp -f /usr/lib/x86_64-linux-gnu/libmircore.so.1 $PKGDIR/lib/
+cp -f /usr/lib/x86_64-linux-gnu/libmirprotobuf.so.3 $PKGDIR/lib/
+cp -f /usr/lib/x86_64-linux-gnu/libpango-1.0.so.0 $PKGDIR/lib/
+cp -f /usr/lib/x86_64-linux-gnu/libpangocairo-1.0.so.0 $PKGDIR/lib/
+cp -f /usr/lib/x86_64-linux-gnu/libpangoft2-1.0.so.0 $PKGDIR/lib/
+cp -f /usr/lib/x86_64-linux-gnu/libpixman-1.so.0 $PKGDIR/lib/
+cp -f /usr/lib/x86_64-linux-gnu/libpng16.so.16 $PKGDIR/lib/
+cp -f /usr/lib/x86_64-linux-gnu/libprotobuf-lite.so.10 $PKGDIR/lib/
+cp -f /usr/lib/x86_64-linux-gnu/libstdc++.so.6 $PKGDIR/lib/
+cp -f /usr/lib/x86_64-linux-gnu/libthai.so.0 $PKGDIR/lib/
+cp -f /usr/lib/x86_64-linux-gnu/libxcb-render.so.0 $PKGDIR/lib/
+cp -f /usr/lib/x86_64-linux-gnu/libxcb-shm.so.0 $PKGDIR/lib/
+cp -f /usr/lib/x86_64-linux-gnu/libxcb.so.1 $PKGDIR/lib/
+cp -f /usr/lib/x86_64-linux-gnu/libxkbcommon.so.0 $PKGDIR/lib/
+cp -f /usr/lib/x86_64-linux-gnu/libzip.so.4 $PKGDIR/lib/
+cp -f /usr/local/lib/libjansson.so.4 $PKGDIR/lib/
+
+# swap in the launcher script
+cp -f build/sqlnotebook-gui-linux-launcher.sh $PKGDIR/sqlnotebook-gui
+chmod +x $PKGDIR/sqlnotebook-gui
+
+if [ $1 == "release" ]
+then
+    # set up desktop icon
+    mkdir -p $PKGROOT/usr/share/applications
+    mkdir -p $PKGROOT/usr/share/icons/hicolor/48x48/apps/
+    cp -f build/sqlnotebook-gui.desktop $PKGROOT/usr/share/applications/
+    cp -f art/sqlnotebook_256.png $PKGROOT/usr/share/icons/hicolor/48x48/apps/sqlnotebook-gui.png
+
+    # create .deb
+    mkdir -p $BINDIR/sqlnotebook/DEBIAN
+    cp -f build/linux-deb-control $BINDIR/sqlnotebook/DEBIAN/control
+    pushd $BINDIR
+    dpkg-deb --build sqlnotebook
+    popd
+
+    # create .tar.gz
+    pushd $PKGROOT/opt
+    tar zcf $BINDIR/sqlnotebook.tar.gz sqlnotebook/
+    popd
+fi
+
+echo $PKGDIR/sqlnotebook-gui > run.sh
 
 chown --reference=.gitignore --recursive $BINDIR/ $OBJDIR/
