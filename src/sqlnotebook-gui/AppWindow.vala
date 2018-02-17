@@ -54,10 +54,15 @@ namespace SqlNotebook.Gui {
             _add_console_btn.icon_widget = new Image.from_resource("/com/sqlnotebook/sqlnotebook-gui/console_add_20.png");
             _add_script_btn.icon_widget = new Image.from_resource("/com/sqlnotebook/sqlnotebook-gui/script_add_20.png");
 
-            var search_entry = new SearchEntry() {
-                placeholder_text = "Search Help"
-            };
-            _search_tool_item.add(search_entry);
+            try {
+                var search_entry = new Entry() {
+                    placeholder_text = "Search Help",
+                    primary_icon_pixbuf = new Pixbuf.from_resource("/com/sqlnotebook/sqlnotebook-gui/search_20.png")
+                };
+                _search_tool_item.add(search_entry);
+            } catch (Error e) {
+                assert(false);
+            }
         }
 
         [GtkCallback]
@@ -82,15 +87,10 @@ namespace SqlNotebook.Gui {
 
         [GtkCallback]
         private void about_mnu_activate() {
-            show_about_dialog(this,
-                    program_name: "SQL Notebook",
-                    copyright: "Copyright © 2018 Brian Luft",
-                    website: "https://sqlnotebook.com",
-                    website_label: "Visit the SQL Notebook website",
-                    logo: icon,
-                    license: ResourceUtil.get_string("/com/sqlnotebook/sqlnotebook-gui/license.txt"),
-                    default_width: 700,
-                    default_height: 500);
+            var dialog = new AboutDialog();
+            dialog.set_modal(true);
+            dialog.set_transient_for(this);
+            dialog.show_all();
         }
 
         private void open_new_notebook_window() {
