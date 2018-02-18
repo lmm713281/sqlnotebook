@@ -40,17 +40,17 @@ namespace SqlNotebook.Gui {
             } catch (Error e) {
                 assert(false);
             }
-            
+
             var search_entry = new Entry() {
                 placeholder_text = "Search Help"
             };
-            
+
             try {
                 search_entry.primary_icon_pixbuf = new Pixbuf.from_resource("/com/sqlnotebook/sqlnotebook-gui/search_20.png");
             } catch (Error e) {
                 assert(false);
             }
-            
+
             _search_tool_item.add(search_entry);
         }
 

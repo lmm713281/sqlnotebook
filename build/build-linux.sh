@@ -84,8 +84,10 @@ cp -f /usr/lib/x86_64-linux-gnu/libzip.so.4 $PKGDIR/lib/
 cp -f /usr/local/lib/libjansson.so.4 $PKGDIR/lib/
 
 # swap in the launcher script
-cp -f build/sqlnotebook-gui-linux-launcher.sh $PKGDIR/sqlnotebook-gui
+cp -f $OBJDIR/linux-launcher $PKGDIR/sqlnotebook-gui
 chmod +x $PKGDIR/sqlnotebook-gui
+cp -f $OBJDIR/linux-launcher $PKGDIR/sqlnotebook
+chmod +x $PKGDIR/sqlnotebook
 
 if [ $1 == "release" ]
 then

@@ -22,12 +22,12 @@ namespace SqlNotebook.Gui {
     [GtkTemplate(ui = "/com/sqlnotebook/sqlnotebook-gui/AboutDialog.ui")]
     public class AboutDialog : Dialog {
         [GtkChild] private TextView _license_txt;
-        
+
         public AboutDialog() {
             set_size_request(750, 500);
             _license_txt.buffer.text = ResourceUtil.get_string("/com/sqlnotebook/sqlnotebook-gui/license.txt");
         }
-        
+
         [GtkCallback]
         private void close_btn_clicked() {
             destroy();

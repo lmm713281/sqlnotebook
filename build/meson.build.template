@@ -49,20 +49,14 @@ add_global_arguments('--target-glib=2.55', language: 'vala')
 # libsqlite3 (static library)
 #
 
-libsqlite3_deps = [
-    linux_dl_dep,
-    m_dep,
-    threads_dep
-]
-
-libsqlite3_sources = [
-    'src/libsqlite3/sqlite3.c'
-]
-
 libsqlite3_a = static_library(
     'sqlite3',
-    libsqlite3_sources,
-    dependencies: libsqlite3_deps)
+    [ 'src/libsqlite3/sqlite3.c' ],
+    dependencies: [
+        linux_dl_dep,
+        m_dep,
+        threads_dep
+    ])
 
 libsqlite3_vapi = meson.get_compiler('vala').find_library(
     'sqlite3',
@@ -81,29 +75,8 @@ libsqlite3_dep = declare_dependency(
 # libsqlnotebook (shared library)
 #
 
-libsqlnotebook_deps = [
-    gio_dep,
-    glib_dep,
-    gobject_dep,
-    gmodule_dep,
-    gee_dep,
-    z_dep,
-    windows_ws2_32_dep,
-    windows_dnsapi_dep,
-    windows_iphlpapi_dep,
-    threads_dep,
-    posix_dep,
-    libsqlite3_dep,
-    jansson_dep,
-    homebrew_include_dep,
-    zip_dep
-]
-
-libsqlnotebook_sources = [ <sources-libsqlnotebook> ]
-
 libsqlnotebook_link_args = []
 libsqlnotebook_c_args = []
-
 if host_machine.system() == 'windows'
     libsqlnotebook_link_args += '-Wl,--export-all-symbols'
     libsqlnotebook_c_args += '-municode'
@@ -111,8 +84,24 @@ endif
 
 libsqlnotebook_so = shared_library(
     'sqlnotebook',
-    libsqlnotebook_sources,
-    dependencies: libsqlnotebook_deps,
+    [ <sources-libsqlnotebook> ],
+    dependencies: [
+        gio_dep,
+        glib_dep,
+        gobject_dep,
+        gmodule_dep,
+        gee_dep,
+        z_dep,
+        windows_ws2_32_dep,
+        windows_dnsapi_dep,
+        windows_iphlpapi_dep,
+        threads_dep,
+        posix_dep,
+        libsqlite3_dep,
+        jansson_dep,
+        homebrew_include_dep,
+        zip_dep
+    ],
     link_args: libsqlnotebook_link_args,
     c_args: libsqlnotebook_c_args)
 
@@ -124,101 +113,97 @@ libsqlnotebook_dep = declare_dependency(
 # sqlnotebook (executable)
 #
 
-sqlnotebook_deps = [
-    gio_dep,
-    glib_dep,
-    gobject_dep,
-    gmodule_dep,
-    gee_dep,
-    z_dep,
-    windows_ws2_32_dep,
-    windows_dnsapi_dep,
-    windows_iphlpapi_dep,
-    libsqlnotebook_dep
-]
-
-sqlnotebook_sources = [ <sources-sqlnotebook> ]
-
 sqlnotebook_c_args = []
-
 if host_machine.system() == 'windows'
     sqlnotebook_c_args += '-municode'
 endif
 
 executable(
     'sqlnotebook',
-    sqlnotebook_sources,
-    dependencies: sqlnotebook_deps,
+    [ <sources-sqlnotebook> ],
+    dependencies: [
+        gio_dep,
+        glib_dep,
+        gobject_dep,
+        gmodule_dep,
+        gee_dep,
+        z_dep,
+        windows_ws2_32_dep,
+        windows_dnsapi_dep,
+        windows_iphlpapi_dep,
+        libsqlnotebook_dep
+    ],
     c_args: sqlnotebook_c_args)
 
 #
 # sqlnotebook-gui (executable)
 #
 
-gui_resources_src = gnome.compile_resources(
-    'resources',
-    'src/sqlnotebook-gui/resources/gresource.xml',
-    source_dir: ['src/sqlnotebook-gui/resources/']
-)
-
-sqlnotebookgui_deps = [
-    gio_dep,
-    glib_dep,
-    gobject_dep,
-    gmodule_dep,
-    gee_dep,
-    z_dep,
-    windows_ws2_32_dep,
-    windows_dnsapi_dep,
-    windows_iphlpapi_dep,
-    gtk_dep,
-    posix_dep,
-    libsqlnotebook_dep
-]
-
-sqlnotebookgui_sources = [ <sources-sqlnotebook-gui>, gui_resources_src ]
-
 sqlnotebookgui_c_args = []
-
 if host_machine.system() == 'windows'
     sqlnotebookgui_c_args += '-municode'
 endif
 
 executable(
     'sqlnotebook-gui',
-    sqlnotebookgui_sources,
-    dependencies: sqlnotebookgui_deps,
+    [
+        <sources-sqlnotebook-gui>,
+        gnome.compile_resources(
+            'resources',
+            'src/sqlnotebook-gui/resources/gresource.xml',
+            source_dir: ['src/sqlnotebook-gui/resources/'])
+    ],
+    dependencies: [
+        gio_dep,
+        glib_dep,
+        gobject_dep,
+        gmodule_dep,
+        gee_dep,
+        z_dep,
+        windows_ws2_32_dep,
+        windows_dnsapi_dep,
+        windows_iphlpapi_dep,
+        gtk_dep,
+        posix_dep,
+        libsqlnotebook_dep
+    ],
     gui_app: true,
     vala_args: '--gresources=../src/sqlnotebook-gui/resources/gresource.xml',
     c_args: sqlnotebookgui_c_args)
 
 #
+# linux-launcher (executable)
+#
+
+if host_machine.system() == 'linux'
+    executable(
+        'linux-launcher',
+        [ <sources-linux-launcher> ],
+        dependencies: [])
+endif
+
+#
 # tests (executable)
 #
 
-tests_deps = [
-    gio_dep,
-    glib_dep,
-    gobject_dep,
-    gmodule_dep,
-    gee_dep,
-    z_dep,
-    windows_ws2_32_dep,
-    windows_dnsapi_dep,
-    windows_iphlpapi_dep,
-    libsqlnotebook_dep
-]
-
-tests_sources = [ <sources-tests> ]
-
 tests_c_args = []
-
 if host_machine.system() == 'windows'
     tests_c_args += '-municode'
 endif
 
 executable(
     'tests',
-    tests_sources,
-    dependencies: tests_deps,
+    [ <sources-tests> ],
+    dependencies: [
+        gio_dep,
+        glib_dep,
+        gobject_dep,
+        gmodule_dep,
+        gee_dep,
+        z_dep,
+        windows_ws2_32_dep,
+        windows_dnsapi_dep,
+        windows_iphlpapi_dep,
+        libsqlnotebook_dep
+    ],
     c_args: tests_c_args)
