@@ -46,10 +46,14 @@ windows-release:
 
 .PHONY: mac-debug
 mac-debug:
+	-rm -rf obj-$(PLATFORM)-$(BUILDTYPE)/meson-*
+	-rm -f obj-$(PLATFORM)-$(BUILDTYPE)/resources.*
 	BUILDTYPE=debug /bin/bash build/build-mac.sh
 
 .PHONY: mac-release
 mac-release:
+	-rm -rf obj-$(PLATFORM)-$(BUILDTYPE)/meson-*
+	-rm -f obj-$(PLATFORM)-$(BUILDTYPE)/resources.*
 	BUILDTYPE=release /bin/bash build/build-mac.sh
 
 .PHONY: format

@@ -1,15 +1,13 @@
 bin-linux-debug/
 obj-linux-debug/
-bin-mac-debug/
-obj-mac-debug/
 bin-windows-debug/
 obj-windows-debug/
 bin-linux-release/
 obj-linux-release/
-bin-mac-release/
-obj-mac-release/
 bin-windows-release/
 obj-windows-release/
+bin-mac/
+obj-mac/
 meson.build
 *.ui~
 *.ui#

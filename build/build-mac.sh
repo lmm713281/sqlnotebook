@@ -25,7 +25,7 @@ pushd obj-mac
 [[ ! -d homebrew ]] && git clone --depth 1 https://github.com/mxcl/homebrew.git
 export PATH=$(pwd)/homebrew/bin:$PATH
 brew update
-brew install xz vala python3 ninja gtk+3 libiconv pango
+brew install xz vala python3 ninja gtk+3 libiconv pango libgee jansson
 popd
 
 # gtk-mac-bundler
@@ -40,8 +40,8 @@ fi
 export PATH=~/.local/bin:$PATH
 
 python3 build/generate-meson.py > meson.build
-ext/meson/meson.py --buildtype $BUILDTYPE obj-mac/
-ninja -v -C obj-mac/
+ext/meson/meson.py --buildtype $1 obj-mac/
+ninja -C obj-mac/
 
 # sqlnotebook
 cp -f obj-mac/libsqlnotebook.dylib bin-mac/

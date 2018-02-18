@@ -32,8 +32,10 @@ threads_dep = dependency('threads')
 m_dep = meson.get_compiler('c').find_library('m', required: false)
 posix_dep = meson.get_compiler('vala').find_library('posix')
 zip_dep = meson.get_compiler('c').find_library('zip', required: true)
-
-jansson_dep = meson.get_compiler('c').find_library('jansson', required: true)
+jansson_dep = meson.get_compiler('c').find_library('jansson', required: true,
+    dirs: [ <homebrew-lib-path> ])
+homebrew_include_dep = declare_dependency(
+	include_directories: include_directories( <homebrew-include-path> ))
 
 # windows-only deps
 windows_ws2_32_dep = meson.get_compiler('c').find_library('ws2_32', required: false)
@@ -93,6 +95,7 @@ libsqlnotebook_deps = [
     posix_dep,
     libsqlite3_dep,
     jansson_dep,
+    homebrew_include_dep,
     zip_dep
 ]
 
@@ -104,10 +107,6 @@ libsqlnotebook_c_args = []
 if host_machine.system() == 'windows'
     libsqlnotebook_link_args += '-Wl,--export-all-symbols'
     libsqlnotebook_c_args += '-municode'
-endif
-
-if host_machine.system() == 'darwin'
-    libsqlnotebook_link_args += '-L/usr/x86_64-apple-darwin14/lib/'
 endif
 
 libsqlnotebook_so = shared_library(
