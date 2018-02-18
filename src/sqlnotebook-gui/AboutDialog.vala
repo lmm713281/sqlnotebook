@@ -24,13 +24,40 @@ namespace SqlNotebook.Gui {
         [GtkChild] private TextView _license_txt;
 
         public AboutDialog() {
-            set_size_request(750, 500);
+            set_size_request(750, 600);
             _license_txt.buffer.text = ResourceUtil.get_string("/com/sqlnotebook/sqlnotebook-gui/license.txt");
         }
 
         [GtkCallback]
         private void close_btn_clicked() {
             destroy();
+        }
+
+        [GtkCallback]
+        private void website_btn_clicked() {
+            try {
+                Gtk.show_uri_on_window(this, "https://sqlnotebook.com", Gdk.CURRENT_TIME);
+            } catch (Error e) {
+                show_browser_error();
+            }
+        }
+
+        [GtkCallback]
+        private void github_btn_clicked() {
+            try {
+                Gtk.show_uri_on_window(this, "https://github.com/electroly/sqlnotebook", Gdk.CURRENT_TIME);
+            } catch (Error e) {
+                show_browser_error();
+            }
+        }
+
+        private void show_browser_error() {
+            var d = new MessageDialog(this, DialogFlags.MODAL, MessageType.WARNING, ButtonsType.OK,
+                    "Unable to open an external browser.");
+            d.response.connect(response_id => {
+                d.destroy();
+            });
+            d.show();
         }
     }
 }
