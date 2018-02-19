@@ -32,7 +32,6 @@
     <property name="can_focus">False</property>
     <property name="resource">/com/sqlnotebook/sqlnotebook-gui/save_notebook_20.png</property>
   </object>
-  <object class="GtkListStore" id="contents_tree_store"/>
   <template class="SqlNotebookGuiAppWindow" parent="GtkApplicationWindow">
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">SQL Notebook</property>
@@ -359,7 +358,6 @@
               <object class="GtkTreeView">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="model">contents_tree_store</property>
                 <child internal-child="selection">
                   <object class="GtkTreeSelection"/>
                 </child>

@@ -15,24 +15,12 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifdef _WIN32
-    #include <windows.h>
-    #ifndef UNICODE
-        #error Must be built with Unicode enabled.
-    #endif
-#else
-    #include <errno.h>
-    #include <sys/types.h>
-    #include <sys/stat.h>
-    #include <signal.h>
-#endif
-
-#include "NativeUtil.h"
+#include "NativeCommon.h"
 
 #ifdef _WIN32
-static LPTSTR utf8_to_utf16(const char* utf8) {
+LPWSTR utf8_to_utf16(const char* utf8) {
     int utf16_length = 0;
-    WCHAR* utf16 = NULL;
+    LPWSTR utf16 = NULL;
 
     utf16_length = MultiByteToWideChar(
             /* CodePage */ CP_UTF8,
@@ -55,47 +43,33 @@ static LPTSTR utf8_to_utf16(const char* utf8) {
     return utf16;
 }
 
-#endif
+char* utf16_to_utf8(LPCWSTR utf16) {
+    int utf8_length = 0;
+    char* utf8 = NULL;
 
-/* 1 = success, 0 = failure */
-int create_directory(const char* path) {
-#ifdef _WIN32
-    WCHAR* utf16_path = NULL;
-    BOOL create_directory_result;
+    utf8_length = WideCharToMultiByte(
+            /* CodePage */ CP_UTF8,
+            /* dwFlags */ 0,
+            /* lpWideCharStr */ utf16,
+            /* cchWideChar */ -1,
+            /* lpMultiByteStr */ NULL,
+            /* cbMultiByte */ 0,
+            /* lpDefaultChar */ NULL,
+            /* lpUsedDefaultChar*/ NULL);
 
-    utf16_path = utf8_to_utf16(path);
-    create_directory_result = CreateDirectory(utf16_path, NULL);
-    free(utf16_path);
+    utf8 = calloc(utf8_length + 1, sizeof(char));
 
-    return create_directory_result == 0 ? 0 : 1;
-#else
-    mode_t mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH;
+    WideCharToMultiByte(
+            /* CodePage */ CP_UTF8,
+            /* dwFlags */ 0,
+            /* lpWideCharStr */ utf16,
+            /* cchWideChar */ -1,
+            /* lpMultiByteStr */ utf8,
+            /* cbMultiByte */ utf8_length,
+            /* lpDefaultChar */ NULL,
+            /* lpUsedDefaultChar*/ NULL);
 
-    if (mkdir(path, mode) != 0) {
-        if (errno != EEXIST) {
-            return 0;
-        }
-    }
-
-    return 1;
-#endif
+    return utf8;
 }
 
-/* 1 = exists, 0 = does not exist */
-int does_process_exist(int pid) {
-#ifdef _WIN32
-    HANDLE process_handle = OpenProcess(SYNCHRONIZE, FALSE, (DWORD)pid);
-    if (process_handle == NULL) {
-        return 0;
-    }
-
-    DWORD wait_result = WaitForSingleObject(process_handle, 0);
-
-    CloseHandle(process_handle);
-
-    return wait_result == WAIT_TIMEOUT ? 1 : 0;
-#else
-    int kill_result = kill((pid_t)pid, 0);
-    return kill_result == 0 ? 1 : 0;
 #endif
-}

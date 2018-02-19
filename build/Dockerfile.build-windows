@@ -85,6 +85,4 @@ RUN cd /tmp && \
     cd /tmp && \
     rm -rf jansson-2.10
 
-RUN apt-get install -y gsettings-desktop-schemas
-
 VOLUME /source

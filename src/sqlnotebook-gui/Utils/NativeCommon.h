@@ -14,13 +14,15 @@
 // OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-[CCode(cheader_filename = "src/libsqlnotebook/Utils/NativeUtil.h")]
-namespace SqlNotebook.Utils.NativeUtil {
-    // int create_directory(const char* path);
-    [CCode(cname = "create_directory")]
-    public int create_directory(string path);
+#pragma once
 
-    // int does_process_exist(int pid)
-    [CCode(cname = "does_process_exist")]
-    public int does_process_exist(int pid);
-}
+#ifdef _WIN32
+#include <windows.h>
+#ifndef UNICODE
+    #error Must be built with Unicode enabled.
+#endif
+
+LPWSTR utf8_to_utf16(const char* utf8);
+char* utf16_to_utf8(LPCWSTR utf16);
+
+#endif

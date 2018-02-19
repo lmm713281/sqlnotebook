@@ -14,13 +14,8 @@
 // OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-[CCode(cheader_filename = "src/libsqlnotebook/Utils/NativeUtil.h")]
-namespace SqlNotebook.Utils.NativeUtil {
-    // int create_directory(const char* path);
-    [CCode(cname = "create_directory")]
-    public int create_directory(string path);
-
-    // int does_process_exist(int pid)
-    [CCode(cname = "does_process_exist")]
-    public int does_process_exist(int pid);
+[CCode(cheader_filename = "src/sqlnotebook-gui/Utils/NativeFileBrowserUtil.h")]
+namespace SqlNotebook.Gui.Utils.NativeFileBrowserUtil {
+    [CCode(cname = "run_open_file_dialog")]
+    public int run_open_file_dialog(string title, string filter_name, string filter_extensions, out string file_path);
 }

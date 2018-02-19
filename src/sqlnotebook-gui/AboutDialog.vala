@@ -16,6 +16,7 @@
 
 using Gdk;
 using Gtk;
+using SqlNotebook.Gui.Utils;
 using SqlNotebook.Utils;
 
 namespace SqlNotebook.Gui {
@@ -36,7 +37,7 @@ namespace SqlNotebook.Gui {
         [GtkCallback]
         private void website_btn_clicked() {
             try {
-                Gtk.show_uri_on_window(this, "https://sqlnotebook.com", Gdk.CURRENT_TIME);
+                WebBrowserUtil.open(this, "https://sqlnotebook.com");
             } catch (Error e) {
                 show_browser_error();
             }
@@ -45,7 +46,7 @@ namespace SqlNotebook.Gui {
         [GtkCallback]
         private void github_btn_clicked() {
             try {
-                Gtk.show_uri_on_window(this, "https://github.com/electroly/sqlnotebook", Gdk.CURRENT_TIME);
+                WebBrowserUtil.open(this, "https://github.com/electroly/sqlnotebook");
             } catch (Error e) {
                 show_browser_error();
             }

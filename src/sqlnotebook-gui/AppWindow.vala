@@ -15,7 +15,9 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using Gdk;
+using Gee;
 using Gtk;
+using SqlNotebook.Gui.Utils;
 using SqlNotebook.Utils;
 
 namespace SqlNotebook.Gui {
@@ -32,7 +34,8 @@ namespace SqlNotebook.Gui {
             set_role("SqlNotebookAppWindow");
 
             // https://stackoverflow.com/a/9343106
-            // this sets the application name in the GNOME shell top bar
+            // this sets the application name in the GNOME shell top bar.
+            // it also needs to match the StartupWMClass property in the .desktop file.
             set_wmclass("SQL Notebook", "SQL Notebook");
 
             try {
@@ -88,16 +91,9 @@ namespace SqlNotebook.Gui {
         }
 
         private void open_existing_notebook_window() {
-            var w = new FileChooserDialog(
-                    /* title */ "Open Notebook",
-                    /* parent */ this,
-                    /* action */ FileChooserAction.OPEN,
-                    /* accept_label */ "Open", ResponseType.ACCEPT,
-                    /* cancel_label */ "Cancel", ResponseType.CANCEL);
-            w.set_modal(true);
-            w.set_transient_for(this);
-            w.run();
-            w.close();
+            var extensions = new ArrayList<string>();
+            extensions.add("*.sqlnb");
+            FileBrowserUtil.open_file(this, "Open Notebook", "SQL Notebook files", extensions);
         }
     }
 }
