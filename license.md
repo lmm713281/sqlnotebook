@@ -18,6 +18,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 - [Jansson](#jansson)
 - [libzip](#libzip)
 - [Meson](#meson)
+- [railroad-diagrams](#railroad-diagrams)
 - [SQLite](#sqlite)
 - [Vala](#vala)
 - [Appendix: GNU Lesser General Public License](#appendix-gnu-lesser-general-public-license)
@@ -152,6 +153,11 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ```
+
+# railroad-diagrams
+By Tab Atkins Jr.
+
+This document and all associated files in the github project are licensed under [CC0](http://creativecommons.org/publicdomain/zero/1.0/). This means you can reuse, remix, or otherwise appropriate this project for your own use without restriction. (The actual legal meaning can be found at the above link.) Don't ask me for permission to use any part of this project, just use it. I would appreciate attribution, but that is not required by the license.
 
 # SQLite
 SQLite Is Public Domain

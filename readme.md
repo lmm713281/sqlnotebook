@@ -1,4 +1,5 @@
-<a href="https://sqlnotebook.com/index.html"><img src="https://sqlnotebook.com/art/icon-title.png"></a>    
+# SQL Notebook
+
 - [**Website**](https://sqlnotebook.com/index.html)
 - [**Download &amp; Install**](https://sqlnotebook.com/download.html)
 - [**Documentation**](https://sqlnotebook.com/doc.html)

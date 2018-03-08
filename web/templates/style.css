@@ -1,0 +1,42 @@
+@import url('https://fonts.googleapis.com/css?family=Arimo:400,700|Cousine:400,400i|Lato:400,400i,700');
+a, a:visited, a:hover { color: #217968; text-decoration: none; }
+a, a:visited { border-bottom: 1px solid #d4ece7; }
+a:hover { border-bottom: 1px solid #2C7DA0; }
+body { font-family: 'Lato', 'Arial', sans-serif; margin: 0 auto; width: 850px; line-height: 150%; padding-top: 15px; color: #404040; }
+code { margin-left: 2px; margin-right: 2px; }
+div#article { margin-top: 20px; margin-bottom: 40px; }
+div#footer { margin-bottom: 75px; }
+div#toc li { margin-top: 0; margin-bottom: 0; }
+div#toc ul { margin-bottom: 10px; }
+h1 code { margin-left: 0; margin-right: 0; }
+h1 { font-size: 24px; }
+h1, h2, h3 { font-family: 'Arimo', 'Arial', sans-serif; }
+h2 { font-size: 20px; color: #2ca089; text-transform: uppercase; margin-top: 30px; }
+h3 { font-size: 18px; }
+hr { height: 4px; border-width: 0; margin: 0 -9999rem; padding: 0 9999rem; color: #cce4df; background-color: #cce4df; }
+hr.section-divider { margin-top: 50px; margin-bottom: 30px; }
+html { overflow-x: hidden; overflow-y: scroll; }
+img, a img { border: 0; }
+li { list-style-type: disc; margin-top: 10px; margin-bottom: 10px; }
+p#crumb { position: relative; top: -20px; }
+p#crumb span.crumb-separator { color: #A0A0A0; padding-left: 3px; padding-right: 3px; }
+pre, code { font-family: 'Cousine', 'Consolas', 'Monaco', monospace; }
+pre code { margin-left: 0; margin-right: 0; background: #f8fdfc; }
+pre { padding: 6px; padding-left: 12px; border: 1px solid #d4ece7; border-radius: 8px; background: #f8fdfc; }
+span.comment { color: #909090; }
+svg.railroad-diagram { }
+svg.railroad-diagram g.non-terminal text { font-style: italic; }
+svg.railroad-diagram path { stroke-width: 2px; stroke: #9cc1b9; fill: rgba(0,0,0,0); }
+svg.railroad-diagram rect { stroke-width: 2px; stroke: #909090; fill: white; }
+svg.railroad-diagram text.comment { font: italic 12px 'Cousine', 'Consolas', 'Monaco', monospace; }
+svg.railroad-diagram text { font-size: 14px; font-family: 'Cousine', 'Consolas', 'Monaco', monospace; text-anchor: middle; color: #404040; }
+svg.railroad-diagram text.label { text-anchor: start; }
+table { border-collapse: collapse; margin-top: 10px; margin-bottom: 10px; }
+table#top-bar tr td { vertical-align: middle; border: 0; }
+table#top-bar { width: 898px; margin-left: -24px; margin-right: -24px; }
+th { font-weight: normal; text-align: left; background: #f6f6f6; }
+th, td { border: 1px solid #eee; padding: 3px 10px 3px 10px; }
+ul#nav li a, a.link-button { font-weight: bold; background: #f0f7f5; border: 1px solid #d4ece7; border-radius: 4px; padding: 10px; padding-left: 14px; padding-right: 14px; }
+ul#nav li a:hover, a.link-button:hover { border: 1px solid rgb(160, 187, 182); }
+ul#nav li { display: inline-block; padding-right: 5px; font-size: 16px; margin-top: 0; margin-bottom: 0; }
+ul#nav { padding-left: 0px; padding-top: 0px; margin: 0px; }

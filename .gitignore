@@ -8,6 +8,8 @@ bin-windows-release/
 obj-windows-release/
 bin-mac/
 obj-mac/
+bin-web/
+obj-web/
 meson.build
 *.ui~
 *.ui#
@@ -15,3 +17,5 @@ meson.build
 *.vala.uncrustify
 run.sh
 .~lock*
+ext/meson/test cases/python3/1 basic/gluon/tags.*
+

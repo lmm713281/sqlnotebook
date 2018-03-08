@@ -19,9 +19,11 @@ all: linux-debug
 
 .PHONY: clean
 clean:
-	rm -rf obj-linux-debug bin-linux-debug obj-windows-debug bin-windows-debug obj-mac-debug bin-mac-debug
-	rm -rf obj-linux-release bin-linux-release obj-windows-release bin-windows-release obj-mac-release bin-mac-release
+	rm -rf obj-linux-debug bin-linux-debug obj-windows-debug bin-windows-debug obj-mac bin-mac
+	rm -rf obj-linux-release bin-linux-release obj-windows-release bin-windows-release
+	rm -rf obj-web bin-web
 	rm -f meson.build run.sh
+	rm -f temp-jekyll
 	find src -name "*.vala.uncrustify" -delete
 
 .PHONY: run
@@ -67,9 +69,19 @@ test: linux
 
 .PHONY: license
 license:
-	docker build -q -t sqlnotebook-doctoc -f build/Dockerfile.doctoc .
-	docker run --rm -t -v "$(CURDIR)":/source sqlnotebook-doctoc /bin/bash /source/build/generate-license.sh
+	docker build -q -t sqlnotebook-build-web -f build/web/Dockerfile.build-web .
+	docker run --rm -t -v "$(CURDIR)":/source sqlnotebook-build-web /bin/bash /source/build/generate-license.sh
 
+.PHONY: web
+web:
+	docker build -q -t sqlnotebook-build-web -f build/web/Dockerfile.build-web .
+	docker run -i --rm -t -v "$(CURDIR)":/source sqlnotebook-build-web /bin/bash /source/build/web/build-web.sh
+
+.PHONY: web-serve
+web-serve:
+	cd bin-web && python3 -m http.server 8080
+
+# do not call directly from the command line
 .PHONY: internal-docker-build
 internal-docker-build:
 	-rm -rf obj-$(PLATFORM)-$(BUILDTYPE)/meson-*

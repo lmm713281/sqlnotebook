@@ -4,6 +4,11 @@
 - Applied patch `meson-patch1.diff` to `meson/mesonbuild/compiler/c.py`.
 - Applied patch `meson-patch2.diff` to `meson/mesonbuild/modules/gnome.py`.
 
+## railroad-diagrams
+- From https://github.com/tabatkins/railroad-diagrams
+- Commit `67ac665ab8ddc8426281fec42f879e8cdd8f21cb`
+- Applied patch `railroad-diagrams-patch1.diff` to `railroad-diagrams/railroad_diagrams.py`.
+
 ## sqlite
 - From https://www.sqlite.org/download.html
 - Release `sqlite-amalgamation-3140100.zip`
