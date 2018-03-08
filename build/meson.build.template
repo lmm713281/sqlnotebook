@@ -131,6 +131,7 @@ executable(
         windows_ws2_32_dep,
         windows_dnsapi_dep,
         windows_iphlpapi_dep,
+        posix_dep,
         libsqlnotebook_dep
     ],
     c_args: sqlnotebook_c_args)

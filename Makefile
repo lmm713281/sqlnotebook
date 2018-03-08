@@ -50,18 +50,18 @@ windows-release:
 mac-debug:
 	-rm -rf obj-$(PLATFORM)-$(BUILDTYPE)/meson-*
 	-rm -f obj-$(PLATFORM)-$(BUILDTYPE)/resources.*
-	BUILDTYPE=debug /bin/bash build/build-mac.sh
+	BUILDTYPE=debug /bin/bash build/mac/build-mac.sh
 
 .PHONY: mac-release
 mac-release:
 	-rm -rf obj-$(PLATFORM)-$(BUILDTYPE)/meson-*
 	-rm -f obj-$(PLATFORM)-$(BUILDTYPE)/resources.*
-	BUILDTYPE=release /bin/bash build/build-mac.sh
+	BUILDTYPE=release /bin/bash build/mac/build-mac.sh
 
 .PHONY: format
 format:
-	docker build -q -t sqlnotebook-uncrustify -f build/Dockerfile.uncrustify .
-	docker run --rm -t -v "$(CURDIR)":/source sqlnotebook-uncrustify /bin/bash /source/build/uncrustify.sh
+	docker build -q -t sqlnotebook-uncrustify -f build/format/Dockerfile.uncrustify .
+	docker run --rm -t -v "$(CURDIR)":/source sqlnotebook-uncrustify /bin/bash /source/build/format/uncrustify.sh
 
 .PHONY: test
 test: linux
@@ -70,7 +70,7 @@ test: linux
 .PHONY: license
 license:
 	docker build -q -t sqlnotebook-build-web -f build/web/Dockerfile.build-web .
-	docker run --rm -t -v "$(CURDIR)":/source sqlnotebook-build-web /bin/bash /source/build/generate-license.sh
+	docker run --rm -t -v "$(CURDIR)":/source sqlnotebook-build-web /bin/bash /source/build/license/generate-license.sh
 
 .PHONY: web
 web:
@@ -87,6 +87,6 @@ internal-docker-build:
 	-rm -rf obj-$(PLATFORM)-$(BUILDTYPE)/meson-*
 	-rm -f obj-$(PLATFORM)-$(BUILDTYPE)/resources.*
 	echo "bin-$(PLATFORM)-$(BUILDTYPE)/sqlnotebook-gui" > run.sh
-	docker build -q -t sqlnotebook-build-$(PLATFORM) -f build/Dockerfile.build-$(PLATFORM) .
-	docker run --rm -t -v "$(CURDIR)":/source sqlnotebook-build-$(PLATFORM) /bin/bash /source/build/build-$(PLATFORM).sh $(BUILDTYPE)
+	docker build -q -t sqlnotebook-build-$(PLATFORM) -f build/$(PLATFORM)/Dockerfile.build-$(PLATFORM) .
+	docker run --rm -t -v "$(CURDIR)":/source sqlnotebook-build-$(PLATFORM) /bin/bash /source/build/$(PLATFORM)/build-$(PLATFORM).sh $(BUILDTYPE)
 	chmod +x run.sh

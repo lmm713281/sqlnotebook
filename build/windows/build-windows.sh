@@ -9,7 +9,7 @@ mkdir -p $OBJDIR/
 
 python3 build/generate-meson.py > meson.build
 chown --reference=.gitignore meson.build
-ext/meson/meson.py --buildtype $1 --cross-file build/meson-windows.txt $OBJDIR/ 
+ext/meson/meson.py --buildtype $1 --cross-file build/windows/meson-windows.txt $OBJDIR/ 
 ninja -C $OBJDIR/
 
 cp -f /usr/x86_64-w64-mingw32/bin/libffi-6.dll $BINDIR/

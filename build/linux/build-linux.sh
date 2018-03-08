@@ -94,12 +94,12 @@ then
     # set up desktop icon
     mkdir -p $PKGROOT/usr/share/applications
     mkdir -p $PKGROOT/usr/share/icons/hicolor/48x48/apps/
-    cp -f build/sqlnotebook-gui.desktop $PKGROOT/usr/share/applications/
+    cp -f build/linux/sqlnotebook-gui.desktop $PKGROOT/usr/share/applications/
     cp -f art/sqlnotebook_256.png $PKGROOT/usr/share/icons/hicolor/48x48/apps/sqlnotebook-gui.png
 
     # create .deb
     mkdir -p $BINDIR/sqlnotebook/DEBIAN
-    cp -f build/linux-deb-control $BINDIR/sqlnotebook/DEBIAN/control
+    cp -f build/linux/deb-control $BINDIR/sqlnotebook/DEBIAN/control
     pushd $BINDIR
     dpkg-deb --build sqlnotebook
     popd
