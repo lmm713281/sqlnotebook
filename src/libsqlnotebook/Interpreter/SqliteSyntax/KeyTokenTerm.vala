@@ -18,7 +18,7 @@ using SqlNotebook.Interpreter.Tokens;
 
 namespace SqlNotebook.Interpreter.SqliteSyntax {
     public class KeyTokenTerm : SpecTerm {
-        public TokenKind token_kind { get; set; }
+        public TokenKind token_kind;
 
         public override string get_expected() {
             switch (token_kind) {

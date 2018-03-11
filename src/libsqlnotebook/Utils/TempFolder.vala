@@ -21,16 +21,7 @@ using SqlNotebook.Errors;
 namespace SqlNotebook.Utils {
     public class TempFolder : Object {
         private const string ROOT_DIR_NAME = "com.sqlnotebook";
-        private static Regex _pid_regex;
         private string _process_dir;
-
-        static construct {
-            try {
-                _pid_regex = new Regex("^[0-9]+$", RegexCompileFlags.OPTIMIZE);
-            } catch (RegexError e) {
-                assert(false);
-            }
-        }
 
         private TempFolder(string process_dir) {
             _process_dir = process_dir;
@@ -62,13 +53,17 @@ namespace SqlNotebook.Utils {
 
         private static void prune(string sqlnotebook_dir) {
             try {
+                var pid_regex = new Regex("^[0-9]+$");
+
                 foreach (var path in get_process_paths(sqlnotebook_dir)) {
                     var name = Path.get_basename(path);
-                    if (_pid_regex.match(name) && NativeUtil.does_process_exist(int.parse(name)) == 0) {
+                    if (pid_regex.match(name) && NativeUtil.does_process_exist(int.parse(name)) == 0) {
                         delete_directory(path);
                     }
                 }
             } catch (RuntimeError e) {
+                // eat it
+            } catch (RegexError e) {
                 // eat it
             }
         }
@@ -83,7 +78,7 @@ namespace SqlNotebook.Utils {
                 FileInfo dir_info;
                 while ((dir_info = children_enumerator.next_file()) != null) {
                     if (dir_info.get_file_type() == FileType.DIRECTORY) {
-                        process_paths.add(dir_info.get_name());
+                        process_paths.add(Path.build_filename(sqlnotebook_dir, dir_info.get_name()));
                     }
                 }
 

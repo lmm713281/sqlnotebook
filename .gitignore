@@ -15,7 +15,7 @@ meson.build
 *.ui#
 *.DS_Store
 *.vala.uncrustify
+run-gui.sh
 run.sh
 .~lock*
 ext/meson/test cases/python3/1 basic/gluon/tags.*
-

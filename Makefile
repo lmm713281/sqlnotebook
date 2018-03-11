@@ -22,13 +22,17 @@ clean:
 	rm -rf obj-linux-debug bin-linux-debug obj-windows-debug bin-windows-debug obj-mac bin-mac
 	rm -rf obj-linux-release bin-linux-release obj-windows-release bin-windows-release
 	rm -rf obj-web bin-web
-	rm -f meson.build run.sh
+	rm -f meson.build run.sh run-gui.sh
 	rm -f temp-jekyll
 	find src -name "*.vala.uncrustify" -delete
 
 .PHONY: run
 run:
-	./run.sh
+	@./run.sh $(ARGS)
+
+.PHONY: run-gui
+run-gui:
+	@./run-gui.sh
 	
 .PHONY: linux-debug
 linux-debug:
@@ -86,7 +90,9 @@ web-serve:
 internal-docker-build:
 	-rm -rf obj-$(PLATFORM)-$(BUILDTYPE)/meson-*
 	-rm -f obj-$(PLATFORM)-$(BUILDTYPE)/resources.*
-	echo "bin-$(PLATFORM)-$(BUILDTYPE)/sqlnotebook-gui" > run.sh
-	docker build -q -t sqlnotebook-build-$(PLATFORM) -f build/$(PLATFORM)/Dockerfile.build-$(PLATFORM) .
-	docker run --rm -t -v "$(CURDIR)":/source sqlnotebook-build-$(PLATFORM) /bin/bash /source/build/$(PLATFORM)/build-$(PLATFORM).sh $(BUILDTYPE)
+	echo 'bin-$(PLATFORM)-$(BUILDTYPE)/sqlnotebook "$@"' > run.sh
+	echo "bin-$(PLATFORM)-$(BUILDTYPE)/sqlnotebook-gui" > run-gui.sh
+	docker build -t sqlnotebook-build-$(PLATFORM) -f build/$(PLATFORM)/Dockerfile.build-$(PLATFORM) .
+	docker run --rm -i -t -v "$(CURDIR)":/source sqlnotebook-build-$(PLATFORM) /bin/bash /source/build/$(PLATFORM)/build-$(PLATFORM).sh $(BUILDTYPE)
 	chmod +x run.sh
+	chmod +x run-gui.sh

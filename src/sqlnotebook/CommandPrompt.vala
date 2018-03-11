@@ -14,9 +14,33 @@
 // OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using SqlNotebook;
+namespace SqlNotebook.Cli {
+    public class CommandPrompt : Object {
+        private NativeCommandPrompt _native;
 
-void main() {
-    stdout.printf("Hello!\n");
-    stdout.printf("World!\n");
+        public CommandPrompt() {
+            _native = NativeCommandPrompt.create();
+        }
+
+        public void run() {
+            while (true) {
+                var line = _native.get_line();
+                if (line == null) {
+                    stdout.printf("\n");
+                    return;
+                }
+
+                line = line.strip();
+                if (line == "exit") {
+                    return;
+                }
+
+                if (line != "") {
+                    _native.add_history(line);
+                }
+                
+                //TODO: handle command here
+            }
+        }
+    }
 }

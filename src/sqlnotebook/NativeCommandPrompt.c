@@ -15,13 +15,34 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#pragma once
+#include <linenoise.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "NativeCommandPrompt.h"
 
-typedef enum {
-    ZIP_ARCHIVE_RESULT_SUCCESS = 0,
-    ZIP_ARCHIVE_RESULT_UNKNOWN_ERROR = 1,
-    ZIP_ARCHIVE_RESULT_CORRUPT_FILE = 2,
-    ZIP_ARCHIVE_RESULT_OUT_OF_MEMORY = 3,
-    ZIP_ARCHIVE_RESULT_FILE_NOT_FOUND = 4,
-    ZIP_ARCHIVE_RESULT_IO_FAILED = 5
-} ZipArchiveResult;
+struct CommandPrompt {
+    int unused;
+};
+
+CommandPrompt* command_prompt_create(void) {
+    CommandPrompt* self = NULL;
+
+    self = calloc(1, sizeof(CommandPrompt));
+
+    linenoiseInstallWindowChangeHandler();
+
+    return self;
+}
+
+void command_prompt_delete(CommandPrompt* self) {
+    free(self);
+}
+
+char* command_prompt_get_line(CommandPrompt* self) {
+    return linenoise("sqlnotebook> ");
+}
+
+void command_prompt_add_history(CommandPrompt* self, const char* line) {
+    linenoiseHistoryAdd(line);
+}

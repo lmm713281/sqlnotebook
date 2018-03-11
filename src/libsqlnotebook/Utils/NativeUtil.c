@@ -69,7 +69,7 @@ int create_directory(const char* path) {
 
     return create_directory_result == 0 ? 0 : 1;
 #else
-    mode_t mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH;
+    mode_t mode = ACCESSPERMS;
 
     if (mkdir(path, mode) != 0) {
         if (errno != EEXIST) {

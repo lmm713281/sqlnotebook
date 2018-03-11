@@ -13,18 +13,8 @@ mkdir -p $OBJDIR
 
 python3 build/generate-meson.py > meson.build
 chown --reference=.gitignore meson.build
-
-# https://unix.stackexchange.com/a/4529
-# the perl snippet below strips ansi escape codes.  doing this because geany doesn't seem to like the escape codes.
-# the grep snippets removes noisy messages
-ext/meson/meson.py --buildtype $1 $OBJDIR/ | \
-    perl -pe 's/\e\[?.*?[\@-~]//g'
-    
-ninja -C $OBJDIR/ | \
-    perl -pe 's/\e\[?.*?[\@-~]//g' | \
-    grep -v '\] Compiling ' | \
-    grep -v '\] Linking ' | \
-    grep -v '\] Generating ' 
+ext/meson/meson.py --buildtype $1 $OBJDIR/
+ninja -C $OBJDIR/
 
 cp -f $OBJDIR/libsqlnotebook.so $PKGDIR/lib/
 cp -f $OBJDIR/sqlnotebook $PKGDIR/bin/sqlnotebook.bin
@@ -32,14 +22,20 @@ cp -f $OBJDIR/sqlnotebook-gui $PKGDIR/bin/sqlnotebook-gui.bin
 
 # generate these copy statements by uncommenting the command below and then running a build
 #LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH" \
-#    ldd bin-linux-debug/sqlnotebook-gui | \
-#    awk '{ print "cp -f " $3 " $PKGDIR/" }' | \
-#    grep -v libX | \
-#    grep -v libwayland | \
-#    grep -v "^cp -f /lib/" | \
-#    grep -v "0x0" | \
-#    grep -v "  " | \
-#    sort
+    #ldd \
+        #bin-linux-debug/sqlnotebook/opt/sqlnotebook/lib/libsqlnotebook.so \
+        #bin-linux-debug/sqlnotebook/opt/sqlnotebook/bin/sqlnotebook.bin \
+        #bin-linux-debug/sqlnotebook/opt/sqlnotebook/bin/sqlnotebook-gui.bin \
+    #| grep -v libsqlnotebook \
+    #| grep -v libX \
+    #| grep -v libwayland \
+    #| awk '{ print "cp -f " $3 " $PKGDIR/lib/" }' \
+    #| grep -v "^cp -f /lib/" \
+    #| grep -v "0x0" \
+    #| grep -v "  " \
+    #| sort \
+    #| uniq
+
 cp -f /usr/lib/x86_64-linux-gnu/libatk-1.0.so.0 $PKGDIR/lib/
 cp -f /usr/lib/x86_64-linux-gnu/libatk-bridge-2.0.so.0 $PKGDIR/lib/
 cp -f /usr/lib/x86_64-linux-gnu/libatspi.so.0 $PKGDIR/lib/
@@ -62,6 +58,7 @@ cp -f /usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0 $PKGDIR/lib/
 cp -f /usr/lib/x86_64-linux-gnu/libgraphite2.so.3 $PKGDIR/lib/
 cp -f /usr/lib/x86_64-linux-gnu/libgtk-3.so.0 $PKGDIR/lib/
 cp -f /usr/lib/x86_64-linux-gnu/libharfbuzz.so.0 $PKGDIR/lib/
+cp -f /usr/lib/x86_64-linux-gnu/libjansson.so.4 $PKGDIR/lib/
 cp -f /usr/lib/x86_64-linux-gnu/libkj-0.5.3.so $PKGDIR/lib/
 cp -f /usr/lib/x86_64-linux-gnu/liblz4.so.1 $PKGDIR/lib/
 cp -f /usr/lib/x86_64-linux-gnu/libmirclient.so.9 $PKGDIR/lib/
@@ -81,7 +78,6 @@ cp -f /usr/lib/x86_64-linux-gnu/libxcb-shm.so.0 $PKGDIR/lib/
 cp -f /usr/lib/x86_64-linux-gnu/libxcb.so.1 $PKGDIR/lib/
 cp -f /usr/lib/x86_64-linux-gnu/libxkbcommon.so.0 $PKGDIR/lib/
 cp -f /usr/lib/x86_64-linux-gnu/libzip.so.4 $PKGDIR/lib/
-cp -f /usr/local/lib/libjansson.so.4 $PKGDIR/lib/
 
 # swap in the launcher script
 cp -f $OBJDIR/linux-launcher $PKGDIR/sqlnotebook-gui
@@ -110,6 +106,7 @@ then
     popd
 fi
 
-echo $PKGDIR/sqlnotebook-gui > run.sh
+echo "$PKGDIR/sqlnotebook \"\$@\"" > run.sh
+echo $PKGDIR/sqlnotebook-gui > run-gui.sh
 
 chown --reference=.gitignore --recursive $BINDIR/ $OBJDIR/

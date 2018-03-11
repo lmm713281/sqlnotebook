@@ -25,6 +25,8 @@ namespace SqlNotebook.Interpreter.SqliteSyntax {
         public SqliteGrammar() {
             string p;
 
+            prods = new HashMap<string, SpecProd>();
+
             // sql-stmt ::= [ EXPLAIN [ QUERY PLAN ] ] ( <alter-table-stmt> | <analyze-stmt> | <attach-stmt> |
             // <begin-stmt> | <commit-stmt> | <create-index-stmt> | <create-table-stmt> | <create-trigger-stmt> |
             // <create-view-stmt> | <create-virtual-table-stmt> | <delete-stmt> |
@@ -272,28 +274,29 @@ namespace SqlNotebook.Interpreter.SqliteSyntax {
 
             // column-def ::= column-name [ <type-name> ] [ <column-constraint> ]*
             p = "column-def";
+            var column_def_token_kinds = new TokenKind[] {
+                TokenKind.ABORT,
+                TokenKind.ASC,
+                TokenKind.BEGIN,
+                TokenKind.CONFLICT,
+                TokenKind.DESC,
+                TokenKind.END,
+                TokenKind.EXPLAIN,
+                TokenKind.FAIL,
+                TokenKind.IGNORE,
+                TokenKind.KEY,
+                TokenKind.OFFSET,
+                TokenKind.PRAGMA,
+                TokenKind.REPLACE,
+                TokenKind.TEMP,
+                TokenKind.VACUUM,
+                TokenKind.VIEW
+            };
             top_prod(p, 1, new SpecTerm[] {
                 or_terms(new SpecTerm[] {
                     id("column name"),
                     // per SQLite test suite file misc1.test, these are valid to use as column names
-                    toks(new TokenKind[] {
-                        TokenKind.ABORT,
-                        TokenKind.ASC,
-                        TokenKind.BEGIN,
-                        TokenKind.CONFLICT,
-                        TokenKind.DESC,
-                        TokenKind.END,
-                        TokenKind.EXPLAIN,
-                        TokenKind.FAIL,
-                        TokenKind.IGNORE,
-                        TokenKind.KEY,
-                        TokenKind.OFFSET,
-                        TokenKind.PRAGMA,
-                        TokenKind.REPLACE,
-                        TokenKind.TEMP,
-                        TokenKind.VACUUM,
-                        TokenKind.VIEW
-                    })
+                    toks(column_def_token_kinds)
                 }),
                 opt_one(sub_prod("type-name")),
                 lst(@"$p.constraint", null, 0, new SpecTerm[] {
@@ -304,83 +307,84 @@ namespace SqlNotebook.Interpreter.SqliteSyntax {
             // type-name ::= name+ [ "(" <signed-number> ")" | "(" <signed-number> "," <signed-number> ")" ]
             // implemented as: name+ [ "(" <signed-number> [ "," <signed-number> ] ")" ]
             p = "type-name";
+            var type_name_token_kinds = new TokenKind[] {
+                TokenKind.EXPLAIN,
+                TokenKind.QUERY,
+                TokenKind.PLAN,
+                TokenKind.BEGIN,
+                TokenKind.DEFERRED,
+                TokenKind.IMMEDIATE,
+                TokenKind.EXCLUSIVE,
+                TokenKind.END,
+                TokenKind.ROLLBACK,
+                TokenKind.SAVEPOINT,
+                TokenKind.RELEASE,
+                TokenKind.IF,
+                TokenKind.TEMP,
+                TokenKind.WITHOUT,
+                TokenKind.ABORT,
+                TokenKind.ACTION,
+                TokenKind.AFTER,
+                TokenKind.ANALYZE,
+                TokenKind.ASC,
+                TokenKind.ATTACH,
+                TokenKind.BEFORE,
+                TokenKind.BY,
+                TokenKind.CASCADE,
+                TokenKind.CAST,
+                TokenKind.COLUMNKW,
+                TokenKind.CONFLICT,
+                TokenKind.DATABASE,
+                TokenKind.DESC,
+                TokenKind.DETACH,
+                TokenKind.EACH,
+                TokenKind.FAIL,
+                TokenKind.FOR,
+                TokenKind.IGNORE,
+                TokenKind.INITIALLY,
+                TokenKind.INSTEAD,
+                TokenKind.LIKE_KW,
+                TokenKind.MATCH,
+                TokenKind.NO,
+                TokenKind.KEY,
+                TokenKind.OF,
+                TokenKind.OFFSET,
+                TokenKind.PRAGMA,
+                TokenKind.RAISE,
+                TokenKind.RECURSIVE,
+                TokenKind.REPLACE,
+                TokenKind.RESTRICT,
+                TokenKind.ROW,
+                TokenKind.TRIGGER,
+                TokenKind.VACUUM,
+                TokenKind.VIEW,
+                TokenKind.VIRTUAL,
+                TokenKind.WITH,
+                TokenKind.REINDEX,
+                TokenKind.RENAME,
+                TokenKind.CTIME_KW,
+                TokenKind.ANY,
+                TokenKind.REM,
+                TokenKind.CONCAT,
+                TokenKind.AUTOINCR,
+                TokenKind.DEFERRABLE,
+                TokenKind.TO_TEXT,
+                TokenKind.TO_BLOB,
+                TokenKind.TO_NUMERIC,
+                TokenKind.TO_INT,
+                TokenKind.TO_REAL,
+                TokenKind.ISNOT,
+                TokenKind.FUNCTION,
+                TokenKind.AGG_FUNCTION,
+                TokenKind.REGISTER
+            };
             top_prod(p, 1, new SpecTerm[] {
                 lst(@"$p.part", null, 1, new SpecTerm[] {
                     or_terms(new SpecTerm[] {
                         id("data type"),
-                        toks(new TokenKind[] {
-                            // these tokens are okay to enter as part of the data type.  the list was created by testing
-                            // SQLite; these are not enumerated in the grammar.
-                            TokenKind.EXPLAIN,
-                            TokenKind.QUERY,
-                            TokenKind.PLAN,
-                            TokenKind.BEGIN,
-                            TokenKind.DEFERRED,
-                            TokenKind.IMMEDIATE,
-                            TokenKind.EXCLUSIVE,
-                            TokenKind.END,
-                            TokenKind.ROLLBACK,
-                            TokenKind.SAVEPOINT,
-                            TokenKind.RELEASE,
-                            TokenKind.IF,
-                            TokenKind.TEMP,
-                            TokenKind.WITHOUT,
-                            TokenKind.ABORT,
-                            TokenKind.ACTION,
-                            TokenKind.AFTER,
-                            TokenKind.ANALYZE,
-                            TokenKind.ASC,
-                            TokenKind.ATTACH,
-                            TokenKind.BEFORE,
-                            TokenKind.BY,
-                            TokenKind.CASCADE,
-                            TokenKind.CAST,
-                            TokenKind.COLUMNKW,
-                            TokenKind.CONFLICT,
-                            TokenKind.DATABASE,
-                            TokenKind.DESC,
-                            TokenKind.DETACH,
-                            TokenKind.EACH,
-                            TokenKind.FAIL,
-                            TokenKind.FOR,
-                            TokenKind.IGNORE,
-                            TokenKind.INITIALLY,
-                            TokenKind.INSTEAD,
-                            TokenKind.LIKE_KW,
-                            TokenKind.MATCH,
-                            TokenKind.NO,
-                            TokenKind.KEY,
-                            TokenKind.OF,
-                            TokenKind.OFFSET,
-                            TokenKind.PRAGMA,
-                            TokenKind.RAISE,
-                            TokenKind.RECURSIVE,
-                            TokenKind.REPLACE,
-                            TokenKind.RESTRICT,
-                            TokenKind.ROW,
-                            TokenKind.TRIGGER,
-                            TokenKind.VACUUM,
-                            TokenKind.VIEW,
-                            TokenKind.VIRTUAL,
-                            TokenKind.WITH,
-                            TokenKind.REINDEX,
-                            TokenKind.RENAME,
-                            TokenKind.CTIME_KW,
-                            TokenKind.ANY,
-                            TokenKind.REM,
-                            TokenKind.CONCAT,
-                            TokenKind.AUTOINCR,
-                            TokenKind.DEFERRABLE,
-                            TokenKind.TO_TEXT,
-                            TokenKind.TO_BLOB,
-                            TokenKind.TO_NUMERIC,
-                            TokenKind.TO_INT,
-                            TokenKind.TO_REAL,
-                            TokenKind.ISNOT,
-                            TokenKind.FUNCTION,
-                            TokenKind.AGG_FUNCTION,
-                            TokenKind.REGISTER
-                        })
+                        // these tokens are okay to enter as part of the data type.  the list was created by testing
+                        // SQLite; these are not enumerated in the grammar.
+                        toks(type_name_token_kinds)
                     })
                 }),
                 opt_all(new SpecTerm[] {
@@ -1808,7 +1812,7 @@ namespace SqlNotebook.Interpreter.SqliteSyntax {
         }
 
         private static TokenSetTerm toks(TokenKind[] kinds) {
-            return new TokenSetTerm(ArrayUtil.to_list(kinds));
+            return new TokenSetTerm(kinds);
         }
 
         private static OptionalTerm opt(int num_required_terms, SpecTerm[] terms) {

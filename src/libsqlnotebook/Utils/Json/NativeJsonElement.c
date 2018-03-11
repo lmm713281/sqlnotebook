@@ -174,15 +174,15 @@ JsonElement* json_element_object_iterator_value(JsonObjectIterator* object_itera
     return element_from_node(node);
 }
 
-JsonElement* json_element_for_true() {
+JsonElement* json_element_for_true(void) {
     return element_from_node(json_true());
 }
 
-JsonElement* json_element_for_false() {
+JsonElement* json_element_for_false(void) {
     return element_from_node(json_false());
 }
 
-JsonElement* json_element_for_null() {
+JsonElement* json_element_for_null(void) {
     return element_from_node(json_null());
 }
 
@@ -198,7 +198,7 @@ JsonElement* json_element_for_real(double value) {
     return element_from_node(json_real(value));
 }
 
-JsonElement* json_element_for_array() {
+JsonElement* json_element_for_array(void) {
     return element_from_node(json_array());
 }
 
@@ -206,7 +206,7 @@ void json_element_array_append(JsonElement* array_element, JsonElement* child_el
     json_array_append(array_element->node, child_element->node);
 }
 
-JsonElement* json_element_for_object() {
+JsonElement* json_element_for_object(void) {
     return element_from_node(json_object());
 }
 

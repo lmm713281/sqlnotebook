@@ -1,3 +1,7 @@
+## linenoise-ng
+- From https://github.com/arangodb/linenoise-ng
+- Commit `4754bee2d8eb3c4511e6ac87cac62255b2011e2f`
+
 ## meson
 - From https://github.com/mesonbuild/meson
 - Commit `bdfcecd2c6337cc9ebc3256abadafe0d47b90a8d`

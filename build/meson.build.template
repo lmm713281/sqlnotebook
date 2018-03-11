@@ -16,7 +16,7 @@
 
 project(
     'sqlnotebook',
-    ['c', 'vala'])
+    ['c', 'cpp', 'vala'])
 
 gnome = import('gnome')
 
@@ -26,13 +26,13 @@ gobject_dep = dependency('gobject-2.0')
 gmodule_dep = dependency('gmodule-2.0')
 gtk_dep = dependency('gtk+-3.0')
 gee_dep = dependency('gee-0.8')
-z_dep = meson.get_compiler('c').find_library('z', required: true)
+z_dep = meson.get_compiler('c').find_library('z')
 linux_dl_dep = meson.get_compiler('c').find_library('dl', required: false)
 threads_dep = dependency('threads')
 m_dep = meson.get_compiler('c').find_library('m', required: false)
 posix_dep = meson.get_compiler('vala').find_library('posix')
-zip_dep = meson.get_compiler('c').find_library('zip', required: true)
-jansson_dep = meson.get_compiler('c').find_library('jansson', required: true,
+zip_dep = meson.get_compiler('c').find_library('zip')
+jansson_dep = meson.get_compiler('c').find_library('jansson',
     dirs: [ <homebrew-lib-path> ])
 homebrew_include_dep = declare_dependency(
 	include_directories: include_directories( <homebrew-include-path> ))
@@ -70,6 +70,23 @@ libsqlite3_dep = declare_dependency(
     dependencies: [libsqlite3_vapi, libsqlite3_tokenizer_vapi],
     link_with: libsqlite3_a,
     include_directories: include_directories('src/libsqlite3'))
+
+#
+# liblinenoise (static library)
+#
+
+liblinenoise_a = static_library(
+    'linenoise',
+    [
+        'ext/linenoise-ng/src/ConvertUTF.cpp',
+        'ext/linenoise-ng/src/linenoise.cpp',
+        'ext/linenoise-ng/src/wcwidth.cpp'
+    ],
+    include_directories: include_directories('ext/linenoise-ng/include'))
+
+liblinenoise_dep = declare_dependency(
+    link_with: liblinenoise_a,
+    include_directories: include_directories('ext/linenoise-ng/include'))
 
 #
 # libsqlnotebook (shared library)
@@ -132,6 +149,7 @@ executable(
         windows_dnsapi_dep,
         windows_iphlpapi_dep,
         posix_dep,
+        liblinenoise_dep,
         libsqlnotebook_dep
     ],
     c_args: sqlnotebook_c_args)

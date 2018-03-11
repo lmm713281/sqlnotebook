@@ -22,9 +22,9 @@ namespace SqlNotebook.Interpreter.SqliteSyntax {
     public class TokenSetTerm : SpecTerm {
         private bool[] _bitmap = new bool[200];
 
-        public ArrayList<TokenKind> token_kinds { get; private set; }
+        public TokenKind[] token_kinds { get; private set; }
 
-        public TokenSetTerm(ArrayList<TokenKind> token_kinds) {
+        public TokenSetTerm(TokenKind[] token_kinds) {
             foreach (var token_kind in token_kinds) {
                 _bitmap[(int)token_kind] = true;
             }
@@ -32,7 +32,12 @@ namespace SqlNotebook.Interpreter.SqliteSyntax {
         }
 
         public override string get_expected() {
-            var list = StringUtil.join_strings("|", token_kinds.map<string>(x => x.to_string()));
+            var strings = new ArrayList<string>();
+            foreach (var token_kind in token_kinds) {
+                strings.add(token_kind.to_string());
+            }
+
+            var list = StringUtil.join_strings("|", strings);
             return @"($list)";
         }
 

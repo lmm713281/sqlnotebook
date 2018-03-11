@@ -17,11 +17,9 @@
 
 #pragma once
 
-typedef enum {
-    ZIP_ARCHIVE_RESULT_SUCCESS = 0,
-    ZIP_ARCHIVE_RESULT_UNKNOWN_ERROR = 1,
-    ZIP_ARCHIVE_RESULT_CORRUPT_FILE = 2,
-    ZIP_ARCHIVE_RESULT_OUT_OF_MEMORY = 3,
-    ZIP_ARCHIVE_RESULT_FILE_NOT_FOUND = 4,
-    ZIP_ARCHIVE_RESULT_IO_FAILED = 5
-} ZipArchiveResult;
+typedef struct CommandPrompt CommandPrompt;
+
+CommandPrompt* command_prompt_create(void);
+void command_prompt_delete(CommandPrompt* self);
+char* command_prompt_get_line(CommandPrompt* self);
+void command_prompt_add_history(CommandPrompt* self, const char* line);

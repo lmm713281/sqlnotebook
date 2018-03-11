@@ -44,6 +44,10 @@ namespace SqlNotebook {
             return f;
         }
 
+        public string get_app_version() {
+            return "1.0.0";
+        }
+
         public Notebook new_notebook() throws RuntimeError {
             var file_path = _temp_folder.get_temp_file_path(".db");
             var session = SqliteSession.open(file_path, true);
