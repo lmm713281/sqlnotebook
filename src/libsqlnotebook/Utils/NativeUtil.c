@@ -61,11 +61,17 @@ static LPTSTR utf8_to_utf16(const char* utf8) {
 int create_directory(const char* path) {
 #ifdef _WIN32
     WCHAR* utf16_path = NULL;
-    BOOL create_directory_result;
+    BOOL create_directory_result = FALSE;
 
     utf16_path = utf8_to_utf16(path);
     create_directory_result = CreateDirectory(utf16_path, NULL);
     free(utf16_path);
+
+    if (create_directory_result == 0) {
+        return GetLastError() == ERROR_ALREADY_EXISTS ? 1 : 0;
+    } else {
+        return 1;
+    }
 
     return create_directory_result == 0 ? 0 : 1;
 #else
