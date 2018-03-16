@@ -10,6 +10,7 @@ bin-mac/
 obj-mac/
 bin-web/
 obj-web/
+valadoc/
 meson.build
 *.ui~
 *.ui#

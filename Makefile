@@ -64,7 +64,7 @@ mac-release:
 
 .PHONY: format
 format:
-	docker build -q -t sqlnotebook-uncrustify -f build/format/Dockerfile.uncrustify .
+	docker build -t sqlnotebook-uncrustify -f build/format/Dockerfile.uncrustify .
 	docker run --rm -t -v "$(CURDIR)":/source sqlnotebook-uncrustify /bin/bash /source/build/format/uncrustify.sh
 
 .PHONY: test
@@ -73,17 +73,25 @@ test: linux
 
 .PHONY: license
 license:
-	docker build -q -t sqlnotebook-build-web -f build/web/Dockerfile.build-web .
+	docker build -t sqlnotebook-build-web -f build/web/Dockerfile.build-web .
 	docker run --rm -t -v "$(CURDIR)":/source sqlnotebook-build-web /bin/bash /source/build/license/generate-license.sh
 
 .PHONY: web
 web:
-	docker build -q -t sqlnotebook-build-web -f build/web/Dockerfile.build-web .
+	docker build -t sqlnotebook-build-web -f build/web/Dockerfile.build-web .
 	docker run -i --rm -t -v "$(CURDIR)":/source sqlnotebook-build-web /bin/bash /source/build/web/build-web.sh
 
 .PHONY: web-serve
 web-serve:
 	cd bin-web && python3 -m http.server 8080
+
+.PHONY: valadoc
+valadoc: linux-debug
+	docker run --rm -i -t -v "$(CURDIR)":/source sqlnotebook-build-linux /bin/bash /source/build/valadoc/build-valadoc.sh
+
+.PHONY: valadoc-serve
+valadoc-serve:
+	cd valadoc && python3 -m http.server 8081
 
 # do not call directly from the command line
 .PHONY: internal-docker-build
