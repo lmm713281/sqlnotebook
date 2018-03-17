@@ -24,7 +24,8 @@ namespace SqlNotebook.Interpreter.SqliteSyntax {
             return text;
         }
 
-        public override MatchResult? match_step(MatchStack stack, MatchFrame frame, TokenQueue q) {
+        public override MatchResult? match_step(MatchStack stack, MatchFrame frame, TokenQueue q,
+                SqliteGrammar grammar) {
             return q.take().text.down() == text.down() ? MatchResult.for_match() : MatchResult.for_no_match();
         }
     }

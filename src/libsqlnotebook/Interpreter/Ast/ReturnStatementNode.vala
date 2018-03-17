@@ -16,7 +16,7 @@
 
 namespace SqlNotebook.Interpreter.Ast {
     public class ReturnStatementNode : StatementNode {
-        public ExpressionNode value { get; set; }
+        public ExpressionNode? value { get; set; }
 
         public ReturnStatementNode() {
             statement_type = StatementType.RETURN;

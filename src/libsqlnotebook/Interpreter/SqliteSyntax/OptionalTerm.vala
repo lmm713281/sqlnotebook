@@ -25,7 +25,8 @@ namespace SqlNotebook.Interpreter.SqliteSyntax {
             return @"[ $x ]";
         }
 
-        public override MatchResult? match_step(MatchStack stack, MatchFrame frame, TokenQueue q) {
+        public override MatchResult? match_step(MatchStack stack, MatchFrame frame, TokenQueue q,
+                SqliteGrammar grammar) {
             if (frame.optional_state == OptionalTermState.START) {
                 // try to match the sub-production
                 stack.push(prod);

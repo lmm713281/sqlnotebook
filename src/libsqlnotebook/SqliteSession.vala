@@ -48,6 +48,12 @@ namespace SqlNotebook {
             return session;
         }
 
+        public bool is_open {
+            get {
+                return _database != null;
+            }
+        }
+
         public void close() {
             _database = null;
         }

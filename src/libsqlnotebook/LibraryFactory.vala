@@ -22,6 +22,10 @@ using SqlNotebook.Persistence;
 using SqlNotebook.Utils;
 
 namespace SqlNotebook {
+    /**
+     * Generates objects for users of libsqlnotebook.  The application uses a single instance of this factory as the
+     * root of the dependency tree.
+     */
     public class LibraryFactory : Object {
         private NotebookSerializer _notebook_serializer;
         private ScriptParser _script_parser;
@@ -33,6 +37,10 @@ namespace SqlNotebook {
         private LibraryFactory() {
         }
 
+        /**
+         * Initializes the dependency tree.
+         * @return New {@link LibraryFactory}
+         */
         public static LibraryFactory create() throws RuntimeError {
             var f = new LibraryFactory();
             f._sqlite_grammar = new SqliteGrammar();
@@ -41,6 +49,9 @@ namespace SqlNotebook {
             f._tokenizer = new Tokenizer();
             f._script_parser = new ScriptParser(f._tokenizer, f._sqlite_parser);
             f._notebook_serializer = new NotebookSerializer(f._temp_folder);
+
+            MatchResult.init();
+
             return f;
         }
 
@@ -51,7 +62,8 @@ namespace SqlNotebook {
         public Notebook new_notebook() throws RuntimeError {
             var file_path = _temp_folder.get_temp_file_path(".db");
             var session = SqliteSession.open(file_path, true);
-            return new Notebook("untitled", file_path, true, session);
+            var user_data = new NotebookUserData();
+            return new Notebook(null, file_path, session, user_data, _notebook_serializer);
         }
 
         public Notebook open_notebook(string notebook_file_path) throws RuntimeError {
@@ -60,7 +72,7 @@ namespace SqlNotebook {
             _notebook_serializer.open_notebook(notebook_file_path, out sqlite_db_file_path, out user_data);
 
             var session = SqliteSession.open(sqlite_db_file_path, false);
-            return new Notebook(notebook_file_path, sqlite_db_file_path, false, session);
+            return new Notebook(notebook_file_path, sqlite_db_file_path, session, user_data, _notebook_serializer);
         }
 
         public ScriptEnvironment get_script_environment() {

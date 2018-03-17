@@ -27,7 +27,8 @@ namespace SqlNotebook.Interpreter.SqliteSyntax {
             return StringUtil.join_strings(" | ", prod_strings);
         }
 
-        public override MatchResult? match_step(MatchStack stack, MatchFrame frame, TokenQueue q) {
+        public override MatchResult? match_step(MatchStack stack, MatchFrame frame, TokenQueue q,
+                SqliteGrammar grammar) {
             if (frame.or_state == OrTermState.START) {
                 // try to match the first sub-production
                 stack.push(prods[0]);

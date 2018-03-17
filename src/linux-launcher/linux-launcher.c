@@ -41,9 +41,21 @@ static char* get_exe_directory(char* argv[]) {
 static char* get_target_exe_file_path(char* argv[], const char* current_directory) {
     const char* target_exe_relative_path = NULL;
     char* target_exe_file_path = NULL;
+    const char* filename = NULL;
+    int i = 0;
 
-    if (strstr(argv[0], "-gui")) {
+    filename = argv[0];
+    for (i = strlen(argv[0]) - 1; i >= 0; i--) {
+        if (argv[0][i] == '/') {
+            filename = &argv[0][i + 1];
+            break;
+        }
+    }
+
+    if (strcmp(filename, "sqlnotebook-gui") == 0) {
         target_exe_relative_path = "/bin/sqlnotebook-gui.bin";
+    } else if (strcmp(filename, "tests") == 0) {
+        target_exe_relative_path = "/bin/tests.bin";
     } else {
         target_exe_relative_path = "/bin/sqlnotebook.bin";
     }

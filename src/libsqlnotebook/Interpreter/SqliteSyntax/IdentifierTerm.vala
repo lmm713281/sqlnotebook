@@ -25,7 +25,8 @@ namespace SqlNotebook.Interpreter.SqliteSyntax {
             return @"<$desc>";
         }
 
-        public override MatchResult? match_step(MatchStack stack, MatchFrame frame, TokenQueue q) {
+        public override MatchResult? match_step(MatchStack stack, MatchFrame frame, TokenQueue q,
+                SqliteGrammar grammar) {
             var kind = q.take().token_kind;
             var match = kind == TokenKind.ID || (allow_variable && kind == TokenKind.VARIABLE);
             return match ? MatchResult.for_match() : MatchResult.for_no_match();

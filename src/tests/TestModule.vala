@@ -16,11 +16,29 @@
 
 namespace SqlNotebook.Tests {
     public abstract class TestModule : Object {
-        public abstract void go();
+        public abstract void go() throws Error;
 
         protected static void fail(string message) {
             Test.message("%s", message);
             Test.fail();
+        }
+
+        protected static bool assert_true(bool actual, string description) {
+            if (actual == true) {
+                return true;
+            } else {
+                fail(@"$description, actual=false, expected=true");
+                return false;
+            }
+        }
+
+        protected static bool assert_false(bool actual, string description) {
+            if (actual == false) {
+                return true;
+            } else {
+                fail(@"$description, actual=true, expected=false");
+                return false;
+            }
         }
 
         protected static bool assert_eq_int(int actual, int expected, string description) {

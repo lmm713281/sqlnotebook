@@ -17,46 +17,90 @@
 using Gee;
 using SqlNotebook.Collections;
 using SqlNotebook.Errors;
+using SqlNotebook.Persistence;
 using SqlNotebook.Utils;
 
 namespace SqlNotebook {
+    /**
+     * Represents an open notebook (.sqlnb file).
+     */
     public class Notebook : Object {
-        private string _notebook_file_path;
-        private string _sqlite_db_file_path;
-        private bool _is_temporary;
-        private NotebookLockBox _lock_box = new NotebookLockBox();
+        private string _sqlite_db_file_path; // readonly
+        private NotebookLockBox _lock_box = new NotebookLockBox(); // readonly
+        private NotebookSerializer _notebook_serializer; // readonly
 
-        // protected by lock
-        private SqliteSession _sqlite_session;
+        // these members are protected by the NotebookLockBox
+        private string? _notebook_file_path; // mutable
+        private SqliteSession _sqlite_session; // readonly
+        private NotebookUserData _notebook_user_data; // readonly
 
-        public Notebook(string notebook_file_path, string sqlite_db_file_path, bool is_temporary,
-                SqliteSession sqlite_session) {
+        public Notebook(string? notebook_file_path, string sqlite_db_file_path, SqliteSession sqlite_session,
+                NotebookUserData notebook_user_data, NotebookSerializer notebook_serializer) {
             _notebook_file_path = notebook_file_path;
             _sqlite_db_file_path = sqlite_db_file_path;
-            _is_temporary = is_temporary;
+            _notebook_user_data = notebook_user_data;
             _sqlite_session = sqlite_session;
+            _notebook_serializer = notebook_serializer;
         }
 
+        /**
+         * Acquires a notebook lock.  The caller must call {@link exit} to release the lock.
+         * @return Token representing the held lock which must be presented when calling other notebook methods.
+         */
         public NotebookLockToken enter() {
             return _lock_box.enter();
         }
 
+        /**
+         * Releases a notebook lock that was obtained from {@link enter}.
+         */
         public void exit(NotebookLockToken token) {
             _lock_box.exit(token);
         }
 
-        // returns the absolute path of the sqlite db
-        public string close_sqlite(NotebookLockToken token) {
+        /**
+         * Gets the absolute path of the .sqlnb file that this notebook was loaded from.
+         * @param token Proof that the caller acquired the notebook lock using {@link enter}
+         * @return File path, or ``null`` if this is an unsaved new notebook.
+         */
+        public string? get_notebook_file_path(NotebookLockToken token) throws RuntimeError {
+            _lock_box.check(token);
+            return _notebook_file_path;
+        }
+
+        /**
+         * Checks whether the SQLite connection is open.  This will always be true unless we're in the middle of a save
+         * operation.  The {@link SqlNotebook.Persistence.NotebookSerializer} uses this method verifies that it's safe
+         * to access the database file directly.
+         * @param token Proof that the caller acquired the notebook lock using {@link enter}
+         * @return ``true`` if the SQLite connection is open
+         */
+        public bool is_sqlite_open(NotebookLockToken token) {
+            _lock_box.check(token);
+            return _sqlite_session.is_open;
+        }
+
+        /**
+         * Saves the notebook to the specified file.
+         * @param notebook_file_path Destination .sqlnb file path
+         * @param token Proof that the caller acquired the notebook lock using {@link enter}
+         */
+        public void save(string notebook_file_path, NotebookLockToken token) throws RuntimeError {
             _lock_box.check(token);
             _sqlite_session.close();
-            return _sqlite_db_file_path;
-        }
-
-        public void reopen_sqlite(NotebookLockToken token) throws RuntimeError {
-            _lock_box.check(token);
+            _notebook_serializer.save_notebook(
+                    notebook_file_path, _sqlite_db_file_path, this, _notebook_user_data, token);
             _sqlite_session.reopen();
+            _notebook_file_path = notebook_file_path;
         }
 
+        /**
+         * Performs a plain SQLite query (i.e. not an SQL Notebook script statement).
+         * @param sql SQLite command text
+         * @param args Named arguments referenced in the command text
+         * @param token Proof that the caller acquired the notebook lock using {@link enter}
+         * @return Query results
+         */
         public DataTable sqlite_query_with_named_args(string sql, HashMap<string, DataValue> args,
                 NotebookLockToken token) throws RuntimeError {
             _lock_box.check(token);

@@ -69,34 +69,22 @@ namespace SqlNotebook.Persistence {
             }
         }
 
-        public void save_notebook(string notebook_file_path, Notebook notebook, NotebookUserData user_data) throws RuntimeError {
-            var token = notebook.enter();
+        public void save_notebook(string notebook_file_path, string sqlite_db_file_path, Notebook notebook,
+                NotebookUserData user_data, NotebookLockToken token) throws RuntimeError {
+            // the caller should have closed the SQLite connection already
+            assert(!notebook.is_sqlite_open(token));
+
             try {
-                var sqlite_db_file_path = notebook.close_sqlite(token);
-                RuntimeError? reopen_error = null;
-                try {
-                    var zip_archive = ZipArchive.create(notebook_file_path);
+                var zip_archive = ZipArchive.create(notebook_file_path);
 
-                    // write the sqlite database
-                    zip_archive.add_entry_from_file(DATABASE_ENTRY_NAME, sqlite_db_file_path);
+                // write the sqlite database
+                zip_archive.add_entry_from_file(DATABASE_ENTRY_NAME, sqlite_db_file_path);
 
-                    // write the user data
-                    var user_data_json = jsonify_user_data(user_data);
-                    zip_archive.add_entry_from_string(USER_DATA_ENTRY_NAME, user_data_json);
-                } finally {
-                    try {
-                        notebook.reopen_sqlite(token);
-                    } catch (RuntimeError e) {
-                        reopen_error = e;
-                    }
-                }
-                if (reopen_error != null) {
-                    throw reopen_error;
-                }
+                // write the user data
+                var user_data_json = jsonify_user_data(user_data);
+                zip_archive.add_entry_from_string(USER_DATA_ENTRY_NAME, user_data_json);
             } catch (ZipError e) {
                 throw new RuntimeError.SAVE_FAILED("Unable to save the notebook file. " + e.message);
-            } finally {
-                notebook.exit(token);
             }
         }
 

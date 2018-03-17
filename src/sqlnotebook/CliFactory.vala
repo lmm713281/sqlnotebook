@@ -14,26 +14,31 @@
 // OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using SqlNotebook.Tests;
+using SqlNotebook;
+using SqlNotebook.Errors;
 
-void main(string[] args) {
-    Test.init(ref args);
+namespace SqlNotebook.Cli {
+    public class CliFactory : Object {
+        private LibraryFactory _library_factory;
 
-    var modules = new TestModule[] {
-        new Test_ScriptParser(),
-        new Test_Tokenizer()
-    };
+        private CliFactory() {
+        }
 
-    // uncomment this line to break into the debugger:
-    // Posix.raise(Posix.SIGTRAP);
+        public static CliFactory create() throws RuntimeError {
+            var f = new CliFactory();
+            f._library_factory = LibraryFactory.create();
+            return f;
+        }
 
-    foreach (var module in modules) {
-        try {
-            module.go();
-        } catch (Error e) {
-            stderr.printf("Uncaught error. %s\n", e.message);
+        public CommandPrompt get_command_prompt() {
+            var script_parser = _library_factory.get_script_parser();
+            var script_environment = _library_factory.get_script_environment();
+            var command_prompt = new CommandPrompt(_library_factory, script_parser, script_environment);
+            return command_prompt;
+        }
+
+        public LibraryFactory get_library_factory() {
+            return _library_factory;
         }
     }
-
-    Test.run();
 }

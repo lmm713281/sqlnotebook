@@ -18,7 +18,8 @@ using SqlNotebook.Interpreter.Tokens;
 
 namespace SqlNotebook.Interpreter.SqliteSyntax {
     public abstract class SpecTerm : Object {
-        public abstract MatchResult? match_step(MatchStack stack, MatchFrame frame, TokenQueue q);
+        public abstract MatchResult? match_step(MatchStack stack, MatchFrame frame, TokenQueue q,
+                SqliteGrammar grammar);
         public abstract string get_expected();
     }
 }

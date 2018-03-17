@@ -28,9 +28,11 @@ namespace SqlNotebook.Utils {
             _mutex.@lock();
 
             assert(!_is_entered);
+            assert(_current_token == null);
             _is_entered = true;
+            _current_token = new_token();
 
-            return new_token();
+            return _current_token;
         }
 
         public void check(TToken token) {

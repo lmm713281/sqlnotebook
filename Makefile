@@ -21,7 +21,7 @@ all: linux-debug
 clean:
 	rm -rf obj-linux-debug bin-linux-debug obj-windows-debug bin-windows-debug obj-mac bin-mac
 	rm -rf obj-linux-release bin-linux-release obj-windows-release bin-windows-release
-	rm -rf obj-web bin-web
+	rm -rf obj-web bin-web bin-valadoc
 	rm -f meson.build run.sh run-gui.sh
 	rm -f temp-jekyll
 	find src -name "*.vala.uncrustify" -delete
@@ -68,8 +68,8 @@ format:
 	docker run --rm -t -v "$(CURDIR)":/source sqlnotebook-uncrustify /bin/bash /source/build/format/uncrustify.sh
 
 .PHONY: test
-test: linux
-	obj-linux/tests --verbose
+test: linux-debug
+	bin-linux-debug/sqlnotebook/opt/sqlnotebook/tests --verbose
 
 .PHONY: license
 license:
@@ -86,12 +86,13 @@ web-serve:
 	cd bin-web && python3 -m http.server 8080
 
 .PHONY: valadoc
-valadoc: linux-debug
+valadoc:
+	docker build -t sqlnotebook-build-linux -f build/linux/Dockerfile.build-linux .
 	docker run --rm -i -t -v "$(CURDIR)":/source sqlnotebook-build-linux /bin/bash /source/build/valadoc/build-valadoc.sh
 
 .PHONY: valadoc-serve
 valadoc-serve:
-	cd valadoc && python3 -m http.server 8081
+	cd bin-valadoc && python3 -m http.server 8081
 
 # do not call directly from the command line
 .PHONY: internal-docker-build

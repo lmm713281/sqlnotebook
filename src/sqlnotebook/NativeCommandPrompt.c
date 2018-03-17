@@ -40,7 +40,7 @@ void command_prompt_delete(CommandPrompt* self) {
 }
 
 char* command_prompt_get_line(CommandPrompt* self) {
-    return linenoise("sqlnotebook> ");
+    return linenoise(">> ");
 }
 
 void command_prompt_add_history(CommandPrompt* self, const char* line) {

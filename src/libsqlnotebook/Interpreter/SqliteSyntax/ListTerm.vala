@@ -38,7 +38,8 @@ namespace SqlNotebook.Interpreter.SqliteSyntax {
             return sb.str;
         }
 
-        public override MatchResult? match_step(MatchStack stack, MatchFrame frame, TokenQueue q) {
+        public override MatchResult? match_step(MatchStack stack, MatchFrame frame, TokenQueue q,
+                SqliteGrammar grammar) {
             if (frame.list_state == ListTermState.START) {
                 frame.list_state = ListTermState.MATCH_ITEM;
                 stack.push(item_prod);

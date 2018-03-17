@@ -19,6 +19,7 @@ ninja -C $OBJDIR/
 cp -f $OBJDIR/libsqlnotebook.so $PKGDIR/lib/
 cp -f $OBJDIR/sqlnotebook $PKGDIR/bin/sqlnotebook.bin
 cp -f $OBJDIR/sqlnotebook-gui $PKGDIR/bin/sqlnotebook-gui.bin
+cp -f $OBJDIR/tests $PKGDIR/bin/tests.bin
 
 # generate these copy statements by uncommenting the command below and then running a build
 #LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH" \
@@ -84,6 +85,8 @@ cp -f $OBJDIR/linux-launcher $PKGDIR/sqlnotebook-gui
 chmod +x $PKGDIR/sqlnotebook-gui
 cp -f $OBJDIR/linux-launcher $PKGDIR/sqlnotebook
 chmod +x $PKGDIR/sqlnotebook
+cp -f $OBJDIR/linux-launcher $PKGDIR/tests
+chmod +x $PKGDIR/tests
 
 if [ $1 == "release" ]
 then
@@ -108,5 +111,8 @@ fi
 
 echo "$PKGDIR/sqlnotebook \"\$@\"" > run.sh
 echo $PKGDIR/sqlnotebook-gui > run-gui.sh
+
+# stick all the generated .c files into the OBJDIR because that's where gdb looks for them
+find obj-linux-debug/ -iname '*.c' -exec cp -f {} obj-linux-debug/ \; 2> /dev/null
 
 chown --reference=.gitignore --recursive $BINDIR/ $OBJDIR/

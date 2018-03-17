@@ -14,18 +14,34 @@
 // OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using SqlNotebook.Interpreter.Tokens;
-using SqlNotebook.Utils;
+using SqlNotebook;
+using SqlNotebook.Errors;
+using SqlNotebook.Interpreter;
+using SqlNotebook.Interpreter.Ast;
 
 namespace SqlNotebook.Tests {
-    public class Test_Tokenizer : TestModule {
-        private static Tokenizer _target = new Tokenizer();
+    public class Test_ScriptParser : TestModule {
+        private static ScriptParser _target;
 
         public override void go() throws Error {
-            Test.add_func("/Tokenizer/tokenize", () => {
-                var actual = _target.tokenize("SELECT");
-                assert_eq_int(actual.size, 1, "actual.size") &&
-                assert_eq_int(actual[0].token_kind, TokenKind.SELECT, "actual[0].token_kind");
+            var library_factory = LibraryFactory.create();
+            _target = library_factory.get_script_parser();
+
+            Test.add_func("/ScriptParser/single_return", () => {
+                try {
+                    var script_node = _target.parse("RETURN");
+                    if (!assert_eq_int(script_node.block.statements.size, 1, "script_node.block.statements.size")) {
+                        return;
+                    }
+                    var statement = script_node.block.statements[0];
+                    if (!assert_true(statement is ReturnStatementNode, "statement is ReturnStatementNode")) {
+                        return;
+                    }
+                    var return_statement = (ReturnStatementNode)statement;
+                    assert_true(return_statement.value == null, "return_statement.value == null");
+                } catch (CompileError e) {
+                    fail(e.message);
+                }
             });
         }
     }

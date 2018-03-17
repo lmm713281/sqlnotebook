@@ -42,14 +42,18 @@ namespace SqlNotebook.Cli {
             }
 
             try {
-                var library_factory = LibraryFactory.create();
+                var cli_factory = CliFactory.create();
+                var library_factory = cli_factory.get_library_factory();
+
+                stdout.printf("SQL Notebook %s\n", library_factory.get_app_version());
 
                 if (_version) {
-                    stdout.printf("SQL Notebook %s\n", library_factory.get_app_version());
                     return Posix.EXIT_SUCCESS;
                 }
 
-                var command_prompt = new CommandPrompt();
+                stdout.printf("Enter \".help\" for usage hints.\n");
+
+                var command_prompt = cli_factory.get_command_prompt();
                 command_prompt.run();
 
                 return Posix.EXIT_SUCCESS;

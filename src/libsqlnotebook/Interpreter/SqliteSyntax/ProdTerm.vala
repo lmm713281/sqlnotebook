@@ -26,11 +26,12 @@ namespace SqlNotebook.Interpreter.SqliteSyntax {
             return @"<$prod_name>";
         }
 
-        public override MatchResult? match_step(MatchStack stack, MatchFrame frame, TokenQueue q) {
+        public override MatchResult? match_step(MatchStack stack, MatchFrame frame, TokenQueue q,
+                SqliteGrammar grammar) {
             if (!frame.prod_matched) {
                 if (_prod == null) {
-                    // _prod = SqliteGrammar.Prods[ProdName];
-                    // TODO
+                    _prod = grammar.prods[prod_name];
+                    assert(_prod != null);
                 }
                 stack.push(_prod);
                 frame.prod_matched = true;

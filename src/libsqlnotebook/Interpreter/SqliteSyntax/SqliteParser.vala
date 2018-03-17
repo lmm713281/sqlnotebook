@@ -56,7 +56,7 @@ namespace SqlNotebook.Interpreter.SqliteSyntax {
             // trampoline loop
             while (root_result == null && stack.any()) {
                 var frame = stack.peek();
-                var result = frame.prod.terms[frame.term_index].match_step(stack, frame, q);
+                var result = frame.prod.terms[frame.term_index].match_step(stack, frame, q, _grammar);
                 if (result != null) {
                     // we are done matching this term
                     if (result.is_match) {
@@ -86,7 +86,8 @@ namespace SqlNotebook.Interpreter.SqliteSyntax {
         private void match_internal_finish_frame(MatchStack stack, MatchResult frame_result,
                 SqliteSyntaxProductionNode? frame_ast_prod, ref MatchResult? root_result,
                 ref SqliteSyntaxProductionNode? root_ast) {
-            stack.pop();
+            var pop_result = stack.pop();
+            assert(pop_result == true);
             var parent_frame = stack.peek();
             if (parent_frame == null) {
                 root_result = frame_result;

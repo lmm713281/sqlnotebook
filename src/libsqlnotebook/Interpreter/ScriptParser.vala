@@ -48,7 +48,8 @@ namespace SqlNotebook.Interpreter {
             var script = new ScriptNode() {
                 source_token = q.get_current_token(),
                 block = new BlockNode() {
-                    source_token = q.get_current_token()
+                    source_token = q.get_current_token(),
+                    statements = new ArrayList<StatementNode>()
                 }
             };
 

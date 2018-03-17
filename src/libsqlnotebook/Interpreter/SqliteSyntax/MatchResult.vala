@@ -16,16 +16,21 @@
 
 namespace SqlNotebook.Interpreter.SqliteSyntax {
     public class MatchResult : Object {
-        private static MatchResult _match = new MatchResult() {
-            is_match = true
-        };
-
-        private static MatchResult _no_match = new MatchResult() {
-            is_match = false
-        };
+        private static MatchResult? _match = null;
+        private static MatchResult? _no_match = null;
 
         public bool is_match { get; private set; }
         public string? error_message { get; private set; }
+
+        public static void init() {
+            _match = new MatchResult() {
+                is_match = true
+            };
+
+            _no_match = new MatchResult() {
+                is_match = false
+            };
+        }
 
         public static MatchResult for_match() {
             return _match;

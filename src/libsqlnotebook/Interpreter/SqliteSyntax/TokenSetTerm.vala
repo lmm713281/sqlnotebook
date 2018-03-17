@@ -41,7 +41,8 @@ namespace SqlNotebook.Interpreter.SqliteSyntax {
             return @"($list)";
         }
 
-        public override MatchResult? match_step(MatchStack stack, MatchFrame frame, TokenQueue q) {
+        public override MatchResult? match_step(MatchStack stack, MatchFrame frame, TokenQueue q,
+                SqliteGrammar grammar) {
             var index = (int)q.take().token_kind;
             var match = index >= 0 && index < _bitmap.length && _bitmap[index];
             return match ? MatchResult.for_match() : MatchResult.for_no_match();

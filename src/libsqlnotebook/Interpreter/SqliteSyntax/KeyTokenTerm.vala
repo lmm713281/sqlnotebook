@@ -44,7 +44,8 @@ namespace SqlNotebook.Interpreter.SqliteSyntax {
             }
         }
 
-        public override MatchResult? match_step(MatchStack stack, MatchFrame frame, TokenQueue q) {
+        public override MatchResult? match_step(MatchStack stack, MatchFrame frame, TokenQueue q,
+                SqliteGrammar grammar) {
             return q.take().token_kind == token_kind ? MatchResult.for_match() : MatchResult.for_no_match();
         }
     }
