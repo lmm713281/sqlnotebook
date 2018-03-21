@@ -31,6 +31,8 @@ namespace SqlNotebook.Cli {
         };
 
         public static int main(string[] args) {
+            Intl.setlocale();
+
             if (!parse_args(args)) {
                 return Posix.EXIT_FAILURE;
             }

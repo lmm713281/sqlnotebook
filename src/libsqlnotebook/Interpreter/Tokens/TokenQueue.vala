@@ -152,7 +152,7 @@ namespace SqlNotebook.Interpreter.Tokens {
         public string substring(int start_token_index, int max_tokens) {
             var token_texts =
                 _tokens
-                .chop(_peek_index, max_tokens)
+                .chop(start_token_index, max_tokens)
                 .map<string>(x => x.text);
             return StringUtil.join_strings(" ", token_texts);
         }

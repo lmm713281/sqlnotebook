@@ -19,11 +19,15 @@ using SqlNotebook.Utils;
 
 namespace SqlNotebook.Interpreter.Ast {
     public class SqliteSyntaxProductionNode : Node {
-        public string name { get; set; }
-        public string text { get; set; }
-        public int token_span_start_index { get; set; }
-        public int token_span_length { get; set; }
+        public string name { get; set; default = null; }
+        public string text { get; set; default = null; }
+        public int token_span_start_index { get; set; default = 0; }
+        public int token_span_length { get; set; default = 0; }
         public ArrayList<SqliteSyntaxProductionNode> items { get; set; }
+
+        public SqliteSyntaxProductionNode() {
+            items = new ArrayList<SqliteSyntaxProductionNode>();
+        }
 
         protected override Node?[] get_children() {
             return CollectionUtil.to_casted_array<SqliteSyntaxProductionNode, Node?>(items);

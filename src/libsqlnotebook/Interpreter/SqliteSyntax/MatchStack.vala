@@ -46,13 +46,13 @@ namespace SqlNotebook.Interpreter.SqliteSyntax {
                 _frames.add(new MatchFrame());
             }
 
-            var p = new SqliteSyntaxProductionNode();
-            p.name = prod.name;
-
             var frame = _frames[_top_index];
             frame.prod = prod;
             frame.prod_start_loc = token_queue.current_token_index;
-            frame.ast_prod = p;
+            frame.ast_prod = new SqliteSyntaxProductionNode() {
+                name = prod.name
+            };
+            assert(frame.ast_prod.items != null);
             return frame;
         }
 

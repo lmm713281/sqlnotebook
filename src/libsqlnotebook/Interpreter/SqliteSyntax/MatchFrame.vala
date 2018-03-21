@@ -22,7 +22,7 @@ namespace SqlNotebook.Interpreter.SqliteSyntax {
         public int prod_start_loc;
         public SpecProd? prod;
         public int term_index;
-        public SqliteSyntaxProductionNode? ast_prod;
+        public SqliteSyntaxProductionNode? ast_prod = null;
 
         // OptionalTerm
         public OptionalTermState optional_state;
@@ -43,6 +43,10 @@ namespace SqlNotebook.Interpreter.SqliteSyntax {
 
         // when a sub-frame returns, the result goes here
         public MatchResult? sub_result;
+
+        public MatchFrame() {
+            ast_prod = null;
+        }
 
         public void clear(bool all = true) {
             if (all) {

@@ -14,44 +14,6 @@
 // OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using SqlNotebook.Tests;
-
-void main(string[] args) {
-    var modules = new TestModule[] {
-        new Test_ScriptParser(),
-        new Test_Tokenizer(),
-        new Test_TokenQueue(),
-        new Test_Scripts()
-    };
-
-    // change these values to run a single test rather than the whole suite
-    var run_single_test = false;
-    var single_module = "ScriptParser";
-    var single_test = "simple_print";
-    // ---
-
-    var failures = 0;
-    foreach (var module in modules) {
-        if (run_single_test) {
-            if (module.get_name() == single_module) {
-                module.single_test = single_test;
-            } else {
-                continue;
-            }
-        }
-
-        try {
-            module.module_pre();
-            module.go();
-            failures += module.failures;
-        } catch (Error e) {
-            stderr.printf("Uncaught error in test harness. %s\n", e.message);
-        } finally {
-            module.module_post();
-        }
-    }
-
-    if (failures > 0) {
-        stderr.printf("Failed tests: %d\n", failures);
-    }
+public errordomain TestError {
+    FAILED
 }

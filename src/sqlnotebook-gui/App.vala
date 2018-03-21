@@ -26,6 +26,8 @@ namespace SqlNotebook.Gui {
         }
 
         public static int main(string[] args) {
+            Intl.setlocale();
+
             var app = new App();
             return app.run(args);
         }

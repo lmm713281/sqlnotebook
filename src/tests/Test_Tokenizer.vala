@@ -19,12 +19,24 @@ using SqlNotebook.Utils;
 
 namespace SqlNotebook.Tests {
     public class Test_Tokenizer : TestModule {
-        private static Tokenizer _target = new Tokenizer();
+        private Tokenizer _target;
 
-        public override void go() throws Error {
-            Test.add_func("/Tokenizer/tokenize", () => {
+        public override string get_name() {
+            return "Tokenizer";
+        }
+
+        public override void test_pre() throws Error {
+            _target = new Tokenizer();
+        }
+
+        public override void test_post() {
+            _target = null;
+        }
+
+        public override void go() {
+            test("tokenize", () => {
                 var actual = _target.tokenize("SELECT");
-                assert_eq_int(actual.size, 1, "actual.size") &&
+                assert_eq_int(actual.size, 1, "actual.size");
                 assert_eq_int(actual[0].token_kind, TokenKind.SELECT, "actual[0].token_kind");
             });
         }

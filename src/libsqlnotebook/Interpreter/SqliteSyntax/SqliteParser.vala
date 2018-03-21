@@ -56,6 +56,7 @@ namespace SqlNotebook.Interpreter.SqliteSyntax {
             // trampoline loop
             while (root_result == null && stack.any()) {
                 var frame = stack.peek();
+                assert(frame.ast_prod == null || frame.ast_prod.items != null);
                 var result = frame.prod.terms[frame.term_index].match_step(stack, frame, q, _grammar);
                 if (result != null) {
                     // we are done matching this term
@@ -66,10 +67,13 @@ namespace SqlNotebook.Interpreter.SqliteSyntax {
                         if (frame.term_index >= frame.prod.terms.size) {
                             // we have matched this full production
                             var prod_end_loc = q.current_token_index;
-                            frame.ast_prod.token_span_start_index = frame.prod_start_loc;
-                            frame.ast_prod.token_span_length = prod_end_loc - frame.prod_start_loc;
-                            frame.ast_prod.text = q.substring(frame.prod_start_loc, prod_end_loc - frame.prod_start_loc);
-                            match_internal_finish_frame(stack, MatchResult.for_match(), frame.ast_prod, ref root_result, ref root_ast);
+                            var frame_ast_prod = frame.ast_prod;
+                            assert(frame_ast_prod != null);
+                            assert(frame_ast_prod.items != null);
+                            frame_ast_prod.token_span_start_index = frame.prod_start_loc;
+                            frame_ast_prod.token_span_length = prod_end_loc - frame.prod_start_loc;
+                            frame_ast_prod.text = q.substring(frame.prod_start_loc, prod_end_loc - frame.prod_start_loc);
+                            match_internal_finish_frame(stack, MatchResult.for_match(), frame_ast_prod, ref root_result, ref root_ast);
                         }
                     } else {
                         // we needed a match and didn't find one.  we have to abandon this production.
@@ -95,6 +99,7 @@ namespace SqlNotebook.Interpreter.SqliteSyntax {
             } else {
                 parent_frame.sub_result = frame_result;
                 if (frame_result.is_match) {
+                    assert(frame_ast_prod.items != null);
                     parent_frame.ast_prod.items.add(frame_ast_prod);
                 }
             }

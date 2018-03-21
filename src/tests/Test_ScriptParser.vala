@@ -21,27 +21,41 @@ using SqlNotebook.Interpreter.Ast;
 
 namespace SqlNotebook.Tests {
     public class Test_ScriptParser : TestModule {
-        private static ScriptParser _target;
+        private LibraryFactory _library_factory;
+        private ScriptParser _target;
 
-        public override void go() throws Error {
-            var library_factory = LibraryFactory.create();
-            _target = library_factory.get_script_parser();
+        public override string get_name() {
+            return "ScriptParser";
+        }
 
-            Test.add_func("/ScriptParser/single_return", () => {
-                try {
-                    var script_node = _target.parse("RETURN");
-                    if (!assert_eq_int(script_node.block.statements.size, 1, "script_node.block.statements.size")) {
-                        return;
-                    }
-                    var statement = script_node.block.statements[0];
-                    if (!assert_true(statement is ReturnStatementNode, "statement is ReturnStatementNode")) {
-                        return;
-                    }
-                    var return_statement = (ReturnStatementNode)statement;
-                    assert_true(return_statement.value == null, "return_statement.value == null");
-                } catch (CompileError e) {
-                    fail(e.message);
-                }
+        public override void test_pre() throws Error {
+            _library_factory = LibraryFactory.create();
+            _target = _library_factory.get_script_parser();
+        }
+
+        public override void test_post() {
+            _library_factory = null;
+            _target = null;
+        }
+
+        public override void go() {
+            test("single_return", () => {
+                var script_node = _target.parse("RETURN");
+                assert_eq_int(script_node.block.statements.size, 1, "script_node.block.statements.size");
+                var statement = script_node.block.statements[0];
+                assert_true(statement is ReturnStatementNode, "statement is ReturnStatementNode");
+                var return_statement = (ReturnStatementNode)statement;
+                assert_true(return_statement.value == null, "return_statement.value == null");
+            });
+
+            test("simple_print", () => {
+                var script_node = _target.parse("PRINT 'hello'");
+                assert_eq_int(script_node.block.statements.size, 1, "script_node.block.statements.size");
+                var statement = script_node.block.statements[0];
+                assert_true(statement is PrintStatementNode, "statement is PrintStatementNode");
+                var print_statement = (PrintStatementNode)statement;
+                assert_true(print_statement.value != null, "print_statement.value != null");
+                assert_eq_string(print_statement.value.sql, "'hello'", "print_statement.value.sql");
             });
         }
     }

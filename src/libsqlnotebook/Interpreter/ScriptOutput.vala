@@ -19,8 +19,8 @@ using SqlNotebook.Collections;
 
 namespace SqlNotebook.Interpreter {
     public class ScriptOutput : Object {
-        public ArrayList<DataTable> data_tables { get; set; }
-        public ArrayList<string> text_output { get; set; }
-        public DataValue scalar_result { get; set; }
+        public ArrayList<DataTable> data_tables = new ArrayList<DataTable>();
+        public ArrayList<string> text_output = new ArrayList<string>();
+        public DataValue scalar_result = DataValue.for_null();
     }
 }

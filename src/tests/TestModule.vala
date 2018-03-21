@@ -16,37 +16,65 @@
 
 namespace SqlNotebook.Tests {
     public abstract class TestModule : Object {
-        public abstract void go() throws Error;
+        public delegate void TestAction() throws Error;
 
-        protected static void fail(string message) {
-            Test.message("%s", message);
-            Test.fail();
+        public abstract void go();
+        public abstract string get_name();
+
+        public virtual void module_pre() throws Error {
         }
 
-        protected static bool assert_true(bool actual, string description) {
-            if (actual == true) {
-                return true;
-            } else {
-                fail(@"$description, actual=false, expected=true");
-                return false;
+        public virtual void module_post() {
+        }
+
+        public virtual void test_pre() throws Error {
+        }
+
+        public virtual void test_post() {
+        }
+
+        public int failures = 0;
+        public string? single_test = null;
+
+        protected void test(string name, TestAction action) {
+            if (single_test != null && single_test != name) {
+                return;
+            }
+
+            try {
+                test_pre();
+                action();
+                stdout.printf("[%s] %s = OK\n", get_name(), name);
+            } catch (Error e) {
+                stderr.printf("[%s] %s = FAIL\n", get_name(), name);
+                stderr.printf("\t%s\n", e.message);
+                failures++;
+            } finally {
+                test_post();
             }
         }
 
-        protected static bool assert_false(bool actual, string description) {
-            if (actual == false) {
-                return true;
-            } else {
-                fail(@"$description, actual=true, expected=false");
-                return false;
+        protected void assert_true(bool actual, string description) throws TestError {
+            if (actual != true) {
+                throw new TestError.FAILED(@"$description, actual=false, expected=true");
             }
         }
 
-        protected static bool assert_eq_int(int actual, int expected, string description) {
-            if (actual == expected) {
-                return true;
-            } else {
-                fail(@"$description, actual=$actual, expected=$expected");
-                return false;
+        protected void assert_false(bool actual, string description) throws TestError {
+            if (actual != false) {
+                throw new TestError.FAILED(@"$description, actual=true, expected=false");
+            }
+        }
+
+        protected void assert_eq_int(int actual, int expected, string description) throws TestError {
+            if (actual != expected) {
+                throw new TestError.FAILED(@"$description, actual=$actual, expected=$expected");
+            }
+        }
+
+        protected void assert_eq_string(string actual, string expected, string description) throws TestError {
+            if (actual != expected) {
+                throw new TestError.FAILED(@"$description, actual=\"$actual\", expected=\"$expected\"");
             }
         }
     }

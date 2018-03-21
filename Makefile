@@ -69,7 +69,7 @@ format:
 
 .PHONY: test
 test: linux-debug
-	bin-linux-debug/sqlnotebook/opt/sqlnotebook/tests --verbose
+	bin-linux-debug/sqlnotebook/opt/sqlnotebook/tests
 
 .PHONY: license
 license:
