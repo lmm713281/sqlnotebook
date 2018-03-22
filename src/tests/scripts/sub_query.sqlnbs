@@ -1,0 +1,3 @@
+/* 0 */
+
+PRINT (SELECT COUNT(*) FROM sqlite_master);

@@ -95,11 +95,14 @@ namespace SqlNotebook.Tests {
                     var script_runner = _library_factory.get_script_runner(_notebook, _token);
                     var args = new HashMap<string, DataValue>();
                     var script_output = script_runner.execute(script_node, args, _script_environment);
-                    var actual =
-
-                        StringUtil.join_strings("\n", script_output.text_output).strip();
+                    var actual = StringUtil.join_strings("\n", script_output.text_output).strip();
                     var expected = script.expected_output.strip();
-                    assert_eq_string(actual, expected, "output");
+
+                    if (actual != expected) {
+                        var indented_actual = indent(actual);
+                        var indented_expected = indent(expected);
+                        throw new TestError.FAILED(@"actual:\n$indented_actual\n\texpected:\n$indented_expected");
+                    }
                 });
             }
         }
@@ -118,6 +121,10 @@ namespace SqlNotebook.Tests {
                     return stripped_input.substring(2, end_index - 2);
                 }
             }
+        }
+
+        private string indent(string a) {
+            return "\t" + a.replace("\n", "\n\t");
         }
     }
 }
