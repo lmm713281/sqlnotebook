@@ -20,11 +20,13 @@ using SqlNotebook.Errors;
 namespace SqlNotebook.Cli {
     public class CommandLineApp : Object {
         private static bool _version = false;
+        private static bool _no_banner = false;
 
         [CCode(array_length = false, array_null_terminated = true)]
         private static string[]? _filenames = null;
 
         private const OptionEntry[] _options = {
+            { "no-banner", 0, 0, OptionArg.NONE, ref _no_banner, "Do not print version and hints at startup.", null },
             { "version", 0, 0, OptionArg.NONE, ref _version, "Display version information", null },
             { "", 0, 0, OptionArg.FILENAME_ARRAY, ref _filenames, null, "[file]" },
             { null }
@@ -47,13 +49,17 @@ namespace SqlNotebook.Cli {
                 var cli_factory = CliFactory.create();
                 var library_factory = cli_factory.get_library_factory();
 
-                stdout.printf("SQL Notebook %s\n", library_factory.get_app_version());
+                if (_version || !_no_banner) {
+                    stdout.printf("SQL Notebook %s\n", library_factory.get_app_version());
+                }
 
                 if (_version) {
                     return Posix.EXIT_SUCCESS;
                 }
 
-                stdout.printf("Enter \".help\" for usage hints.\n");
+                if (!_no_banner) {
+                    stdout.printf("Enter \".help\" for usage hints.\n\n");
+                }
 
                 var command_prompt = cli_factory.get_command_prompt();
                 command_prompt.run();

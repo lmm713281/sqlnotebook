@@ -1,3 +1,4 @@
+// result = ("%" + int64.FORMAT_MODIFIER).printf(data_value.integer_value);
 // SQL Notebook
 // Copyright (C) 2018 Brian Luft
 //
@@ -14,45 +15,27 @@
 // OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using SqlNotebook.Tests;
+using Gee;
+using SqlNotebook;
+using SqlNotebook.Collections;
+using SqlNotebook.Interpreter;
+using SqlNotebook.Utils;
 
-void main(string[] args) {
-    var modules = new TestModule[] {
-        new Test_ScriptParser(),
-        new Test_Tokenizer(),
-        new Test_TokenQueue(),
-        new Test_Scripts(),
-        new Test_Sanity()
-    };
-
-    // change these values to run a single test rather than the whole suite
-    var run_single_test = false;
-    var single_module = "ScriptParser";
-    var single_test = "simple_print";
-    // ---
-
-    var failures = 0;
-    foreach (var module in modules) {
-        if (run_single_test) {
-            if (module.get_name() == single_module) {
-                module.single_test = single_test;
-            } else {
-                continue;
-            }
+namespace SqlNotebook.Tests {
+    /**
+     * Tests for things which are not part of SQL Notebook, but we want to verify how they work.
+     */
+    public class Test_Sanity : TestModule {
+        public override string get_name() {
+            return "Sanity";
         }
 
-        try {
-            module.module_pre();
-            module.go();
-            failures += module.failures;
-        } catch (Error e) {
-            stderr.printf("Uncaught error in test harness. %s\n", e.message);
-        } finally {
-            module.module_post();
+        public override void go() {
+            test("string.printf1", () => {
+                int64 a = 1;
+                var actual = ("%" + int64.FORMAT_MODIFIER + "d").printf(a);
+                assert_eq_string(actual, "1", "string");
+            });
         }
-    }
-
-    if (failures > 0) {
-        stderr.printf("Failed tests: %d\n", failures);
     }
 }

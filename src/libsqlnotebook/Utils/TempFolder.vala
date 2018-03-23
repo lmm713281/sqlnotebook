@@ -52,19 +52,21 @@ namespace SqlNotebook.Utils {
         }
 
         private static void prune(string sqlnotebook_dir) {
+            LinkedList<string> paths;
+            Regex pid_regex;
             try {
-                var pid_regex = new Regex("^[0-9]+$");
-
-                foreach (var path in get_process_paths(sqlnotebook_dir)) {
-                    var name = Path.get_basename(path);
-                    if (pid_regex.match(name) && NativeUtil.does_process_exist(int.parse(name)) == 0) {
-                        delete_directory(path);
-                    }
-                }
+                paths = get_process_paths(sqlnotebook_dir);
+                pid_regex = new Regex("^[0-9]+$");
             } catch (RuntimeError e) {
-                // eat it
+                return;
             } catch (RegexError e) {
-                // eat it
+                return;
+            }
+            foreach (var path in paths) {
+                var name = Path.get_basename(path);
+                if (pid_regex.match(name) && NativeUtil.does_process_exist(int.parse(name)) == 0) {
+                    delete_directory(path);
+                }
             }
         }
 

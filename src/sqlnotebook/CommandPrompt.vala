@@ -19,6 +19,7 @@ using SqlNotebook;
 using SqlNotebook.Collections;
 using SqlNotebook.Errors;
 using SqlNotebook.Interpreter;
+using SqlNotebook.Utils;
 
 namespace SqlNotebook.Cli {
     /**
@@ -82,7 +83,7 @@ namespace SqlNotebook.Cli {
                         do_sql(line);
                     }
                 } catch (Error e) {
-                    stderr.printf("Error: %s\n", e.message);
+                    stderr.printf("%s\n\n", e.message);
                 }
             }
         }
@@ -95,6 +96,7 @@ namespace SqlNotebook.Cli {
             stdout.printf(format, ".open FILENAME", "Open the notebook file called FILENAME");
             stdout.printf(format, ".save", "Save the notebook to its original file");
             stdout.printf(format, ".saveas FILENAME", "Save the notebook to FILENAME");
+            stdout.printf("\n");
         }
 
         private void do_new() throws RuntimeError {
@@ -110,7 +112,7 @@ namespace SqlNotebook.Cli {
             try {
                 var file_path = _notebook.get_notebook_file_path(token);
                 if (file_path == null) {
-                    stdout.printf("Use the .saveas command to specify a filename for this untitled notebook.\n");
+                    stdout.printf("Use the .saveas command to specify a filename for this untitled notebook.\n\n");
                 } else {
                     _notebook.save(file_path, token);
                 }
@@ -135,6 +137,7 @@ namespace SqlNotebook.Cli {
                 var script_node = _script_parser.parse(command);
                 var script_runner = _library_factory.get_script_runner(_notebook, token);
                 var args = new HashMap<string, DataValue>();
+                _script_environment.output = new ScriptOutput();
                 var script_output = script_runner.execute(script_node, args, _script_environment);
 
                 // print the output
@@ -146,56 +149,133 @@ namespace SqlNotebook.Cli {
                 }
 
                 for (var table_index = 0; table_index < script_output.data_tables.size; table_index++) {
-                    var data_table = script_output.data_tables[table_index];
-                    stdout.printf("Table\n");
-
-                    for (var row_index = 0; row_index < data_table.row_count; row_index++) {
-                        stdout.printf("  Row %d\n", row_index + 1);
-
-                        for (var column_index = 0; column_index < data_table.column_count; column_index++) {
-                            stdout.printf("    %s = ", data_table.get_column_name(column_index));
-                            print_value(data_table.get_value(row_index, column_index));
-                        }
-                    }
-
+                    print_table(script_output.data_tables[table_index]);
                     stdout.printf("\n");
                 }
 
                 if (script_output.scalar_result.kind != DataValueKind.NULL) {
-                    print_value(script_output.scalar_result);
+                    stdout.printf("%s\n", format_value(script_output.scalar_result));
+                    stdout.printf("\n");
                 }
+
+                _script_environment.output = null;
             } finally {
                 _notebook.exit(token);
             }
         }
 
-        private static void print_value(DataValue data_value) {
+        private static void print_table(DataTable table) {
+            var num_rows = table.row_count;
+            var num_cols = table.column_count;
+
+            // make each column at least as wide as its column name
+            var column_widths = new int[table.column_count];
+            for (var column_index = 0; column_index < num_cols; column_index++) {
+                var name_len = table.get_column_name(column_index).length;
+                column_widths[column_index] = name_len;
+            }
+
+            // scan the first 100 rows to get some reasonable column widths
+            for (var row_index = 0; row_index < num_rows && row_index < 100; row_index++) {
+                for (var column_index = 0; column_index < num_cols; column_index++) {
+                    var str = format_value(table.get_value(row_index, column_index));
+                    if (str.length > column_widths[column_index]) {
+                        column_widths[column_index] = str.length;
+                    }
+                }
+            }
+
+            // add one character for the column separator, then cap each individual column at 40 characters
+            for (var column_index = 0; column_index < num_cols; column_index++) {
+                var w = column_widths[column_index] + 1;
+                if (w > 40) {
+                    w = 40;
+                }
+                column_widths[column_index] = w;
+            }
+
+            // print column header row
+            for (var column_index = 0; column_index < num_cols; column_index++) {
+                if (column_index > 0) {
+                    stdout.printf(" ");
+                }
+
+                var name = table.get_column_name(column_index);
+                stdout.printf(pad_string(name, column_widths[column_index] - 1));
+            }
+            stdout.printf("\n");
+
+            // print row divider
+            for (var column_index = 0; column_index < num_cols; column_index++) {
+                if (column_index > 0) {
+                    stdout.printf(" ");
+                }
+
+                stdout.printf(string.nfill(column_widths[column_index] - 1, '-'));
+            }
+            stdout.printf("\n");
+
+            // print the rows
+            var max_rows = 1000;
+            for (var row_index = 0; row_index < num_rows && row_index < max_rows; row_index++) {
+                if (row_index > 0) {
+                    stdout.printf("\n");
+                }
+
+                for (var column_index = 0; column_index < num_cols; column_index++) {
+                    if (column_index > 0) {
+                        stdout.printf(" ");
+                    }
+
+                    var str = format_value(table.get_value(row_index, column_index));
+                    stdout.printf(pad_string(str, column_widths[column_index] - 1));
+                }
+            }
+            stdout.printf("\n");
+
+            if (num_rows > max_rows) {
+                stdout.printf("(%d rows; %d shown)\n", num_rows, max_rows);
+            }
+        }
+
+        private static string pad_string(string s, int width) {
+            if (s.length < width) {
+                return s + string.nfill(width - s.length, ' ');
+            } else if (s.length > width) {
+                return s.substring(0, width - 3) + "...";
+            } else {
+                return s;
+            }
+        }
+
+        private static string format_value(DataValue data_value) {
+            string? result = null;
+
             switch (data_value.kind) {
                 case DataValueKind.NULL:
-                    stdout.printf("(null)\n");
+                    result = "(null)";
                     break;
 
                 case DataValueKind.INTEGER:
-                    stdout.printf("%" + int64.FORMAT_MODIFIER + "\n", data_value.integer_value);
+                    result = ("%" + int64.FORMAT_MODIFIER + "d").printf(data_value.integer_value);
                     break;
 
                 case DataValueKind.REAL:
-                    stdout.printf("%f\n", data_value.real_value);
+                    result = "%f".printf(data_value.real_value);
                     break;
 
                 case DataValueKind.TEXT:
-                    stdout.printf("'%s'\n", data_value.text_value);
+                    result = data_value.text_value.replace("\r\n", " ").replace("\r", " ").replace("\n", " ");
                     break;
 
                 case DataValueKind.BLOB:
                     // TODO: handle arrays
-                    stdout.printf("(blob, %d bytes)\n", data_value.blob_value.bytes.length);
-                    break;
-
-                default:
-                    assert(false);
+                    result = "(blob, %d bytes)".printf(data_value.blob_value.bytes.length);
                     break;
             }
+
+            assert(result != null);
+            return result;
         }
     }
 }
