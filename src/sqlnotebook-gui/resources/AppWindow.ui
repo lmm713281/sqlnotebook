@@ -22,6 +22,27 @@
     <property name="can_focus">False</property>
     <property name="resource">/com/sqlnotebook/sqlnotebook-gui/new_notebook_20.png</property>
   </object>
+  <object class="GtkImage" id="_note_bold_img">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="resource">/com/sqlnotebook/sqlnotebook-gui/note_bold_20.png</property>
+  </object>
+  <object class="GtkImage" id="_note_italic_img">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="resource">/com/sqlnotebook/sqlnotebook-gui/note_italic_20.png</property>
+  </object>
+  <object class="GtkImage" id="_note_underline_img">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="resource">/com/sqlnotebook/sqlnotebook-gui/note_underline_20.png</property>
+  </object>
+  <object class="GtkTreeStore" id="_notebook_tree_store">
+    <columns>
+      <!-- column-name _notebook_tree_store_name_column -->
+      <column type="gchararray"/>
+    </columns>
+  </object>
   <object class="GtkImage" id="_open_notebook_img">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
@@ -32,6 +53,7 @@
     <property name="can_focus">False</property>
     <property name="resource">/com/sqlnotebook/sqlnotebook-gui/save_notebook_20.png</property>
   </object>
+  <object class="GtkListStore" id="_sources_list_store"/>
   <template class="SqlNotebookGuiAppWindow" parent="GtkApplicationWindow">
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">SQL Notebook</property>
@@ -103,6 +125,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Add note</property>
                         <property name="use_underline">True</property>
+                        <signal name="activate" handler="add_note_mnu_activate" swapped="no"/>
                         <accelerator key="n" signal="activate" modifiers="GDK_SHIFT_MASK | GDK_CONTROL_MASK"/>
                       </object>
                     </child>
@@ -112,6 +135,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Add console</property>
                         <property name="use_underline">True</property>
+                        <signal name="activate" handler="add_console_mnu_activate" swapped="no"/>
                         <accelerator key="c" signal="activate" modifiers="GDK_SHIFT_MASK | GDK_CONTROL_MASK"/>
                       </object>
                     </child>
@@ -121,6 +145,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Add script</property>
                         <property name="use_underline">True</property>
+                        <signal name="activate" handler="add_script_mnu_activate" swapped="no"/>
                         <accelerator key="s" signal="activate" modifiers="GDK_SHIFT_MASK | GDK_CONTROL_MASK"/>
                       </object>
                     </child>
@@ -286,6 +311,7 @@
                 <property name="label" translatable="yes">Note</property>
                 <property name="use_underline">True</property>
                 <property name="icon_widget">_add_note_img</property>
+                <signal name="clicked" handler="add_note_btn_clicked" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -300,6 +326,7 @@
                 <property name="label" translatable="yes">Console</property>
                 <property name="use_underline">True</property>
                 <property name="icon_widget">_add_console_img</property>
+                <signal name="clicked" handler="add_console_btn_clicked" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -314,6 +341,59 @@
                 <property name="label" translatable="yes">Script</property>
                 <property name="use_underline">True</property>
                 <property name="icon_widget">_add_script_img</property>
+                <signal name="clicked" handler="add_script_btn_clicked" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSeparatorToolItem">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <style>
+                  <class name="toolbar_separator"/>
+                </style>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">False</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="_note_bold_btn">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">Bold</property>
+                <property name="use_underline">True</property>
+                <property name="icon_widget">_note_bold_img</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="_note_italic_btn">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">Italic</property>
+                <property name="use_underline">True</property>
+                <property name="icon_widget">_note_italic_img</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="_note_underline_btn">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">Underline</property>
+                <property name="use_underline">True</property>
+                <property name="icon_widget">_note_underline_img</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -352,14 +432,68 @@
             <property name="can_focus">True</property>
             <property name="hexpand">True</property>
             <property name="vexpand">True</property>
-            <property name="position">250</property>
+            <property name="position">300</property>
             <property name="position_set">True</property>
             <child>
-              <object class="GtkTreeView">
+              <object class="GtkNotebook" id="_side_tabs_ctl">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <child internal-child="selection">
-                  <object class="GtkTreeSelection"/>
+                <property name="show_border">False</property>
+                <property name="scrollable">True</property>
+                <property name="enable_popup">True</property>
+                <child>
+                  <object class="GtkScrolledWindow">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="kinetic_scrolling">False</property>
+                    <property name="overlay_scrolling">False</property>
+                    <child>
+                      <object class="GtkTreeView" id="_notebook_tree_view">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="model">_notebook_tree_store</property>
+                        <property name="headers_visible">False</property>
+                        <property name="search_column">0</property>
+                        <child internal-child="selection">
+                          <object class="GtkTreeSelection"/>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child type="tab">
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">Notebook</property>
+                  </object>
+                  <packing>
+                    <property name="tab_fill">False</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkTreeView" id="_sources_tree_view">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="model">_sources_list_store</property>
+                    <child internal-child="selection">
+                      <object class="GtkTreeSelection"/>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child type="tab">
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">Data Sources</property>
+                  </object>
+                  <packing>
+                    <property name="position">1</property>
+                    <property name="tab_fill">False</property>
+                  </packing>
                 </child>
               </object>
               <packing>
@@ -368,16 +502,21 @@
               </packing>
             </child>
             <child>
-              <object class="GtkNotebook">
+              <object class="GtkNotebook" id="_tabs_ctl">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="show_border">False</property>
+                <property name="scrollable">True</property>
+                <property name="enable_popup">True</property>
               </object>
               <packing>
                 <property name="resize">True</property>
                 <property name="shrink">True</property>
               </packing>
             </child>
+            <style>
+              <class name="app_window_document_area_background"/>
+            </style>
           </object>
           <packing>
             <property name="left_attach">0</property>

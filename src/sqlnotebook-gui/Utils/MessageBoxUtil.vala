@@ -14,16 +14,17 @@
 // OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-namespace SqlNotebook.Utils.ResourceUtil {
-    public string get_string(string path) {
-        try {
-            var input_stream = resources_open_stream(path, ResourceLookupFlags.NONE);
-            var data_input_stream = new DataInputStream(input_stream);
-            size_t length = 0;
-            return data_input_stream.read_upto("", -1, out length);
-        } catch (Error e) {
-            assert(false);
-            return "";
+using Gtk;
+
+namespace SqlNotebook.Gui.Utils.MessageBoxUtil {
+    public void show_error(Window parent, string primary_text, string? secondary_text = null) {
+        var message_dialog = new MessageDialog(
+                parent, DialogFlags.MODAL, MessageType.ERROR, ButtonsType.OK, "%s", primary_text);
+
+        if (secondary_text != null) {
+            message_dialog.secondary_text = secondary_text;
         }
+
+        message_dialog.run();
     }
 }

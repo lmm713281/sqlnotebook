@@ -14,16 +14,9 @@
 // OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-namespace SqlNotebook.Utils.ResourceUtil {
-    public string get_string(string path) {
-        try {
-            var input_stream = resources_open_stream(path, ResourceLookupFlags.NONE);
-            var data_input_stream = new DataInputStream(input_stream);
-            size_t length = 0;
-            return data_input_stream.read_upto("", -1, out length);
-        } catch (Error e) {
-            assert(false);
-            return "";
-        }
+namespace SqlNotebook.Gui.Editors {
+    [GtkTemplate(ui = "/com/sqlnotebook/sqlnotebook-gui/NoteControl.ui")]
+    public class NoteControl : Gtk.Grid {
+        // [GtkChild] private Gtk.TextView _text_view;
     }
 }

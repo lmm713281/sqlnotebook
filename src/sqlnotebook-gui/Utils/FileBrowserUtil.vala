@@ -18,43 +18,40 @@ using Gee;
 using Gtk;
 using SqlNotebook.Utils;
 
-namespace SqlNotebook.Gui.Utils {
-    [Compact]
-    public abstract class FileBrowserUtil {
-        public static string? open_file(Window? parent, string title, string filter_name, ArrayList<string> filter_extensions) {
-            string file_path;
-            var native_result = NativeFileBrowserUtil.run_open_file_dialog(
-                    title, filter_name, StringUtil.join_strings(";", filter_extensions), out file_path);
+namespace SqlNotebook.Gui.Utils.FileBrowserUtil {
+    public string? open_file(Window? parent, string title, string filter_name, ArrayList<string> filter_extensions) {
+        string file_path;
+        var native_result = NativeFileBrowserUtil.run_open_file_dialog(
+                title, filter_name, StringUtil.join_strings(";", filter_extensions), out file_path);
 
-            if (native_result == 1) {
-                // user selected a file
-                return file_path;
-            } else if (native_result == 0) {
-                // user canceled
-                return null;
+        if (native_result == 1) {
+            // user selected a file
+            return file_path;
+        } else if (native_result == 0) {
+            // user canceled
+            return null;
+        } else {
+            // fall back to gtk dialog
+            var w = new FileChooserNative(
+                    /* title */ title,
+                    /* parent */ parent,
+                    /* action */ FileChooserAction.OPEN,
+                    /* accept_label */ "Open",
+                    /* cancel_label */ "Cancel");
+            w.set_modal(true);
+            w.set_transient_for(parent);
+
+            var filter = new FileFilter();
+            filter.set_filter_name(filter_name);
+            foreach (var extension in filter_extensions) {
+                filter.add_pattern(extension);
+            }
+            w.add_filter(filter);
+
+            if (w.run() == ResponseType.ACCEPT) {
+                return w.get_filename();
             } else {
-                // fall back to gtk dialog
-                var w = new FileChooserNative(
-                        /* title */ title,
-                        /* parent */ parent,
-                        /* action */ FileChooserAction.OPEN,
-                        /* accept_label */ "Open",
-                        /* cancel_label */ "Cancel");
-                w.set_modal(true);
-                w.set_transient_for(parent);
-
-                var filter = new FileFilter();
-                filter.set_filter_name(filter_name);
-                foreach (var extension in filter_extensions) {
-                    filter.add_pattern(extension);
-                }
-                w.add_filter(filter);
-
-                if (w.run() == ResponseType.ACCEPT) {
-                    return w.get_filename();
-                } else {
-                    return null;
-                }
+                return null;
             }
         }
     }

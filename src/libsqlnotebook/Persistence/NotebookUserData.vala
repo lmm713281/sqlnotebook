@@ -18,6 +18,6 @@ using Gee;
 
 namespace SqlNotebook.Persistence {
     public class NotebookUserData : Object {
-        public ArrayList<NotebookItemRecord> items { get; set; default = new ArrayList<NotebookItemRecord>(); }
+        public ArrayList<NotebookItemRecord> items = new ArrayList<NotebookItemRecord>();
     }
 }

@@ -16,13 +16,10 @@
 
 using Gtk;
 
-namespace SqlNotebook.Gui.Utils {
-    [Compact]
-    public abstract class WebBrowserUtil {
-        public static void open(Window? parent, string url) throws Error {
-            if (NativeWebBrowserUtil.open_web_browser(url) == 0) {
-                Gtk.show_uri_on_window(parent, url, Gdk.CURRENT_TIME);
-            }
+namespace SqlNotebook.Gui.Utils.WebBrowserUtil {
+    public void open(Window? parent, string url) throws Error {
+        if (NativeWebBrowserUtil.open_web_browser(url) == 0) {
+            Gtk.show_uri_on_window(parent, url, Gdk.CURRENT_TIME);
         }
     }
 }

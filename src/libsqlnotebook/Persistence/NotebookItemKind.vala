@@ -16,7 +16,10 @@
 
 namespace SqlNotebook.Persistence {
     public enum NotebookItemKind {
-        SCRIPT
-        // TODO: note, console, table, view
+        SCRIPT,
+        NOTE,
+        CONSOLE,
+        TABLE,
+        VIEW
     }
 }

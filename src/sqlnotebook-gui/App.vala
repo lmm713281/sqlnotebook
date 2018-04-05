@@ -14,14 +14,32 @@
 // OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using SqlNotebook;
+using SqlNotebook.Errors;
+
 namespace SqlNotebook.Gui {
     public class App : Gtk.Application {
+        private Gtk.CssProvider _css_provider;
+
         public App() {
             Object(application_id: "com.sqlnotebook.SqlNotebook", flags: ApplicationFlags.FLAGS_NONE);
         }
 
         protected override void activate() {
-            var app_window = new AppWindow(this);
+            var screen = Gdk.Screen.get_default();
+            _css_provider = new Gtk.CssProvider();
+            _css_provider.load_from_resource("/com/sqlnotebook/sqlnotebook-gui/App.css");
+            Gtk.StyleContext.add_provider_for_screen(
+                    screen, _css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+
+            LibraryFactory library_factory;
+            try {
+                library_factory = LibraryFactory.create();
+            } catch (RuntimeError e) {
+                assert(false);
+                return;
+            }
+            var app_window = new AppWindow(this, library_factory);
             app_window.show_all();
         }
 

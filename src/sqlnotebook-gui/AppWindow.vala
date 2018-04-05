@@ -16,20 +16,30 @@
 
 using Gdk;
 using Gee;
-using Gtk;
+using SqlNotebook.Errors;
+using SqlNotebook.Gui.Editors;
 using SqlNotebook.Gui.Utils;
+using SqlNotebook.Persistence;
 using SqlNotebook.Utils;
 
 namespace SqlNotebook.Gui {
     [GtkTemplate(ui = "/com/sqlnotebook/sqlnotebook-gui/AppWindow.ui")]
-    public class AppWindow : ApplicationWindow {
+    public class AppWindow : Gtk.ApplicationWindow {
         private Gtk.Application _application;
+        private Notebook _notebook;
+        private LibraryFactory _library_factory;
+        private NotebookTreeStoreSync _notebook_tree_store_sync;
 
-        [GtkChild] private ToolItem _search_tool_item;
+        [GtkChild] private Gtk.ToolItem _search_tool_item;
+        [GtkChild] private Gtk.Notebook _tabs_ctl;
+        [GtkChild] private Gtk.TreeView _notebook_tree_view;
+        [GtkChild] private Gtk.TreeStore _notebook_tree_store;
 
-        public AppWindow(Gtk.Application application) {
+        public AppWindow(Gtk.Application application, LibraryFactory library_factory) {
             Object(application: application);
             _application = application;
+            _library_factory = library_factory;
+
             set_size_request(900, 650);
             set_role("SqlNotebookAppWindow");
 
@@ -39,22 +49,34 @@ namespace SqlNotebook.Gui {
             set_wmclass("SQL Notebook", "SQL Notebook");
 
             try {
+                _notebook = _library_factory.new_notebook();
                 icon = new Pixbuf.from_resource("/com/sqlnotebook/sqlnotebook-gui/sqlnotebook_48.png");
+
+                var search_entry = new Gtk.Entry() {
+                    placeholder_text = "Search Help"
+                };
+
+                search_entry.primary_icon_pixbuf = new Pixbuf.from_resource(
+                        "/com/sqlnotebook/sqlnotebook-gui/search_20.png");
+
+                _search_tool_item.add(search_entry);
+
+                init_notebook_tree();
             } catch (Error e) {
                 assert(false);
             }
+        }
 
-            var search_entry = new Entry() {
-                placeholder_text = "Search Help"
-            };
+        private void init_notebook_tree() throws RuntimeError {
+            _notebook_tree_view.insert_column_with_attributes(-1, null, new Gtk.CellRendererText(), "text", 0, null);
+            _notebook_tree_store_sync = new NotebookTreeStoreSync(_notebook, _notebook_tree_store);
 
+            var token = _notebook.enter();
             try {
-                search_entry.primary_icon_pixbuf = new Pixbuf.from_resource("/com/sqlnotebook/sqlnotebook-gui/search_20.png");
-            } catch (Error e) {
-                assert(false);
+                _notebook_tree_store_sync.initial_sync(token);
+            } finally {
+                _notebook.exit(token);
             }
-
-            _search_tool_item.add(search_entry);
         }
 
         [GtkCallback]
@@ -85,8 +107,38 @@ namespace SqlNotebook.Gui {
             dialog.show_all();
         }
 
+        [GtkCallback]
+        private void add_note_btn_clicked() {
+            add_new_item(NotebookItemKind.NOTE);
+        }
+
+        [GtkCallback]
+        private void add_note_mnu_activate() {
+            add_new_item(NotebookItemKind.NOTE);
+        }
+
+        [GtkCallback]
+        private void add_console_btn_clicked() {
+            add_new_item(NotebookItemKind.CONSOLE);
+        }
+
+        [GtkCallback]
+        private void add_console_mnu_activate() {
+            add_new_item(NotebookItemKind.CONSOLE);
+        }
+
+        [GtkCallback]
+        private void add_script_btn_clicked() {
+            add_new_item(NotebookItemKind.SCRIPT);
+        }
+
+        [GtkCallback]
+        private void add_script_mnu_activate() {
+            add_new_item(NotebookItemKind.SCRIPT);
+        }
+
         private void open_new_notebook_window() {
-            var w = new AppWindow(_application);
+            var w = new AppWindow(_application, _library_factory);
             w.show_all();
         }
 
@@ -94,6 +146,46 @@ namespace SqlNotebook.Gui {
             var extensions = new ArrayList<string>();
             extensions.add("*.sqlnb");
             FileBrowserUtil.open_file(this, "Open Notebook", "SQL Notebook files", extensions);
+        }
+
+        private void add_new_item(NotebookItemKind kind) {
+            string? name = null;
+
+            var token = _notebook.enter();
+            try {
+                name = _notebook.add_new_item(kind, token);
+                _notebook_tree_store_sync.sync(token);
+            } catch (RuntimeError e) {
+                MessageBoxUtil.show_error(this, "Unable to add the new item.", e.message);
+            } finally {
+                _notebook.exit(token);
+            }
+            if (name != null) {
+                open_existing_item(kind, name);
+            }
+        }
+
+        private void open_existing_item(NotebookItemKind kind, string name) {
+            var title = new Gtk.Label(name);
+
+            Gtk.Widget content = null;
+
+            switch (kind) {
+                case NotebookItemKind.NOTE:
+                    content = new NoteControl();
+                    break;
+
+                default:
+                    content = new Gtk.Label("Unknown item kind!");
+                    break;
+            }
+
+            title.show();
+            content.show();
+
+            var index = _tabs_ctl.append_page(content, title);
+            assert(index != -1);
+            _tabs_ctl.set_current_page(index);
         }
     }
 }

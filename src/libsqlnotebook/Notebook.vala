@@ -106,5 +106,82 @@ namespace SqlNotebook {
             _lock_box.check(token);
             return _sqlite_session.query_with_named_args(sql, args);
         }
+
+        /**
+         * Adds a new blank item (console, note, or script) to the notebook.
+         * @param kind What type of item to add
+         * @param token Proof that the caller acquired the notebook lock using {@link enter}
+         * @return Name of the newly added item
+         */
+        public string add_new_item(NotebookItemKind kind, NotebookLockToken token) throws RuntimeError {
+            _lock_box.check(token);
+
+            var name = get_new_item_name(kind);
+            var item = new NotebookItemRecord() {
+                name = name,
+                kind = kind,
+                data = ""
+            };
+            _notebook_user_data.items.add(item);
+
+            return name;
+        }
+
+        /**
+         * Get a list of the names of all notebook items of a given kind.
+         * @param kind What type of items to list
+         * @param token Proof that the caller acquired the notebook lock using {@link enter}
+         * @return List of item names
+         */
+        public HashSet<string> get_names_of_items_of_kind(NotebookItemKind kind, NotebookLockToken token)
+        throws RuntimeError {
+            _lock_box.check(token);
+
+            var list = new HashSet<string>();
+            foreach (var notebook_item_record in _notebook_user_data.items) {
+                if (notebook_item_record.kind == kind) {
+                    list.add(notebook_item_record.name);
+                }
+            }
+
+            return list;
+        }
+
+        private string get_new_item_name(NotebookItemKind kind) {
+            var prefix = "";
+
+            switch (kind) {
+                case NotebookItemKind.CONSOLE:
+                    prefix = "Console";
+                    break;
+
+                case NotebookItemKind.NOTE:
+                    prefix = "Note";
+                    break;
+
+                case NotebookItemKind.SCRIPT:
+                    prefix = "Script";
+                    break;
+
+                default:
+                    assert(false);
+                    break;
+            }
+
+            var existing_down_names = new HashSet<string>();
+            foreach (var item in _notebook_user_data.items) {
+                existing_down_names.add(item.name.down());
+            }
+
+            var name = "";
+            for (var i = 1; ; i++) {
+                name = @"$prefix$i";
+                if (!existing_down_names.contains(name.down())) {
+                    break;
+                }
+            }
+
+            return name;
+        }
     }
 }
