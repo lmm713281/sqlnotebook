@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.20.0 -->
+<!-- Generated with glade 3.22.1 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
   <object class="GtkImage" id="_add_console_img">
@@ -17,36 +17,11 @@
     <property name="can_focus">False</property>
     <property name="resource">/com/sqlnotebook/sqlnotebook-gui/script_add_20.png</property>
   </object>
-  <object class="GtkImage" id="_new_notebook_img">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="resource">/com/sqlnotebook/sqlnotebook-gui/new_notebook_20.png</property>
-  </object>
-  <object class="GtkImage" id="_note_bold_img">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="resource">/com/sqlnotebook/sqlnotebook-gui/note_bold_20.png</property>
-  </object>
-  <object class="GtkImage" id="_note_italic_img">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="resource">/com/sqlnotebook/sqlnotebook-gui/note_italic_20.png</property>
-  </object>
-  <object class="GtkImage" id="_note_underline_img">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="resource">/com/sqlnotebook/sqlnotebook-gui/note_underline_20.png</property>
-  </object>
   <object class="GtkTreeStore" id="_notebook_tree_store">
     <columns>
       <!-- column-name _notebook_tree_store_name_column -->
       <column type="gchararray"/>
     </columns>
-  </object>
-  <object class="GtkImage" id="_open_notebook_img">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="resource">/com/sqlnotebook/sqlnotebook-gui/open_notebook_20.png</property>
   </object>
   <object class="GtkImage" id="_save_notebook_img">
     <property name="visible">True</property>
@@ -58,6 +33,9 @@
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">SQL Notebook</property>
     <property name="has_resize_grip">True</property>
+    <child>
+      <placeholder/>
+    </child>
     <child>
       <object class="GtkGrid" id="_main_grid">
         <property name="visible">True</property>
@@ -243,196 +221,12 @@
           </packing>
         </child>
         <child>
-          <object class="GtkToolbar" id="_toolbar">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <child>
-              <object class="GtkToolButton" id="_new_notebook_btn">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">Create a new notebook</property>
-                <property name="label" translatable="yes">New</property>
-                <property name="use_underline">True</property>
-                <property name="icon_widget">_new_notebook_img</property>
-                <signal name="clicked" handler="new_notebook_btn_clicked" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToolButton" id="_open_notebook_btn">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">Open a saved notebook file</property>
-                <property name="label" translatable="yes">Open</property>
-                <property name="use_underline">True</property>
-                <property name="icon_widget">_open_notebook_img</property>
-                <signal name="clicked" handler="open_notebook_btn_clicked" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToolButton" id="_save_notebook_btn">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">Save the notebook file</property>
-                <property name="label" translatable="yes">Save</property>
-                <property name="use_underline">True</property>
-                <property name="icon_widget">_save_notebook_img</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkSeparatorToolItem">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <style>
-                  <class name="toolbar_separator"/>
-                </style>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">False</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToolButton" id="_add_note_btn">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">Add a new note</property>
-                <property name="label" translatable="yes">Note</property>
-                <property name="use_underline">True</property>
-                <property name="icon_widget">_add_note_img</property>
-                <signal name="clicked" handler="add_note_btn_clicked" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToolButton" id="_add_console_btn">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">Add a new console</property>
-                <property name="label" translatable="yes">Console</property>
-                <property name="use_underline">True</property>
-                <property name="icon_widget">_add_console_img</property>
-                <signal name="clicked" handler="add_console_btn_clicked" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToolButton" id="_add_script_btn">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">Add a new script</property>
-                <property name="label" translatable="yes">Script</property>
-                <property name="use_underline">True</property>
-                <property name="icon_widget">_add_script_img</property>
-                <signal name="clicked" handler="add_script_btn_clicked" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkSeparatorToolItem">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <style>
-                  <class name="toolbar_separator"/>
-                </style>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">False</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToolButton" id="_note_bold_btn">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Bold</property>
-                <property name="use_underline">True</property>
-                <property name="icon_widget">_note_bold_img</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToolButton" id="_note_italic_btn">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Italic</property>
-                <property name="use_underline">True</property>
-                <property name="icon_widget">_note_italic_img</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToolButton" id="_note_underline_btn">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Underline</property>
-                <property name="use_underline">True</property>
-                <property name="icon_widget">_note_underline_img</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToolItem">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="homogeneous">False</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToolItem" id="_search_tool_item">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">False</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="left_attach">0</property>
-            <property name="top_attach">1</property>
-          </packing>
-        </child>
-        <child>
           <object class="GtkPaned">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="hexpand">True</property>
             <property name="vexpand">True</property>
-            <property name="position">300</property>
+            <property name="position">260</property>
             <property name="position_set">True</property>
             <child>
               <object class="GtkNotebook" id="_side_tabs_ctl">
@@ -440,24 +234,120 @@
                 <property name="can_focus">True</property>
                 <property name="show_border">False</property>
                 <property name="scrollable">True</property>
-                <property name="enable_popup">True</property>
                 <child>
-                  <object class="GtkScrolledWindow">
+                  <object class="GtkGrid">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="kinetic_scrolling">False</property>
-                    <property name="overlay_scrolling">False</property>
+                    <property name="can_focus">False</property>
+                    <property name="hexpand">True</property>
+                    <property name="vexpand">True</property>
                     <child>
-                      <object class="GtkTreeView" id="_notebook_tree_view">
+                      <object class="GtkScrolledWindow">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="model">_notebook_tree_store</property>
-                        <property name="headers_visible">False</property>
-                        <property name="search_column">0</property>
-                        <child internal-child="selection">
-                          <object class="GtkTreeSelection"/>
+                        <property name="hexpand">True</property>
+                        <property name="vexpand">True</property>
+                        <property name="kinetic_scrolling">False</property>
+                        <property name="overlay_scrolling">False</property>
+                        <child>
+                          <object class="GtkTreeView" id="_notebook_tree_view">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="model">_notebook_tree_store</property>
+                            <property name="headers_visible">False</property>
+                            <property name="search_column">0</property>
+                            <child internal-child="selection">
+                              <object class="GtkTreeSelection"/>
+                            </child>
+                          </object>
                         </child>
                       </object>
+                      <packing>
+                        <property name="left_attach">0</property>
+                        <property name="top_attach">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkToolbar" id="_toolbar">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="hexpand">True</property>
+                        <child>
+                          <object class="GtkToolButton" id="_save_notebook_btn">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="tooltip_text" translatable="yes">Save the notebook file</property>
+                            <property name="label" translatable="yes">Save</property>
+                            <property name="use_underline">True</property>
+                            <property name="icon_widget">_save_notebook_img</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="homogeneous">True</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkSeparatorToolItem">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <style>
+                              <class name="toolbar_separator"/>
+                            </style>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="homogeneous">False</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkToolButton" id="_add_note_btn">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="tooltip_text" translatable="yes">Add a new note</property>
+                            <property name="label" translatable="yes">Note</property>
+                            <property name="use_underline">True</property>
+                            <property name="icon_widget">_add_note_img</property>
+                            <signal name="clicked" handler="add_note_btn_clicked" swapped="no"/>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="homogeneous">True</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkToolButton" id="_add_console_btn">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="tooltip_text" translatable="yes">Add a new console</property>
+                            <property name="label" translatable="yes">Console</property>
+                            <property name="use_underline">True</property>
+                            <property name="icon_widget">_add_console_img</property>
+                            <signal name="clicked" handler="add_console_btn_clicked" swapped="no"/>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="homogeneous">True</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkToolButton" id="_add_script_btn">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="tooltip_text" translatable="yes">Add a new script</property>
+                            <property name="label" translatable="yes">Script</property>
+                            <property name="use_underline">True</property>
+                            <property name="icon_widget">_add_script_img</property>
+                            <signal name="clicked" handler="add_script_btn_clicked" swapped="no"/>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="homogeneous">True</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="left_attach">0</property>
+                        <property name="top_attach">0</property>
+                      </packing>
                     </child>
                   </object>
                 </child>
@@ -507,7 +397,6 @@
                 <property name="can_focus">True</property>
                 <property name="show_border">False</property>
                 <property name="scrollable">True</property>
-                <property name="enable_popup">True</property>
               </object>
               <packing>
                 <property name="resize">True</property>
@@ -520,7 +409,7 @@
           </object>
           <packing>
             <property name="left_attach">0</property>
-            <property name="top_attach">2</property>
+            <property name="top_attach">1</property>
           </packing>
         </child>
       </object>

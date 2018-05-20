@@ -30,7 +30,6 @@ namespace SqlNotebook.Gui {
         private LibraryFactory _library_factory;
         private NotebookTreeStoreSync _notebook_tree_store_sync;
 
-        [GtkChild] private Gtk.ToolItem _search_tool_item;
         [GtkChild] private Gtk.Notebook _tabs_ctl;
         [GtkChild] private Gtk.TreeView _notebook_tree_view;
         [GtkChild] private Gtk.TreeStore _notebook_tree_store;
@@ -51,15 +50,6 @@ namespace SqlNotebook.Gui {
             try {
                 _notebook = _library_factory.new_notebook();
                 icon = new Pixbuf.from_resource("/com/sqlnotebook/sqlnotebook-gui/sqlnotebook_48.png");
-
-                var search_entry = new Gtk.Entry() {
-                    placeholder_text = "Search Help"
-                };
-
-                search_entry.primary_icon_pixbuf = new Pixbuf.from_resource(
-                        "/com/sqlnotebook/sqlnotebook-gui/search_20.png");
-
-                _search_tool_item.add(search_entry);
 
                 init_notebook_tree();
             } catch (Error e) {
@@ -85,17 +75,7 @@ namespace SqlNotebook.Gui {
         }
 
         [GtkCallback]
-        private void new_notebook_btn_clicked() {
-            open_new_notebook_window();
-        }
-
-        [GtkCallback]
         private void open_mnu_activate() {
-            open_existing_notebook_window();
-        }
-
-        [GtkCallback]
-        private void open_notebook_btn_clicked() {
             open_existing_notebook_window();
         }
 

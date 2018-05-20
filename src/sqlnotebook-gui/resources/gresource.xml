@@ -4,6 +4,8 @@
     <file compressed="true">AboutDialog.ui</file>
     <file compressed="true">App.css</file>
     <file compressed="true">AppWindow.ui</file>
+    <file compressed="true">FontFamilyComboBox.ui</file>
+    <file compressed="true">FontSizeComboBox.ui</file>
     <file compressed="true">license.txt</file>
     <file compressed="true">NoteControl.ui</file>
     <file alias="console_20.png">../../../art/console_20.png</file>

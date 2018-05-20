@@ -12,7 +12,7 @@ bin-web/
 obj-web/
 bin-valadoc/
 meson.build
-*.ui~
+*~
 *.ui#
 *.DS_Store
 *.vala.uncrustify
