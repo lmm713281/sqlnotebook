@@ -388,6 +388,9 @@
                     <property name="tab_fill">False</property>
                   </packing>
                 </child>
+                <style>
+                  <class name="app_window_side_tabs_ctl"/>
+                </style>
               </object>
               <packing>
                 <property name="resize">False</property>
@@ -400,6 +403,9 @@
                 <property name="can_focus">True</property>
                 <property name="show_border">False</property>
                 <property name="scrollable">True</property>
+                <style>
+                  <class name="app_window_tabs_ctl"/>
+                </style>
               </object>
               <packing>
                 <property name="resize">True</property>

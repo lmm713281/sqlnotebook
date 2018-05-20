@@ -44,6 +44,8 @@ namespace SqlNotebook.Gui {
             // it also needs to match the StartupWMClass property in the .desktop file.
             set_wmclass("SQL Notebook", "SQL Notebook");
 
+            set_size_request(600, 400); // minimum size
+
             try {
                 _notebook = _library_factory.new_notebook();
                 icon = new Pixbuf.from_resource("/com/sqlnotebook/sqlnotebook-gui/sqlnotebook_48.png");
