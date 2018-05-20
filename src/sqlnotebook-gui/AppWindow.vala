@@ -39,9 +39,6 @@ namespace SqlNotebook.Gui {
             _application = application;
             _library_factory = library_factory;
 
-            set_size_request(900, 650);
-            set_role("SqlNotebookAppWindow");
-
             // https://stackoverflow.com/a/9343106
             // this sets the application name in the GNOME shell top bar.
             // it also needs to match the StartupWMClass property in the .desktop file.
@@ -146,10 +143,7 @@ namespace SqlNotebook.Gui {
         }
 
         private void open_existing_item(NotebookItemKind kind, string name) {
-            var title = new Gtk.Label(name);
-
             Gtk.Widget content = null;
-
             switch (kind) {
                 case NotebookItemKind.NOTE:
                     content = new NoteControl();
@@ -159,6 +153,12 @@ namespace SqlNotebook.Gui {
                     content = new Gtk.Label("Unknown item kind!");
                     break;
             }
+
+            var title = new TabTitleControl(kind, name);
+            title.close_tab.connect(() => {
+                var current_page_index = _tabs_ctl.page_num(content);
+                _tabs_ctl.remove_page(current_page_index);
+            });
 
             title.show();
             content.show();

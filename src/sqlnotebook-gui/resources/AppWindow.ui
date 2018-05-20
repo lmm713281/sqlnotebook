@@ -32,6 +32,9 @@
   <template class="SqlNotebookGuiAppWindow" parent="GtkApplicationWindow">
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">SQL Notebook</property>
+    <property name="role">SqlNotebookAppWindow</property>
+    <property name="default_width">900</property>
+    <property name="default_height">650</property>
     <property name="has_resize_grip">True</property>
     <child>
       <placeholder/>
@@ -299,21 +302,6 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkToolButton" id="_add_note_btn">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="tooltip_text" translatable="yes">Add a new note</property>
-                            <property name="label" translatable="yes">Note</property>
-                            <property name="use_underline">True</property>
-                            <property name="icon_widget">_add_note_img</property>
-                            <signal name="clicked" handler="add_note_btn_clicked" swapped="no"/>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="homogeneous">True</property>
-                          </packing>
-                        </child>
-                        <child>
                           <object class="GtkToolButton" id="_add_console_btn">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
@@ -322,6 +310,21 @@
                             <property name="use_underline">True</property>
                             <property name="icon_widget">_add_console_img</property>
                             <signal name="clicked" handler="add_console_btn_clicked" swapped="no"/>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="homogeneous">True</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkToolButton" id="_add_note_btn">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="tooltip_text" translatable="yes">Add a new note</property>
+                            <property name="label" translatable="yes">Note</property>
+                            <property name="use_underline">True</property>
+                            <property name="icon_widget">_add_note_img</property>
+                            <signal name="clicked" handler="add_note_btn_clicked" swapped="no"/>
                           </object>
                           <packing>
                             <property name="expand">False</property>

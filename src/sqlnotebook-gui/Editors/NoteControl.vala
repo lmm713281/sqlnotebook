@@ -172,7 +172,7 @@ namespace SqlNotebook.Gui.Editors {
             if (tag == null) {
                 return;
             }
-            
+
             Gtk.TextIter start_iter, end_iter;
             if (!_text_buffer.get_selection_bounds(out start_iter, out end_iter)) {
                 var insert_mark = _text_buffer.get_insert();

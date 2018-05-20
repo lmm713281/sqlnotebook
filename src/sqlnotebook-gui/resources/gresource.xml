@@ -8,6 +8,8 @@
     <file compressed="true">FontSizeComboBox.ui</file>
     <file compressed="true">license.txt</file>
     <file compressed="true">NoteControl.ui</file>
+    <file compressed="true">TabTitleControl.ui</file>
+    <file alias="close_tab_12.png">../../../art/close_tab_12.png</file>
     <file alias="console_20.png">../../../art/console_20.png</file>
     <file alias="console_add_20.png">../../../art/console_add_20.png</file>
     <file alias="note_20.png">../../../art/note_20.png</file>
