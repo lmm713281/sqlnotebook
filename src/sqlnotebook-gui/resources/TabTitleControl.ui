@@ -13,7 +13,7 @@
           <object class="GtkLabel" id="_label">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="margin_right">4</property>
+            <property name="margin_right">7</property>
             <property name="label" translatable="yes">label</property>
             <property name="single_line_mode">True</property>
             <property name="max_width_chars">40</property>
