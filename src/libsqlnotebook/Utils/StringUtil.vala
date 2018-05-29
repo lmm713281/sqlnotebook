@@ -16,24 +16,21 @@
 
 using Gee;
 
-namespace SqlNotebook.Utils {
-    [Compact]
-    public abstract class StringUtil {
-        public static string join_strings(string separator, Traversable<string> strings) {
-            var sb = new StringBuilder();
+namespace SqlNotebook.Utils.StringUtil {
+    public string join_strings(string separator, Traversable<string> strings) {
+        var sb = new StringBuilder();
 
-            var first = true;
-            strings.@foreach(s => {
-                if (first) {
-                    first = false;
-                } else {
-                    sb.append(separator);
-                }
-                sb.append(s);
-                return true;
-            });
+        var first = true;
+        strings.@foreach(s => {
+            if (first) {
+                first = false;
+            } else {
+                sb.append(separator);
+            }
+            sb.append(s);
+            return true;
+        });
 
-            return sb.str;
-        }
+        return sb.str;
     }
 }

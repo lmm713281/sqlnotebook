@@ -17,17 +17,24 @@
 using Gee;
 using SqlNotebook.Collections;
 using SqlNotebook.Errors;
+using SqlNotebook.Interpreter.ScalarFunctions;
 using SqlNotebook.Utils;
 
 namespace SqlNotebook {
     public class SqliteSession : Object {
+        private BidirList<ScalarFunction> _scalar_functions;
+
         private string _file_path;
         private bool _is_temporary;
         private Sqlite.Database? _database;
+        private ArrayList<ScalarFunctionRegistration> _scalar_function_registrations;
 
-        private SqliteSession(string file_path, bool is_temporary) {
+        public SqliteSession(string file_path, bool is_temporary,
+                BidirList<ScalarFunction> scalar_functions) {
             _file_path = file_path;
             _is_temporary = is_temporary;
+            _scalar_functions = scalar_functions;
+            _scalar_function_registrations = new ArrayList<ScalarFunctionRegistration>();
         }
 
         ~SqliteSession() {
@@ -42,12 +49,6 @@ namespace SqlNotebook {
             }
         }
 
-        public static SqliteSession open(string file_path, bool is_temporary) throws RuntimeError {
-            var session = new SqliteSession(file_path, is_temporary);
-            maybe_throw_without_database(Sqlite.Database.open(file_path, out session._database));
-            return session;
-        }
-
         public bool is_open {
             get {
                 return _database != null;
@@ -56,10 +57,52 @@ namespace SqlNotebook {
 
         public void close() {
             _database = null;
+            _scalar_function_registrations.clear();
         }
 
-        public void reopen() throws RuntimeError {
+        public void open(Notebook notebook) throws RuntimeError {
             maybe_throw_without_database(Sqlite.Database.open(_file_path, out _database));
+            register_scalar_functions(notebook);
+        }
+
+        private void register_scalar_functions(Notebook notebook) throws RuntimeError {
+            _scalar_function_registrations.clear();
+
+            foreach (var f in _scalar_functions) {
+                var scalar_function_registration = new ScalarFunctionRegistration() {
+                    scalar_function = f,
+                    notebook = notebook
+                };
+
+                maybe_throw(_database, _database.create_function_v2(
+                        /* zFunctionName */ f.get_name(),
+                        /* nArg */ f.get_parameter_count(),
+                        /* eTextRep */ Sqlite.UTF8,
+                        /* user_data */ scalar_function_registration,
+                        /* xFunc */ scalar_function_invoke,
+                        /* xStep */ null,
+                        /* xFinal */ null,
+                        /* xDestroy */ null));
+
+                _scalar_function_registrations.add(scalar_function_registration);
+            }
+        }
+
+        private static void scalar_function_invoke(Sqlite.Context context,
+                [CCode(array_length_pos = 1.1)] Sqlite.Value[] values) {
+            var registration = context.user_data<ScalarFunctionRegistration>();
+
+            var args = new ArrayList<DataValue>();
+            foreach (unowned Sqlite.Value arg in values) {
+                args.add(DataValue.for_sqlite_value(arg));
+            }
+
+            try {
+                var return_value = registration.scalar_function.execute(args);
+                return_value.set_as_sqlite_result(context);
+            } catch (RuntimeError e) {
+                context.result_error(e.message, -1);
+            }
         }
 
         private static void maybe_throw(Sqlite.Database database, int sqlite_result) throws RuntimeError {

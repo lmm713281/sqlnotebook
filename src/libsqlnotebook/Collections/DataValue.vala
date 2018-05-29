@@ -85,5 +85,84 @@ namespace SqlNotebook.Collections {
                     return "(unknown kind)";
             }
         }
+
+        public string get_kind_name() {
+            switch (kind) {
+                case DataValueKind.INTEGER:
+                    return "INTEGER";
+
+                case DataValueKind.REAL:
+                    return "REAL";
+
+                case DataValueKind.TEXT:
+                    return "TEXT";
+
+                case DataValueKind.NULL:
+                    return "NULL";
+
+                case DataValueKind.BLOB:
+                    return "BLOB";
+
+                default:
+                    assert(false);
+                    return "(unknown kind)";
+            }
+        }
+
+        internal static DataValue for_sqlite_value(Sqlite.Value x) {
+            switch (x.to_type()) {
+                case Sqlite.INTEGER:
+                    return for_integer(x.to_int64());
+
+                case Sqlite.FLOAT:
+                    return for_real(x.to_double());
+
+                case Sqlite.TEXT:
+                    return for_text(x.to_text());
+
+                case Sqlite.BLOB:
+                    var blob_length = x.to_bytes();
+                    var blob = new DataValueBlob() {
+                        bytes = new uint8[blob_length]
+                    };
+                    Posix.memcpy(blob.bytes, x.to_blob(), blob_length);
+                    return for_blob(blob);
+
+                case Sqlite.NULL:
+                    return for_null();
+
+                default:
+                    assert(false);
+                    return for_null();
+            }
+        }
+
+        internal void set_as_sqlite_result(Sqlite.Context context) {
+            switch (kind) {
+                case DataValueKind.INTEGER:
+                    context.result_int64(integer_value);
+                    break;
+
+                case DataValueKind.REAL:
+                    context.result_double(real_value);
+                    break;
+
+                case DataValueKind.TEXT:
+                    context.result_text(text_value);
+                    break;
+
+                case DataValueKind.NULL:
+                    context.result_null();
+                    break;
+
+                case DataValueKind.BLOB:
+                    context.result_blob(blob_value.bytes);
+                    break;
+
+                default:
+                    assert(false);
+                    break;
+            }
+        }
     }
 }

@@ -14,24 +14,29 @@
 // OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using Gee;
+using SqlNotebook.Collections;
+using SqlNotebook.Errors;
 
-namespace SqlNotebook.Utils.CollectionUtil {
-    public TDstItem[] to_casted_array<TSrcItem, TDstItem>(Collection<TSrcItem> list) {
-        var count = list.size;
-        var array = new TDstItem[count];
-        var n = 0;
-        list.@foreach(x => {
-            array[n++] = (TDstItem)x;
-            return true;
-        });
-        return array;
+namespace SqlNotebook.Utils.ArgUtil {
+    public int64 get_int_arg(DataValue arg, string param_name, string function_name) throws RuntimeError {
+        if (arg.kind == DataValueKind.INTEGER) {
+            return arg.integer_value;
+        } else {
+            var actual_kind = arg.get_kind_name();
+            throw new RuntimeError.WRONG_ARGUMENT_KIND(@"The \"$param_name\" argument must be an INTEGER value, but " +
+                    @"type $actual_kind was provided.");
+        }
     }
 
-    public void add_many<T>(Collection<T> target, Traversable<T> source) {
-        source.@foreach(x => {
-            target.add(x);
-            return true;
-        });
+    public double get_real_arg(DataValue arg, string param_name, string function_name) throws RuntimeError {
+        if (arg.kind == DataValueKind.REAL) {
+            return arg.real_value;
+        } else if (arg.kind == DataValueKind.INTEGER) {
+            return arg.integer_value;
+        } else {
+            var actual_kind = arg.get_kind_name();
+            throw new RuntimeError.WRONG_ARGUMENT_KIND(@"The \"$param_name\" argument must be a REAL value, but " +
+                    @"type $actual_kind was provided.");
+        }
     }
 }

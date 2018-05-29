@@ -15,23 +15,14 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using Gee;
+using SqlNotebook.Collections;
+using SqlNotebook.Errors;
 
-namespace SqlNotebook.Utils.CollectionUtil {
-    public TDstItem[] to_casted_array<TSrcItem, TDstItem>(Collection<TSrcItem> list) {
-        var count = list.size;
-        var array = new TDstItem[count];
-        var n = 0;
-        list.@foreach(x => {
-            array[n++] = (TDstItem)x;
-            return true;
-        });
-        return array;
-    }
-
-    public void add_many<T>(Collection<T> target, Traversable<T> source) {
-        source.@foreach(x => {
-            target.add(x);
-            return true;
-        });
+namespace SqlNotebook.Interpreter.ScalarFunctions {
+    public abstract class ScalarFunction : Object {
+        public abstract string get_name();
+        public abstract int get_parameter_count();
+        public abstract bool is_deterministic();
+        public abstract DataValue execute(Gee.ArrayList<DataValue> args) throws RuntimeError;
     }
 }

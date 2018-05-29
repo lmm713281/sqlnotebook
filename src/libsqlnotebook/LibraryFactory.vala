@@ -16,6 +16,8 @@
 
 using SqlNotebook.Errors;
 using SqlNotebook.Interpreter;
+using SqlNotebook.Interpreter.ScalarFunctions;
+using SqlNotebook.Interpreter.ScalarFunctions.MonadicMathFunctions;
 using SqlNotebook.Interpreter.SqliteSyntax;
 using SqlNotebook.Interpreter.Tokens;
 using SqlNotebook.Persistence;
@@ -33,6 +35,7 @@ namespace SqlNotebook {
         private SqliteParser _sqlite_parser;
         private TempFolder _temp_folder;
         private Tokenizer _tokenizer;
+        private Gee.BidirList<ScalarFunction> _scalar_functions;
 
         private LibraryFactory() {
         }
@@ -50,6 +53,26 @@ namespace SqlNotebook {
             f._script_parser = new ScriptParser(f._tokenizer, f._sqlite_parser);
             f._notebook_serializer = new NotebookSerializer(f._temp_folder);
 
+            var scalar_functions = new Gee.ArrayList<ScalarFunction>();
+            scalar_functions.add(new AcosFunction());
+            scalar_functions.add(new AsinFunction());
+            scalar_functions.add(new AtanFunction());
+            scalar_functions.add(new CeilingFunction());
+            scalar_functions.add(new CosFunction());
+            scalar_functions.add(new CoshFunction());
+            scalar_functions.add(new ExpFunction());
+            scalar_functions.add(new FloorFunction());
+            scalar_functions.add(new LogFunction());
+            scalar_functions.add(new Log10Function());
+            scalar_functions.add(new RoundFunction());
+            scalar_functions.add(new SignFunction());
+            scalar_functions.add(new SinFunction());
+            scalar_functions.add(new SinhFunction());
+            scalar_functions.add(new SqrtFunction());
+            scalar_functions.add(new TanFunction());
+            scalar_functions.add(new TanhFunction());
+            f._scalar_functions = scalar_functions.read_only_view;
+
             MatchResult.init();
 
             return f;
@@ -61,9 +84,11 @@ namespace SqlNotebook {
 
         public Notebook new_notebook() throws RuntimeError {
             var file_path = _temp_folder.get_temp_file_path(".db");
-            var session = SqliteSession.open(file_path, true);
+            var session = new SqliteSession(file_path, true, _scalar_functions);
             var user_data = new NotebookUserData();
-            return new Notebook(null, file_path, session, user_data, _notebook_serializer);
+            var notebook = new Notebook(null, file_path, session, user_data, _notebook_serializer);
+            session.open(notebook);
+            return notebook;
         }
 
         public Notebook open_notebook(string notebook_file_path) throws RuntimeError {
@@ -71,8 +96,10 @@ namespace SqlNotebook {
             NotebookUserData user_data;
             _notebook_serializer.open_notebook(notebook_file_path, out sqlite_db_file_path, out user_data);
 
-            var session = SqliteSession.open(sqlite_db_file_path, false);
-            return new Notebook(notebook_file_path, sqlite_db_file_path, session, user_data, _notebook_serializer);
+            var session = new SqliteSession(sqlite_db_file_path, false, _scalar_functions);
+            var notebook = new Notebook(notebook_file_path, sqlite_db_file_path, session, user_data, _notebook_serializer);
+            session.open(notebook);
+            return notebook;
         }
 
         public ScriptEnvironment get_script_environment() {
@@ -85,6 +112,10 @@ namespace SqlNotebook {
 
         public ScriptRunner get_script_runner(Notebook notebook, NotebookLockToken token) {
             return new ScriptRunner(notebook, token);
+        }
+
+        public Gee.BidirList<ScalarFunction> get_scalar_functions() {
+            return _scalar_functions;
         }
     }
 }

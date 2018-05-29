@@ -14,24 +14,25 @@
 // OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using Gee;
+using SqlNotebook.Collections;
+using SqlNotebook.Errors;
+using SqlNotebook.Utils;
 
-namespace SqlNotebook.Utils.CollectionUtil {
-    public TDstItem[] to_casted_array<TSrcItem, TDstItem>(Collection<TSrcItem> list) {
-        var count = list.size;
-        var array = new TDstItem[count];
-        var n = 0;
-        list.@foreach(x => {
-            array[n++] = (TDstItem)x;
-            return true;
-        });
-        return array;
-    }
+namespace SqlNotebook.Interpreter.ScalarFunctions.MonadicMathFunctions {
+    public abstract class MonadicMathFunction : ScalarFunction {
+        public override int get_parameter_count() {
+            return 1;
+        }
 
-    public void add_many<T>(Collection<T> target, Traversable<T> source) {
-        source.@foreach(x => {
-            target.add(x);
+        public override bool is_deterministic() {
             return true;
-        });
+        }
+
+        public override DataValue execute(Gee.ArrayList<DataValue> args) throws RuntimeError {
+            var x = ArgUtil.get_real_arg(args[0], "x", get_name());
+            return DataValue.for_real(execute_core(x));
+        }
+
+        protected abstract double execute_core(double x);
     }
 }

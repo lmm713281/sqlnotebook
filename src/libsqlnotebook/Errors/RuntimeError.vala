@@ -59,6 +59,7 @@ namespace SqlNotebook.Errors {
         UNCAUGHT_SCRIPT_ERROR,
         CORRUPT_NOTEBOOK_FILE,
         UNSUPPORTED_NOTEBOOK_FILE,
-        SAVE_FAILED
+        SAVE_FAILED,
+        WRONG_ARGUMENT_KIND
     }
 }

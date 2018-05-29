@@ -16,17 +16,14 @@
 
 using Gee;
 
-namespace SqlNotebook.Utils {
-    [Compact]
-    public abstract class MapUtil {
-        public static bool try_get_value<TK, TV>(HashMap<TK, TV> self, TK key, out TV value) {
-            if (self.has_key(key)) {
-                value = self.get(key);
-                return true;
-            } else {
-                value = null;
-                return false;
-            }
+namespace SqlNotebook.Utils.MapUtil {
+    public bool try_get_value<TK, TV>(HashMap<TK, TV> self, TK key, out TV value) {
+        if (self.has_key(key)) {
+            value = self.get(key);
+            return true;
+        } else {
+            value = null;
+            return false;
         }
     }
 }

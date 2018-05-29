@@ -16,15 +16,12 @@
 
 using Gee;
 
-namespace SqlNotebook.Utils {
-    [Compact]
-    public abstract class MathUtil {
-        public static int min(int x, int y) {
-            return x <= y ? x : y;
-        }
+namespace SqlNotebook.Utils.MathUtil {
+    public int min(int x, int y) {
+        return x <= y ? x : y;
+    }
 
-        public static int max(int x, int y) {
-            return x <= y ? y : x;
-        }
+    public int max(int x, int y) {
+        return x <= y ? y : x;
     }
 }

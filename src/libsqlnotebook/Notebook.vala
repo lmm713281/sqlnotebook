@@ -90,7 +90,7 @@ namespace SqlNotebook {
             _sqlite_session.close();
             _notebook_serializer.save_notebook(
                     notebook_file_path, _sqlite_db_file_path, this, _notebook_user_data, token);
-            _sqlite_session.reopen();
+            _sqlite_session.open(this);
             _notebook_file_path = notebook_file_path;
         }
 

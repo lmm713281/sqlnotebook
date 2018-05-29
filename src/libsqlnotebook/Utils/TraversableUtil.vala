@@ -16,13 +16,10 @@
 
 using Gee;
 
-namespace SqlNotebook.Utils {
-    [Compact]
-    public abstract class TraversableUtil {
-        public static ArrayList<T> to_list<T>(Traversable<T> t) {
-            var list = new ArrayList<T>();
-            CollectionUtil.add_many(list, t);
-            return list;
-        }
+namespace SqlNotebook.Utils.TraversableUtil {
+    public ArrayList<T> to_list<T>(Traversable<T> t) {
+        var list = new ArrayList<T>();
+        CollectionUtil.add_many(list, t);
+        return list;
     }
 }

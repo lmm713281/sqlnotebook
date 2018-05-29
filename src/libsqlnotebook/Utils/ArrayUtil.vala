@@ -16,15 +16,12 @@
 
 using Gee;
 
-namespace SqlNotebook.Utils {
-    [Compact]
-    public abstract class ArrayUtil {
-        public static ArrayList<T> to_list<T>(T[] array) {
-            var list = new ArrayList<T>();
-            foreach (var item in array) {
-                list.add(item);
-            }
-            return list;
+namespace SqlNotebook.Utils.ArrayUtil {
+    public ArrayList<T> to_list<T>(T[] array) {
+        var list = new ArrayList<T>();
+        foreach (var item in array) {
+            list.add(item);
         }
+        return list;
     }
 }
