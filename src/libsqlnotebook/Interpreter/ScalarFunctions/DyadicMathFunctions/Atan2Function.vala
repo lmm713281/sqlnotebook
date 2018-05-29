@@ -14,25 +14,16 @@
 // OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using SqlNotebook.Collections;
-using SqlNotebook.Errors;
 using SqlNotebook.Utils;
 
-namespace SqlNotebook.Interpreter.ScalarFunctions.MonadicMathFunctions {
-    public abstract class MonadicMathFunction : ScalarFunction {
-        public override int get_parameter_count() {
-            return 1;
+namespace SqlNotebook.Interpreter.ScalarFunctions.DyadicMathFunctions {
+    public class Atan2Function : DyadicMathFunction {
+        public override string get_name() {
+            return "atan2";
         }
 
-        public override bool is_deterministic() {
-            return true;
+        protected override double execute_core(double x, double y) {
+            return Math.atan2(x, y);
         }
-
-        public override DataValue execute(Gee.ArrayList<DataValue> args) throws RuntimeError {
-            var x = ArgUtil.get_real_arg(args[0], "x", get_name());
-            return DataValue.for_real(execute_core(x));
-        }
-
-        protected abstract double execute_core(double x);
     }
 }

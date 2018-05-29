@@ -17,6 +17,7 @@
 using SqlNotebook.Errors;
 using SqlNotebook.Interpreter;
 using SqlNotebook.Interpreter.ScalarFunctions;
+using SqlNotebook.Interpreter.ScalarFunctions.DyadicMathFunctions;
 using SqlNotebook.Interpreter.ScalarFunctions.MonadicMathFunctions;
 using SqlNotebook.Interpreter.SqliteSyntax;
 using SqlNotebook.Interpreter.Tokens;
@@ -71,6 +72,8 @@ namespace SqlNotebook {
             scalar_functions.add(new SqrtFunction());
             scalar_functions.add(new TanFunction());
             scalar_functions.add(new TanhFunction());
+            scalar_functions.add(new Atan2Function());
+            scalar_functions.add(new PowFunction());
             f._scalar_functions = scalar_functions.read_only_view;
 
             MatchResult.init();
