@@ -60,6 +60,8 @@ namespace SqlNotebook.Errors {
         CORRUPT_NOTEBOOK_FILE,
         UNSUPPORTED_NOTEBOOK_FILE,
         SAVE_FAILED,
-        WRONG_ARGUMENT_KIND
+        WRONG_ARGUMENT_KIND,
+        WRONG_ARGUMENT_COUNT,
+        ARGUMENT_OUT_OF_RANGE
     }
 }

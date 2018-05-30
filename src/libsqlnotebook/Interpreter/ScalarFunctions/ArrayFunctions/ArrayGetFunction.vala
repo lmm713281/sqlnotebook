@@ -14,36 +14,38 @@
 // OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using Gee;
+using SqlNotebook.Collections;
+using SqlNotebook.Errors;
+using SqlNotebook.Utils;
 
-namespace SqlNotebook.Collections {
-    public enum DataValueKind {
-        NULL = 0,
-        INTEGER = 1,
-        REAL = 2,
-        TEXT = 3,
-        BLOB = 4;
+namespace SqlNotebook.Interpreter.ScalarFunctions.ArrayFunctions {
+    public class ArrayGetFunction : ScalarFunction {
+        public override string get_name() {
+            return "array_get";
+        }
 
-        public string to_string() {
-            switch (this) {
-                case NULL:
-                    return "(null)";
+        public override int get_parameter_count() {
+            return 2;
+        }
 
-                case INTEGER:
-                    return "integer";
+        public override bool is_deterministic() {
+            return true;
+        }
 
-                case REAL:
-                    return "real";
+        public override DataValue execute(Gee.ArrayList<DataValue> args) throws RuntimeError {
+            var name = get_name();
+            var blob = ArgUtil.get_blob_arg(args[0], "array", name);
+            var index = ArgUtil.get_int32_arg(args[1], "element-index", name);
 
-                case TEXT:
-                    return "text";
+            if (!SqlArrayUtil.is_sql_array(blob)) {
+                throw new RuntimeError.WRONG_ARGUMENT_KIND(@"$name: blob argument is not an array.");
+            }
 
-                case BLOB:
-                    return "blob";
-
-                default:
-                    assert(false);
-                    return "";
+            var count = SqlArrayUtil.get_count(blob);
+            if (index < 0 || index >= count) {
+                return DataValue.for_null();
+            } else {
+                return SqlArrayUtil.get_element(blob, index);
             }
         }
     }

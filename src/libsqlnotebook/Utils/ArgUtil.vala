@@ -28,6 +28,16 @@ namespace SqlNotebook.Utils.ArgUtil {
         }
     }
 
+    public int32 get_int32_arg(DataValue arg, string param_name, string function_name) throws RuntimeError {
+        var value64 = get_int_arg(arg, param_name, function_name);
+        if (value64 < int32.MIN || value64 > int32.MAX) {
+            throw new RuntimeError.WRONG_ARGUMENT_KIND(
+                    @"The \"$param_name\" argument is out of range.  A 32-bit INTEGER value is required.");
+        }
+
+        return (int32)value64;
+    }
+
     public double get_real_arg(DataValue arg, string param_name, string function_name) throws RuntimeError {
         if (arg.kind == DataValueKind.REAL) {
             return arg.real_value;
@@ -36,6 +46,16 @@ namespace SqlNotebook.Utils.ArgUtil {
         } else {
             var actual_kind = arg.get_kind_name();
             throw new RuntimeError.WRONG_ARGUMENT_KIND(@"The \"$param_name\" argument must be a REAL value, but " +
+                    @"type $actual_kind was provided.");
+        }
+    }
+
+    public DataValueBlob get_blob_arg(DataValue arg, string param_name, string function_name) throws RuntimeError {
+        if (arg.kind == DataValueKind.BLOB) {
+            return arg.blob_value;
+        } else {
+            var actual_kind = arg.get_kind_name();
+            throw new RuntimeError.WRONG_ARGUMENT_KIND(@"The \"$param_name\" argument must be a BLOB value, but " +
                     @"type $actual_kind was provided.");
         }
     }

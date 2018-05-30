@@ -17,6 +17,7 @@
 using SqlNotebook.Errors;
 using SqlNotebook.Interpreter;
 using SqlNotebook.Interpreter.ScalarFunctions;
+using SqlNotebook.Interpreter.ScalarFunctions.ArrayFunctions;
 using SqlNotebook.Interpreter.ScalarFunctions.DyadicMathFunctions;
 using SqlNotebook.Interpreter.ScalarFunctions.MonadicMathFunctions;
 using SqlNotebook.Interpreter.SqliteSyntax;
@@ -55,6 +56,12 @@ namespace SqlNotebook {
             f._notebook_serializer = new NotebookSerializer(f._temp_folder);
 
             var scalar_functions = new Gee.ArrayList<ScalarFunction>();
+            // ArrayFunctions
+            scalar_functions.add(new ArrayFunction());
+            scalar_functions.add(new ArrayGetFunction());
+            scalar_functions.add(new ArrayInsertFunction());
+            scalar_functions.add(new ArraySetFunction());
+            // MonadicMathFunctions
             scalar_functions.add(new AcosFunction());
             scalar_functions.add(new AsinFunction());
             scalar_functions.add(new AtanFunction());
@@ -72,6 +79,7 @@ namespace SqlNotebook {
             scalar_functions.add(new SqrtFunction());
             scalar_functions.add(new TanFunction());
             scalar_functions.add(new TanhFunction());
+            // DyadicMathFunctions
             scalar_functions.add(new Atan2Function());
             scalar_functions.add(new PowFunction());
             f._scalar_functions = scalar_functions.read_only_view;

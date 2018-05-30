@@ -14,37 +14,26 @@
 // OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using Gee;
+using SqlNotebook.Collections;
+using SqlNotebook.Errors;
+using SqlNotebook.Utils;
 
-namespace SqlNotebook.Collections {
-    public enum DataValueKind {
-        NULL = 0,
-        INTEGER = 1,
-        REAL = 2,
-        TEXT = 3,
-        BLOB = 4;
+namespace SqlNotebook.Interpreter.ScalarFunctions.ArrayFunctions {
+    public class ArrayFunction : ScalarFunction {
+        public override string get_name() {
+            return "array";
+        }
 
-        public string to_string() {
-            switch (this) {
-                case NULL:
-                    return "(null)";
+        public override int get_parameter_count() {
+            return -1;
+        }
 
-                case INTEGER:
-                    return "integer";
+        public override bool is_deterministic() {
+            return true;
+        }
 
-                case REAL:
-                    return "real";
-
-                case TEXT:
-                    return "text";
-
-                case BLOB:
-                    return "blob";
-
-                default:
-                    assert(false);
-                    return "";
-            }
+        public override DataValue execute(Gee.ArrayList<DataValue> args) throws RuntimeError {
+            return SqlArrayUtil.create_sql_array(args);
         }
     }
 }
